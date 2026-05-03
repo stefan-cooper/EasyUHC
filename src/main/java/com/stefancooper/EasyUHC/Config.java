@@ -3,8 +3,8 @@ package com.stefancooper.EasyUHC;
 import com.stefancooper.EasyUHC.base.ConfigKey;
 import com.stefancooper.EasyUHC.base.records.Configurable;
 import com.stefancooper.EasyUHC.base.Worlds;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;

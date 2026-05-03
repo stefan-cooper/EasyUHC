@@ -17,8 +17,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.11.0</version>
                 <configuration>
-                    <source>21</source>
-                    <target>21</target>
+                    <source>25</source>
+                    <target>25</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -53,9 +53,9 @@
     </build>
 
     <properties>
-        <UHCPlugin.version>10.2.0</UHCPlugin.version>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
+        <UHCPlugin.version>11.0.0</UHCPlugin.version>
+        <maven.compiler.source>25</maven.compiler.source>
+        <maven.compiler.target>25</maven.compiler.target>
     </properties>
 
     <repositories>
@@ -87,7 +87,7 @@
         <dependency>
             <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
-            <version>1.21.11-R0.1-SNAPSHOT</version>
+            <version>[26.1.2.build,)</version>
             <scope>provided</scope>
         </dependency>
         <!--This adds json parsing functionality-->
@@ -105,8 +105,8 @@
         <!-- MockBukkit for unit testing -->
         <dependency>
             <groupId>org.mockbukkit.mockbukkit</groupId>
-            <artifactId>mockbukkit-v1.21</artifactId>
-            <version>4.101.0</version>
+            <artifactId>mockbukkit-v26.1.2</artifactId>
+            <version>4.113.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
