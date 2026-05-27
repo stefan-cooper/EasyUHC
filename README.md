@@ -222,7 +222,7 @@ Contact @stefan-cooper for information about contributing. This is an open sourc
 
 ### Prereqs
 
-- Java 21
+- Java 25
 - Maven
 - Git
 

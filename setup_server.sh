@@ -10,12 +10,13 @@ fi
 
 # if you are seeing mvn not found, set this
 if [ "$(uname)" != "Darwin" ]; then
-  export JAVA_HOME=/c/Program\ Files/Java/jdk-21
+  export JAVA_HOME=/c/Program\ Files/Java/jdk-25
 fi
 
 REFRESH_BUILD=${REFRESH_BUILD:-false}
-MINECRAFT_VERSION=${MINECRAFT_VERSION:-1.21.11}
-PAPER_BUILD=${PAPER_BUILD:-69}
+MINECRAFT_VERSION=${MINECRAFT_VERSION:-26.1.2}
+PAPER_BUILD=${PAPER_BUILD:-66}
+PAPER_HASH=2c2af90d6ef0e823c272e7059873e3b7a24e07674e56e3b8d6c63ebff03cf827
 export MINECRAFT_VERSION="${MINECRAFT_VERSION}"
 
 ./build_plugin.sh
@@ -29,7 +30,7 @@ cp build/EasyUHC-"${PLUGIN_VERSION}".jar server/plugins/EasyUHC-"${PLUGIN_VERSIO
 
 if [ "${REFRESH_BUILD}" = "true" ]; then
   cd server
-  curl -o paper-latest.jar "https://api.papermc.io/v2/projects/paper/versions/${MINECRAFT_VERSION}/builds/${PAPER_BUILD}/downloads/paper-${MINECRAFT_VERSION}-${PAPER_BUILD}.jar"
+  curl -o paper-latest.jar "https://fill-data.papermc.io/v1/objects/${PAPER_HASH}/paper-${MINECRAFT_VERSION}-${PAPER_BUILD}.jar"
   cd ..
 fi
 
