@@ -212,8 +212,8 @@ public class EvolvingShield {
 
         final int updatedXP;
         if (expLimit > 0) {
-            if (currentXP + xpToAdd > expLimit) {
-                updatedXP = expLimit;
+            if (currentXP + xpToAdd > expLimit && type.equals(EvolvingShieldXPType.EXPERIENCE)) {
+                updatedXP = currentXP;
             } else {
                 updatedXP = currentXP + xpToAdd;
             }

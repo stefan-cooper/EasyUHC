@@ -80,7 +80,7 @@ public class EvolvingShieldUpgradeMenu {
                     inv.setItem(16, createUpgradeItem(
                             Material.IRON_INGOT,
                             "§6Iron Ingots",
-                            "§7Enough ingots (x24) for a full set of armour. Use it wisely.",
+                            "§7Enough ingots (x12) for some armour, or tools? Use it wisely.",
                             Constants.IRON,
                             false
                     ));
@@ -388,7 +388,7 @@ public class EvolvingShieldUpgradeMenu {
                     player.give(new ItemStack(Material.APPLE, 8));
                     break;
                 case Constants.IRON:
-                    player.give(new ItemStack(Material.IRON_INGOT, 24));
+                    player.give(new ItemStack(Material.IRON_INGOT, 12));
                     break;
                 case Constants.REAPER_KIT:
                     player.give(new ItemStack(Material.ENDER_PEARL, 4));
