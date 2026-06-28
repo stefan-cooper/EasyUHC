@@ -53,7 +53,7 @@
     </build>
 
     <properties>
-        <UHCPlugin.version>11.0.0</UHCPlugin.version>
+        <UHCPlugin.version>11.0.1</UHCPlugin.version>
         <maven.compiler.source>25</maven.compiler.source>
         <maven.compiler.target>25</maven.compiler.target>
     </properties>
@@ -106,7 +106,7 @@
         <dependency>
             <groupId>org.mockbukkit.mockbukkit</groupId>
             <artifactId>mockbukkit-v26.1.2</artifactId>
-            <version>4.113.1</version>
+            <version>4.113.3</version>
             <scope>test</scope>
         </dependency>
         <dependency>

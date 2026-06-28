@@ -101,7 +101,7 @@ This could be subject to change, but see the stages below:
 - 32x Steak
 - 4x Book
 - 8x Apple
-- 24x Iron Ingots
+- 12x Iron Ingots
 
 ### Stage 2 (100 EXP)
 
