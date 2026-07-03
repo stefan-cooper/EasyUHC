@@ -42,7 +42,7 @@ public class UHCLoot {
             Material.BOOK,
             Material.OBSIDIAN,
             Material.COOKED_BEEF,
-            Material.NETHERITE_HOE,
+            Material.DIAMOND_HOE,
             Material.BUCKET,
             Material.GUNPOWDER,
             Material.GOAT_HORN,
@@ -252,7 +252,8 @@ public class UHCLoot {
         switch (item.getType()) {
             case Material.EXPERIENCE_BOTTLE -> item.setAmount(8);
             case Material.GOLD_INGOT -> item.setAmount(2);
-            case Material.ARROW, Material.SPECTRAL_ARROW -> item.setAmount(32);
+            case Material.ARROW -> item.setAmount(16);
+            case Material.SPECTRAL_ARROW -> item.setAmount(8);
             case Material.TNT -> item.setAmount(4);
             case Material.GUNPOWDER -> item.setAmount(5);
             case Material.IRON_INGOT -> item.setAmount(4);

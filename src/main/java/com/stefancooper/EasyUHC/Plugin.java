@@ -1,5 +1,6 @@
 package com.stefancooper.EasyUHC;
 
+import com.stefancooper.EasyUHC.base.Utils;
 import com.stefancooper.EasyUHC.commands.UHCCommand;
 import com.stefancooper.EasyUHC.events.EvolvingShieldEvents;
 import com.stefancooper.EasyUHC.events.BaseEvents;

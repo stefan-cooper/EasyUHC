@@ -13,7 +13,7 @@ public class UHCCommandTabCompleter  {
 
         // First argument
         if (args.length == 1) {
-            suggestions.addAll(Arrays.asList("set", "view", "start", "resume", "latestart", "cancel", "pvp", "randomise", "unset"));
+            suggestions.addAll(Arrays.asList("set", "view", "start", "resume", "latestart", "cancel", "pvp", "randomise", "unset", "give"));
         }
         // Suggestions for "set" command
         else if (args.length >= 2 && (args[0].equalsIgnoreCase("set"))) {
@@ -59,6 +59,13 @@ public class UHCCommandTabCompleter  {
             Bukkit.getOnlinePlayers().forEach(player -> suggestions.add(player.getName()));
         }
 
+        else if (args.length == 2 && args[0].equalsIgnoreCase("give")) {
+           suggestions.add("shieldxp");
+        }
+
+        else if (args.length >= 4 && args[0].equalsIgnoreCase("give") && args[1].equalsIgnoreCase("shieldxp")) {
+            Bukkit.getOnlinePlayers().forEach(player -> suggestions.add(player.getName()));
+        }
 
         // Filter suggestions based on the last argument typed
         List<String> filteredSuggestions = new ArrayList<>();

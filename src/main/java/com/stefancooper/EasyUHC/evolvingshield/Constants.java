@@ -16,7 +16,8 @@ public class Constants {
     public static final String REAPER_KIT = "reaper_kit";
     public static final String APOTHECARY_KIT = "apothecary_kit";
     public static final String LIBRARIAN_KIT = "librarian_kit";
-
+    public static final String NETHER_EXPLORER_KIT = "nether_explorer_kit";
+    public static final String PHOENIX_KIT = "phoenix_kit";
 
     // TNTs
     public static final String FAST_TNT = "fast_tnt";
