@@ -100,11 +100,11 @@
           <groupId>org.apache.maven</groupId>
         </exclusion>
         <exclusion>
-          <artifactId>jspecify</artifactId>
-          <groupId>org.jspecify</groupId>
+          <artifactId>adventure-api</artifactId>
+          <groupId>net.kyori</groupId>
         </exclusion>
         <exclusion>
-          <artifactId>adventure-api</artifactId>
+          <artifactId>adventure-key</artifactId>
           <groupId>net.kyori</groupId>
         </exclusion>
         <exclusion>
@@ -126,6 +126,10 @@
         <exclusion>
           <artifactId>adventure-text-logger-slf4j</artifactId>
           <groupId>net.kyori</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>jspecify</artifactId>
+          <groupId>org.jspecify</groupId>
         </exclusion>
         <exclusion>
           <artifactId>checker-qual</artifactId>
@@ -164,7 +168,7 @@
     <dependency>
       <groupId>org.mockbukkit.mockbukkit</groupId>
       <artifactId>mockbukkit-v26.1.2</artifactId>
-      <version>4.113.1</version>
+      <version>4.113.3</version>
       <scope>test</scope>
       <exclusions>
         <exclusion>
@@ -236,7 +240,7 @@
   <properties>
     <maven.compiler.target>25</maven.compiler.target>
     <maven.compiler.source>25</maven.compiler.source>
-    <UHCPlugin.version>11.1.1</UHCPlugin.version>
+    <UHCPlugin.version>11.1.2</UHCPlugin.version>
   </properties>
 </project>
 

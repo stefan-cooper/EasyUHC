@@ -1,52 +1,9 @@
 name: EasyUHC
-version: 11.1.1
+version: 11.1.2
 author: Stefan Cooper
 main: com.stefancooper.EasyUHC.Plugin
 api-version: 26.1.2
 website: https://stefancooper.com
-commands:
-  uhc:
-    description: Configure and run a UHC
-    permission: op
-    usage: >
-      UHC Plugin Commands
-      
-      Set config value:
-      
-      /uhc set world.border.initial.size=500
-      
-      Set multiple config values:
-      
-      /uhc set world.border.initial.size=500 world.border.final.size=250
-      
-      View full config:
-      
-      /uhc view config
-      
-      View a specific config value:
-
-      /uhc view world.border.initial.size
-      
-      Unset config value:
-
-      /uhc unset world.border.initial.size
-      
-      Unset multiple config values:
-
-      /uhc unset world.border.initial.size world.border.final.size
-      
-      Start the UHC:
-      
-      /uhc start
-      
-      Start a UHC midway/resume a UHC
-
-      /uhc resume <minutes>
-      
-      Late start a specific user:
-
-      /uhc latestart <username>
-      
-      End/cancel the UHC:
-      
-      /uhc cancel
+permissions:
+  easyuhc.command:
+    default: op
