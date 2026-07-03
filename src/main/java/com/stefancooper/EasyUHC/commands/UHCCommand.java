@@ -17,6 +17,8 @@ public class UHCCommand extends Command {
     public UHCCommand(final Config config) {
         super(COMMAND_KEY);
         this.config = config;
+
+        setPermission("easyuhc.command");
     }
 
     /** Used to pass to child commands so that we don't pass the command key to them */
