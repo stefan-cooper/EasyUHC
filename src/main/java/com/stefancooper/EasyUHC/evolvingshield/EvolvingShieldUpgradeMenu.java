@@ -1,9 +1,12 @@
 package com.stefancooper.EasyUHC.evolvingshield;
 
 import com.stefancooper.EasyUHC.Config;
+import com.stefancooper.EasyUHC.Defaults;
 import com.stefancooper.EasyUHC.base.PerformanceTrackingEvent;
+import com.stefancooper.EasyUHC.base.Utils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.Style;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -14,6 +17,7 @@ import org.bukkit.block.banner.PatternType;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -27,8 +31,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
+
+import static com.stefancooper.EasyUHC.base.ConfigKey.ENABLE_TIMESTAMPS;
 import static com.stefancooper.EasyUHC.evolvingshield.EvolvingShield.STAGE_1;
 import static com.stefancooper.EasyUHC.evolvingshield.EvolvingShield.STAGE_10;
+import static com.stefancooper.EasyUHC.evolvingshield.EvolvingShield.STAGE_11;
 import static com.stefancooper.EasyUHC.evolvingshield.EvolvingShield.STAGE_2;
 import static com.stefancooper.EasyUHC.evolvingshield.EvolvingShield.STAGE_3;
 import static com.stefancooper.EasyUHC.evolvingshield.EvolvingShield.STAGE_4;
@@ -73,7 +80,7 @@ public class EvolvingShieldUpgradeMenu {
                     inv.setItem(14, createUpgradeItem(
                             Material.APPLE,
                             "§6Apples",
-                            "§7Don't go punching leaves and take these apples (x8)",
+                            "§7Don't go punching leaves and take these apples (x4)",
                             Constants.APPLES,
                             false
                     ));
@@ -124,21 +131,21 @@ public class EvolvingShieldUpgradeMenu {
                     inv.setItem(11, createUpgradeItem(
                             Material.ARROW,
                             "§6Arrows",
-                            "§7Gain some arrows (x32)",
+                            "§7Gain some arrows (x18)",
                             Constants.ARROWS,
                             false
                     ));
                     inv.setItem(13, createUpgradeItem(
                             Material.SPECTRAL_ARROW,
                             "§6Spectral arrows",
-                            "§7Gain some spectral arrows (x16)",
+                            "§7Gain some spectral arrows (x12)",
                             Constants.ARROWS_SPECTRAL,
                             false
                     ));
                     inv.setItem(15, createUpgradeItem(
                             Material.ARROW,
-                            "§6Tipped Arrow",
-                            "§7Gain one very powerful arrow",
+                            "§6Tipped Arrows",
+                            "§7Gain some very powerful arrows (x3)",
                             Constants.ARROWS_TIPPED,
                             true
                     ));
@@ -196,10 +203,10 @@ public class EvolvingShieldUpgradeMenu {
                     break;
                 case 7:
                     inv.setItem(11, createUpgradeItem(
-                            Material.ENDER_PEARL,
-                            "§6Reapers Kit",
-                            "§7Gain the Reapers kit",
-                            Constants.REAPER_KIT,
+                            Material.OBSIDIAN,
+                            "§6Nether Explorer Kit",
+                            "§7Gain the Nether Explorer kit",
+                            Constants.NETHER_EXPLORER_KIT,
                             true
                     ));
                     inv.setItem(13, createUpgradeItem(
@@ -260,8 +267,24 @@ public class EvolvingShieldUpgradeMenu {
                     inv.setItem(16, createUpgradeItem(
                             Material.WATER_BUCKET,
                             "§6Water Elemental",
-                            "§7Apply Water Elemental to your shield. Blocking whilst sneaking will shoot a snowball that creates a bucket of water (30 second cooldown)",
+                            "§7Apply Water Elemental to your shield. Blocking whilst sneaking will shoot a snowball that creates a bucket of water (10 second cooldown)",
                             Constants.WATER
+                    ));
+                    break;
+                case 10:
+                    inv.setItem(12, createUpgradeItem(
+                            Material.NETHERITE_HOE,
+                            "§6Reaper Form",
+                            "§7Become the Reaper",
+                            Constants.REAPER_KIT,
+                            true
+                    ));
+                    inv.setItem(14, createUpgradeItem(
+                            Material.ELYTRA,
+                            "§6Phoenix Form",
+                            "§7Become the Phoenix",
+                            Constants.PHOENIX_KIT,
+                            true
                     ));
                     break;
             }
@@ -314,6 +337,7 @@ public class EvolvingShieldUpgradeMenu {
         final String type = selectedUpgrade.getItemMeta().getPersistentDataContainer().get(config.getManagedResources().getKeys().getEvolvingShieldUpgradeTypeKey(), PersistentDataType.STRING);
         final NamespacedKey xpKey = config.getManagedResources().getKeys().getEvolvingShieldXPKey();
         final Optional<ItemStack> getShield = EvolvingShield.getEvolvingShieldFromPlayer(config, player);
+
         if (getShield.isPresent()) {
             final ItemStack shield = getShield.get();
 
@@ -385,18 +409,64 @@ public class EvolvingShieldUpgradeMenu {
                     player.give(new ItemStack(Material.BOOK, 4));
                     break;
                 case Constants.APPLES:
-                    player.give(new ItemStack(Material.APPLE, 8));
+                    player.give(new ItemStack(Material.APPLE, 4));
                     break;
                 case Constants.IRON:
                     player.give(new ItemStack(Material.IRON_INGOT, 12));
                     break;
+                case Constants.PHOENIX_KIT:
+                    player.give(new ItemStack(Material.FIREWORK_ROCKET, 8));
+                    final ItemStack phoenixWings = new ItemStack(Material.ELYTRA, 1);
+                    final ItemMeta phoenixWingsMeta = phoenixWings.getItemMeta();
+                    phoenixWingsMeta.displayName(Component.text("Phoenix Wings", Style.style(NamedTextColor.RED)));
+                    phoenixWingsMeta.setEnchantmentGlintOverride(true);
+                    phoenixWings.setItemMeta(phoenixWingsMeta);
+                    player.give(phoenixWings);
+                    final ItemStack phoenixBoots = new ItemStack(Material.IRON_BOOTS, 1);
+                    final ItemMeta phoenixBootsMeta = phoenixWings.getItemMeta();
+                    phoenixBootsMeta.displayName(Component.text("Phoenix Feet", Style.style(NamedTextColor.RED)));
+                    phoenixBoots.setItemMeta(phoenixBootsMeta);
+                    phoenixBoots.addEnchantment(Enchantment.FEATHER_FALLING, 4);
+                    phoenixBoots.addEnchantment(Enchantment.FIRE_PROTECTION, 4);
+                    player.give(phoenixBoots);
+                    final ItemStack phoenixSpear = new ItemStack(Material.IRON_SPEAR);
+                    final ItemMeta phoenixSpearMeta = phoenixWings.getItemMeta();
+                    phoenixSpearMeta.displayName(Component.text("Phoenix Breath", Style.style(NamedTextColor.RED)));
+                    phoenixSpear.setItemMeta(phoenixSpearMeta);
+                    phoenixSpear.addEnchantment(Enchantment.FIRE_ASPECT, 1);
+                    player.give(phoenixSpear);
+                    break;
                 case Constants.REAPER_KIT:
-                    player.give(new ItemStack(Material.ENDER_PEARL, 4));
-                    player.give(new ItemStack(Material.CHORUS_FRUIT, 32));
+                    player.give(new ItemStack(Material.ENDER_PEARL, 2));
                     final ItemStack reaperArrows = new ItemStack(Material.TIPPED_ARROW, 4);
                     final PotionMeta reaperArrowsMeta = (PotionMeta) reaperArrows.getItemMeta();
-                    reaperArrowsMeta.setBasePotionType(PotionType.LONG_WEAKNESS);
+                    reaperArrowsMeta.addCustomEffect(
+                            new PotionEffect(PotionEffectType.WITHER, 800, 1),
+                            true
+                    );
+
+                    reaperArrowsMeta.addItemFlags(ItemFlag.HIDE_ADDITIONAL_TOOLTIP);
+                    reaperArrowsMeta.addItemFlags(ItemFlag.HIDE_STORED_ENCHANTS);
+                    reaperArrowsMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+                    reaperArrowsMeta.lore(List.of(
+                            Component.text("Wither II (00:04)", Style.style(NamedTextColor.LIGHT_PURPLE))
+                    ));
+                    reaperArrowsMeta.displayName(Component.text("Reaper Marked Arrow", Style.style(NamedTextColor.DARK_PURPLE)));
+                    reaperArrowsMeta.setEnchantmentGlintOverride(true);
+                    reaperArrows.setItemMeta(reaperArrowsMeta);
                     player.give(reaperArrows);
+                    final ItemStack reapersHoe = new ItemStack(Material.NETHERITE_HOE);
+                    reapersHoe.addUnsafeEnchantment(config.getManagedResources().getHoeReapersMarkEnchantment(), 1);
+                    final ItemMeta reapersHoeMeta = reapersHoe.getItemMeta();
+                    reapersHoeMeta.displayName(Component.text("Reapers Scythe", Style.style(NamedTextColor.DARK_PURPLE)));
+                    reapersHoeMeta.lore(List.of(
+                            Component.text(""),
+                            Component.text("50% chance of applying Wither I (00:08) ", Style.style(NamedTextColor.LIGHT_PURPLE))
+                    ));
+                    reapersHoeMeta.setEnchantmentGlintOverride(true);
+                    reapersHoe.setItemMeta(reapersHoeMeta);
+                    player.give(reapersHoe);
+
                     break;
                 case Constants.APOTHECARY_KIT:
                     final ItemStack waterBottle1 = new ItemStack(Material.POTION, 1);
@@ -441,14 +511,19 @@ public class EvolvingShieldUpgradeMenu {
                     player.give(sharpnessBook);
                     player.give(protBook);
                     break;
+                case Constants.NETHER_EXPLORER_KIT:
+                    player.give(new ItemStack(Material.OBSIDIAN, 10));
+                    player.give(new ItemStack(Material.GOLDEN_HELMET, 1));
+                    player.give(new ItemStack(Material.FLINT_AND_STEEL, 1));
+                    break;
                 case Constants.ARROWS:
-                    player.give(new ItemStack(Material.ARROW, 32));
+                    player.give(new ItemStack(Material.ARROW, 18));
                     break;
                 case Constants.ARROWS_SPECTRAL:
-                    player.give(new ItemStack(Material.SPECTRAL_ARROW, 16));
+                    player.give(new ItemStack(Material.SPECTRAL_ARROW, 12));
                     break;
                 case Constants.ARROWS_TIPPED:
-                    final ItemStack tippedArrow = new ItemStack(Material.TIPPED_ARROW, 1);
+                    final ItemStack tippedArrow = new ItemStack(Material.TIPPED_ARROW, 3);
                     final PotionMeta tippedArrowMeta = (PotionMeta) tippedArrow.getItemMeta();
                     tippedArrowMeta.setBasePotionType(PotionType.STRONG_HARMING);
                     tippedArrow.setItemMeta(tippedArrowMeta);
@@ -525,9 +600,11 @@ public class EvolvingShieldUpgradeMenu {
             return true;
         } else if (xp >= STAGE_9 && xp < STAGE_10 && currentStage <= 8) {
             return true;
-        } else if (xp >= STAGE_10 && currentStage <= 9) {
+        } else if (xp >= STAGE_10 && xp < STAGE_11 && currentStage <= 9) {
             return true;
-        }else {
+        } else if (xp >= STAGE_10 && currentStage <= 10) {
+            return true;
+        } else {
             return false;
         }
     }

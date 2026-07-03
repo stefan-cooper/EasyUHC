@@ -3,6 +3,7 @@ package com.stefancooper.EasyUHC.events;
 import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent;
 import com.stefancooper.EasyUHC.Config;
 import com.stefancooper.EasyUHC.Defaults;
+import com.stefancooper.EasyUHC.base.Utils;
 import com.stefancooper.EasyUHC.enchants.Constants;
 import com.stefancooper.EasyUHC.enchants.EnchantShield;
 import com.stefancooper.EasyUHC.enchants.EnchantTNT;
@@ -38,6 +39,8 @@ import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 import java.util.*;
 
@@ -339,4 +342,31 @@ public class EnchantmentEvents implements Listener {
     }
 
     /* ----- End of TNT events ----- */
+
+    /* ----- Hoe Events ----- */
+
+    private boolean hasReapersMarkEnchantment(final ItemStack item) {
+        return item.containsEnchantment(config.getManagedResources().getHoeReapersMarkEnchantment());
+    }
+
+    @EventHandler
+    public void witherEffect(final EntityDamageByEntityEvent event) {
+        if (!(event.getDamager() instanceof Player attacker)) return;
+        if (!(event.getEntity() instanceof Player victim)) return;
+        if (event.getDamageSource().getDamageType() != DamageType.PLAYER_ATTACK) return;
+        if (attacker.isBlocking()) return;
+
+        final ItemStack item = attacker.getInventory().getItemInMainHand();
+
+        if (!hasReapersMarkEnchantment(item)) return;
+        if (event.getFinalDamage() <= 0) return;
+
+        if (Utils.checkOddsOf(1)) {
+            victim.addPotionEffect(
+                    new PotionEffect(PotionEffectType.WITHER, (int) Utils.secondsToTicks(9), 0)
+            );
+        }
+
+    }
+
 }

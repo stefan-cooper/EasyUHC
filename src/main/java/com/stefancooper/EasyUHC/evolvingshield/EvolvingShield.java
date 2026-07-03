@@ -5,6 +5,8 @@ import com.stefancooper.EasyUHC.Defaults;
 import com.stefancooper.EasyUHC.base.UHCTeam;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.Style;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -13,6 +15,7 @@ import org.bukkit.block.Banner;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.block.banner.PatternType;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemRarity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BlockStateMeta;
@@ -37,9 +40,10 @@ public class EvolvingShield {
     public static int STAGE_5 = 1100;
     public static int STAGE_6 = 1600;
     public static int STAGE_7 = 2100;
-    public static int STAGE_8 = 2600;
-    public static int STAGE_9 = 3100;
+    public static int STAGE_8 = 3000;
+    public static int STAGE_9 = 3500;
     public static int STAGE_10 = 5000;
+    public static int STAGE_11 = 7500;
 
     public static void createEvolvingShield(final Config config, final Player player) {
         final ItemStack shield = new ItemStack(Material.SHIELD, 1);
@@ -71,7 +75,8 @@ public class EvolvingShield {
         DAMAGE_HEARTS,
         LOOT_CHEST,
         REVIVE,
-        KILL
+        KILL,
+        MANUAL
     }
 
     private static int calculateXP(final EvolvingShieldXPType type, final int toAdd) {
@@ -83,8 +88,10 @@ public class EvolvingShield {
             case LOOT_CHEST:
                 yield 200;
             case DAMAGE_HEARTS:
-                yield toAdd * 200;
+                yield toAdd * 100;
             case EXPERIENCE:
+                yield toAdd * 4;
+            case MANUAL:
                 yield toAdd;
         };
     }
@@ -123,6 +130,8 @@ public class EvolvingShield {
         }
         banner.setPatterns(allPatterns);
         meta.setBlockState(banner);
+        // only in 26.2, uncomment this later
+        // meta.addItemFlags(ItemFlag.HIDE_BANNER_PATTERNS);
         shield.setItemMeta(meta);
     }
 
@@ -226,6 +235,7 @@ public class EvolvingShield {
 
         if (calculateUpgradeAvailable(updatedXP, currentUpgradeStage)) {
             player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 1, 1);
+            player.sendMessage(Component.text("Shield upgrade available. Open your inventory and shift click your shield to upgrade!", Style.style(NamedTextColor.GOLD, TextDecoration.ITALIC)));
             setUpgradeAvailable(config, shieldMeta, true);
             updateLore(config, shieldMeta, updatedXP, true);
         } else {

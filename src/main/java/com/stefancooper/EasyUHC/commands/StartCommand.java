@@ -165,7 +165,10 @@ public class StartCommand extends AbstractCommand {
 
         // Performance Tracking
         if (getConfig().getProperty(ConfigKey.ENABLE_PERFORMANCE_TRACKING, Defaults.ENABLE_PERFORMANCE_TRACKING)) {
-            getConfig().getManagedResources().runRepeatingTask(getConfig().getManagedResources().updatePerformanceStatistics(), 60);
+            getConfig().getManagedResources().runTaskLater(() -> {
+                // don't start performance tracking until after the countdown has finished
+                getConfig().getManagedResources().runRepeatingTask(getConfig().getManagedResources().updatePerformanceStatistics(), 60);
+            }, countdownTimer);
         }
 
         // UHC Loot

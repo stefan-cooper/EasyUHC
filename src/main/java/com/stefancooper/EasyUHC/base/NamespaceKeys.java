@@ -12,6 +12,7 @@ import static com.stefancooper.EasyUHC.enchants.Constants.EVOLVING_SHIELD_USER_K
 import static com.stefancooper.EasyUHC.enchants.Constants.EVOLVING_SHIELD_XP_KEY;
 import static com.stefancooper.EasyUHC.base.Constants.NOTCH_APPLE;
 import static com.stefancooper.EasyUHC.base.Constants.PLAYER_HEAD;
+import static com.stefancooper.EasyUHC.enchants.Constants.HOE_REAPER_MARK;
 import static com.stefancooper.EasyUHC.enchants.Constants.QUICKBOOM_ENCHANTMENT;
 import static com.stefancooper.EasyUHC.base.Constants.NAMESPACE;
 import static com.stefancooper.EasyUHC.enchants.Constants.SHIELD_FIRE_ENCHANTMENT;
@@ -49,6 +50,8 @@ public class NamespaceKeys {
     final private NamespacedKey evolvingShieldUpgradeReadyKey;
     final private NamespacedKey evolvingShieldUpgradeStageKey;
 
+    final private NamespacedKey reapersMarkEnchantment;
+
     public NamespaceKeys(final Config config) {
         // Misc
         this.playerHead = new NamespacedKey(config.getPlugin(), PLAYER_HEAD);
@@ -68,6 +71,8 @@ public class NamespaceKeys {
         this.shieldWaterEnchantment = new NamespacedKey(NAMESPACE, SHIELD_WATER_ENCHANTMENT);
         this.shieldThunderEnchantment = new NamespacedKey(NAMESPACE, SHIELD_THUNDER_ENCHANTMENT);
         this.shieldWindEnchantment = new NamespacedKey(NAMESPACE, SHIELD_WIND_ENCHANTMENT);
+
+        this.reapersMarkEnchantment = new NamespacedKey(NAMESPACE, HOE_REAPER_MARK);
 
         // Evolving shield
         this.evolvingShieldUserKey = new NamespacedKey(NAMESPACE, EVOLVING_SHIELD_USER_KEY);
@@ -110,6 +115,8 @@ public class NamespaceKeys {
     public NamespacedKey getShieldWaterEnchantment() { return shieldWaterEnchantment; }
 
     public NamespacedKey getShieldThunderEnchantment() { return shieldThunderEnchantment; }
+
+    public NamespacedKey getReapersMarkEnchantment() { return reapersMarkEnchantment; }
 
     public NamespacedKey getEvolvingShieldUserKey() {
         return evolvingShieldUserKey;

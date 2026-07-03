@@ -6,19 +6,26 @@ import com.stefancooper.EasyUHC.Defaults;
 import com.stefancooper.EasyUHC.evolvingshield.EvolvingShield;
 import com.stefancooper.EasyUHC.evolvingshield.EvolvingShieldUpgradeMenu;
 import com.stefancooper.EasyUHC.base.Utils;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.Style;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.damage.DamageType;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Fireball;
 import org.bukkit.entity.ItemFrame;
+import org.bukkit.entity.LightningStrike;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.entity.Snowball;
+import org.bukkit.entity.Trident;
 import org.bukkit.entity.WindCharge;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -175,7 +182,9 @@ public class EvolvingShieldEvents implements Listener {
                             EvolvingShield.EvolvingShieldXPType.DAMAGE_HEARTS
                     );
                 }
-            } else if (event.getDamager() instanceof final Projectile projectile && projectile instanceof Arrow && projectile.getShooter() instanceof final Player attacker) {
+            } else if (event.getDamager() instanceof final Projectile projectile &&
+                    (projectile instanceof Arrow || projectile instanceof Trident || projectile instanceof Fireball || projectile instanceof LightningStrike)
+                    && projectile.getShooter() instanceof final Player attacker) {
                 // Bow or Crossbow
                 final Optional<ItemStack> getShield = EvolvingShield.getEvolvingShieldFromPlayer(config, attacker);
                 if (getShield.isPresent()) {
@@ -306,6 +315,11 @@ public class EvolvingShieldEvents implements Listener {
                 if (!player.getGameMode().equals(GameMode.CREATIVE) && now - last < 30000) return;
                 cooldown.put(player.getUniqueId(), now);
 
+                config.getManagedResources().runTaskLater(() -> {
+                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BANJO, 1, 1);
+                    player.sendMessage(Component.text("Elemental shield cooldown refreshed!", Style.style(NamedTextColor.LIGHT_PURPLE, TextDecoration.ITALIC)));
+                }, Utils.secondsToTicks(30));
+
                 final WindCharge charge = player.launchProjectile(WindCharge.class);
                 charge.setVelocity(player.getLocation().getDirection().multiply(1.5));
             } else if (fireLevel > 0) {
@@ -314,6 +328,11 @@ public class EvolvingShieldEvents implements Listener {
 
                 if (!player.getGameMode().equals(GameMode.CREATIVE) && now - last < 60000) return;
                 cooldown.put(player.getUniqueId(), now);
+
+                config.getManagedResources().runTaskLater(() -> {
+                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BANJO, 1, 1);
+                    player.sendMessage(Component.text("Elemental shield cooldown refreshed!", Style.style(NamedTextColor.LIGHT_PURPLE, TextDecoration.ITALIC)));
+                }, Utils.secondsToTicks(60));
 
                 final Fireball charge = player.launchProjectile(Fireball.class);
                 charge.setVelocity(player.getLocation().getDirection().multiply(1.5));
@@ -328,13 +347,23 @@ public class EvolvingShieldEvents implements Listener {
                 if (!player.getGameMode().equals(GameMode.CREATIVE) && now - last < 120000) return;
                 cooldown.put(player.getUniqueId(), now);
 
+                config.getManagedResources().runTaskLater(() -> {
+                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BANJO, 1, 1);
+                    player.sendMessage(Component.text("Elemental shield cooldown refreshed!", Style.style(NamedTextColor.LIGHT_PURPLE, TextDecoration.ITALIC)));
+                }, Utils.secondsToTicks(120));
+
                 player.getWorld().strikeLightning(target.getLocation());
             } else if (waterLevel > 0) {
                 long now = System.currentTimeMillis();
                 long last = cooldown.getOrDefault(player.getUniqueId(), 0L);
 
-                if (!player.getGameMode().equals(GameMode.CREATIVE) && now - last < 30000) return;
+                if (!player.getGameMode().equals(GameMode.CREATIVE) && now - last < 10000) return;
                 cooldown.put(player.getUniqueId(), now);
+
+                config.getManagedResources().runTaskLater(() -> {
+                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BANJO, 1, 1);
+                    player.sendMessage(Component.text("Elemental shield cooldown refreshed!", Style.style(NamedTextColor.LIGHT_PURPLE, TextDecoration.ITALIC)));
+                }, Utils.secondsToTicks(10));
 
                 final Snowball snowball = player.launchProjectile(Snowball.class);
                 snowball.setVelocity(player.getLocation().getDirection().multiply(1.2));

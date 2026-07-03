@@ -52,6 +52,9 @@ public class UHCCommand extends Command {
                 case RandomiseTeamsCommand.COMMAND_KEY:
                     new RandomiseTeamsCommand(sender, cmd, getCommandArgs(args), config).execute();
                     return true;
+                case GiveCommand.COMMAND_KEY:
+                    new GiveCommand(sender, cmd, getCommandArgs(args), config).execute();
+                    return true;
                 default:
                     break;
             }

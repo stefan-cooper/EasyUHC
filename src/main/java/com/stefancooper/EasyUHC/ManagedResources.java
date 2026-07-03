@@ -149,6 +149,10 @@ public class ManagedResources {
         return RegistryAccess.registryAccess().getRegistry(RegistryKey.ENCHANTMENT).get(keys.getShieldStrengthEnchantment());
     }
 
+    public Enchantment getHoeReapersMarkEnchantment() {
+        return RegistryAccess.registryAccess().getRegistry(RegistryKey.ENCHANTMENT).get(keys.getReapersMarkEnchantment());
+    }
+
     public void cancelTimer() {
         scheduler.cancelTasks(config.getPlugin());
     }

@@ -45,13 +45,13 @@ As references in the prior section, levelling up your shield can be done in one 
 
 Gaining minecraft XP will level up the shield (up to and including the `evolving.shields.exp.threshold` config value).
 
-Every `n` minecraft XP equals `n` EXP for the shield.
+Every `n` minecraft XP equals `n * 4` EXP for the shield.
 
 What this means in real-world terms is (for example):
 
-- Killing a chicken: 1-3 EXP
-- Killing a creeper: 6-8 EXP
-- Mining/smelting iron: 0.7 EXP per ingot
+- Killing a chicken: 4-9 EXP
+- Killing a creeper: 24-32 EXP
+- Mining/smelting iron: 2.8 EXP per ingot
 
 For more information, see https://minecraft.wiki/w/Experience
 
@@ -63,14 +63,14 @@ This can be via melee or projectile.
 
 * Note - TNT damage is not included
 
-Every half a heart of post-armor calculated damage equals 200 EXP
+Every half a heart of post-armor calculated damage equals **100 EXP**
 
 What this means in real-world terms is (for example):
 
-- Hitting a player with full iron armor with an Iron Sword: 600 EXP (1.5 hearts of damage)
-- Hitting a player with full iron armor with an Iron Axe: 1000 EXP (2.5 hearts of damage) 
-- Critting an unarmored player with a Golden Sword: 1200 EXP (3 hearts of damage)
-- Critting a player with full iron armor player with a Diamond Axe: 1800 EXP (4.5 hearts of damage)
+- Hitting a player with full iron armor with an Iron Sword: 300 EXP (1.5 hearts of damage)
+- Hitting a player with full iron armor with an Iron Axe: 500 EXP (2.5 hearts of damage) 
+- Critting an unarmored player with a Golden Sword: 600 EXP (3 hearts of damage)
+- Critting a player with full iron armor player with a Diamond Axe: 900 EXP (4.5 hearts of damage)
 
 ### Claiming a loot chest
 
@@ -82,7 +82,7 @@ Claiming a loot chest will give you a 200 EXP bonus.
 
 Reviving a teammate will give you award you some EXP.
 
-After your teammate has been revive, you are awarded a 500 EXP bonus.
+After your teammate has been revived, you are awarded a 500 EXP bonus.
 
 ### Killing opponents
 
@@ -90,17 +90,19 @@ Killing opponents will give you an extra bonus bit of EXP.
 
 Killing an opponent will give a 250 EXP bonus.
 
+* Note: You must deal the final blow to gain the EXP. If they die from fall damage, a potion effect, TNT, etc. You will not gain his bonus.
+
 ## Stages
 
 As you level up, you will reach different stages of the evolving shield. Each stage will provide you with a choice of bonuses or upgrades to pick from. Once picked, there is no going back, so choose wisely.
 
-This could be subject to change, but see the stages below:
+See the stages below:
 
 ### Stage 1 (30 EXP)
 
 - 32x Steak
 - 4x Book
-- 8x Apple
+- 4x Apple
 - 12x Iron Ingots
 
 ### Stage 2 (100 EXP)
@@ -116,9 +118,9 @@ This could be subject to change, but see the stages below:
 
 ### Stage 4 (700 EXP)
 
-- 32x Arrow
-- 16x Spectral Arrow
-- 1x Tipped Arrow with Instant Damage II applied
+- 18x Arrow
+- 12x Spectral Arrow
+- 3x Tipped Arrow with Instant Damage II applied
 
 ### Stage 5 (1100 EXP)
 
@@ -136,25 +138,25 @@ This could be subject to change, but see the stages below:
 - Upgrade or add 'Knockback' to your shield.
 - Upgrade or add 'Thorns' to your shield.
 
-### Stage 8 (2600 EXP)
+### Stage 8 (3000 EXP)
 
-- Gain the Reapers kit
-  - 4x Ender Pearl
-  - 32x Chorus Fruit
-  - 4x Tipped Arrow (Wekaness I applied for 240s)
-- Gain the Apothecary kit
+- Gain the _Nether Explorer_ kit
+  - 10x Obsidian
+  - 1x Golden Helmet
+  - 1x Flint and Steel
+- Gain the _Apothecary_ kit
   - 1x Brewing Stand
   - 3x Nether Wart
   - 1x Blaze Powder
   - 3x Water Bottle
-- Gain the Librarians kit
+- Gain the _Librarian_ kit
   - 1x Knockback II Enchanted Book
   - 1x Sharpness II Enchanted Book
   - 1x Protection II Enchanted Book
   - 4x Bookshelf
   - 32x EXP Bottle
 
-### Stage 9 (3100 EXP)
+### Stage 9 (3500 EXP)
 
 - 1x Quickboom IV TNT
 - 1x Blastwave IV TNT
@@ -167,3 +169,15 @@ This could be subject to change, but see the stages below:
 - Add 'Air Elemental' to your shield. Blocking whilst sneaking will shoot a wind charge (30 second cooldown)
 - Add 'Water Elemental' to your shield. Blocking whilst sneaking will shoot a snowball that creates a bucket of water (30 second cooldown)
 
+### Stage 11 (7500 EXP)
+
+- Become the **Reaper**
+  - 2x Ender Pearl
+  - 4x Tipped Arrow (Wither II applied for 8s)
+  - 1x Hoe (Enchanted with 'Reaper Marked')
+    - 'Reaper Marked' gives a chance (50%) of applying 'Wither I (00:04)' on damage.
+- Become the **Phoenix**
+  - 1x Elytra
+  - 1x Iron Spear (Fire Aspect I)
+  - Iron Boots (Feather Falling IV, Fire Protection IV)
+  - 8x Firework Rocket
