@@ -90,7 +90,6 @@ public class UHCLoot {
             Material.PLAYER_HEAD, // revivable
             Material.DIAMOND_BLOCK,
             Material.TRIDENT,
-            Material.ELYTRA,
             Material.POTION,
             Material.SPLASH_POTION
     );
