@@ -142,7 +142,8 @@ public class EvolvingShieldTest {
         admin.setOp(true);
 
         TestUtils.executeCommand(plugin, admin, "set",
-                "enable.evolving.shields=true"
+                "enable.evolving.shields=true",
+                "evolving.shields.minecraft.exp.multiplier=1"
         );
 
         PlayerMock player1 = server.addPlayer();
@@ -204,7 +205,8 @@ public class EvolvingShieldTest {
         admin.setOp(true);
 
         TestUtils.executeCommand(plugin, admin, "set",
-                "enable.evolving.shields=true"
+                "enable.evolving.shields=true",
+                "evolving.shields.minecraft.exp.multiplier=1"
         );
 
         PlayerMock player1 = server.addPlayer();
@@ -267,6 +269,7 @@ public class EvolvingShieldTest {
 
         TestUtils.executeCommand(plugin, admin, "set",
                 "enable.evolving.shields=true",
+                "evolving.shields.minecraft.exp.multiplier=1",
                 String.format("evolving.shields.exp.threshold=%s", EvolvingShield.STAGE_2)
         );
 
