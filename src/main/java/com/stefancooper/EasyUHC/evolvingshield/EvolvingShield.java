@@ -29,6 +29,7 @@ import java.util.Optional;
 import java.util.logging.Level;
 
 import static com.stefancooper.EasyUHC.base.ConfigKey.EVOLVING_SHIELDS_EXP_THRESHOLD;
+import static com.stefancooper.EasyUHC.base.ConfigKey.EVOLVING_SHIELDS_MINECRAFT_EXP_MULTIPLIER;
 import static com.stefancooper.EasyUHC.evolvingshield.EvolvingShieldUpgradeMenu.calculateUpgradeAvailable;
 
 public class EvolvingShield {
@@ -79,7 +80,7 @@ public class EvolvingShield {
         MANUAL
     }
 
-    private static int calculateXP(final EvolvingShieldXPType type, final int toAdd) {
+    private static int calculateXP(final EvolvingShieldXPType type, final int toAdd, final int mcMultiplier) {
         return switch (type) {
             case KILL:
                 yield 250;
@@ -90,7 +91,7 @@ public class EvolvingShield {
             case DAMAGE_HEARTS:
                 yield toAdd * 100;
             case EXPERIENCE:
-                yield toAdd * 4;
+                yield toAdd * mcMultiplier;
             case MANUAL:
                 yield toAdd;
         };
@@ -215,8 +216,9 @@ public class EvolvingShield {
         final NamespacedKey xpKey = config.getManagedResources().getKeys().getEvolvingShieldXPKey();
         final NamespacedKey currentUpgradeStageKey = config.getManagedResources().getKeys().getEvolvingShieldUpgradeStageKey();
         final ItemMeta shieldMeta = shield.getItemMeta();
+        final int mcMultiplier = config.getProperty(EVOLVING_SHIELDS_MINECRAFT_EXP_MULTIPLIER, Defaults.EVOLVING_SHIELDS_MINECRAFT_EXP_MULTIPLIER);
         final int currentXP = shieldMeta.getPersistentDataContainer().get(xpKey, PersistentDataType.INTEGER);
-        final int xpToAdd = calculateXP(type, xpBeforeCalculation);
+        final int xpToAdd = calculateXP(type, xpBeforeCalculation, mcMultiplier);
         final int expLimit = config.getProperty(EVOLVING_SHIELDS_EXP_THRESHOLD, Defaults.EVOLVING_SHIELDS_EXP_THRESHOLD);
 
         final int updatedXP;

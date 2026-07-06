@@ -27,6 +27,16 @@ This defaults to -1 (no limit for minecraft XP)
 
 `/uhc set evolving.shields.exp.threshold=2000`
 
+### Set minecraft exp multiplier
+
+Set the experience multiplier for minecraft experience earned.
+
+You can use this to allow faster initial progression.
+
+This defaults to 4.
+
+`/uhc set evolving.shields.minecraft.exp.multiplier=4`
+
 ## What is an evolving shield?
 
 On UHC start, each player will be given a unique shield to them. They cannot drop, destroy or lose the shield in any way.
@@ -43,11 +53,11 @@ As references in the prior section, levelling up your shield can be done in one 
 
 ### Gaining minecraft XP
 
-Gaining minecraft XP will level up the shield (up to and including the `evolving.shields.exp.threshold` config value).
+Gaining minecraft XP will level up the shield (up to and including the [threshold](#set-experience---damage-threshold) config value).
 
-Every `n` minecraft XP equals `n * 4` EXP for the shield.
+Every "n" minecraft XP equals "n * [multiplier](#set-minecraft-exp-multiplier)" EXP for the shield.
 
-What this means in real-world terms is (for example):
+What this means in real-world terms is (for example, if the [multiplier](#set-minecraft-exp-multiplier) is set to `4`):
 
 - Killing a chicken: 4-9 EXP
 - Killing a creeper: 24-32 EXP

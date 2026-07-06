@@ -79,7 +79,8 @@ public enum ConfigKey {
 
     // Evolving Shields
     ENABLE_EVOLVING_SHIELDS("enable.evolving.shields"), // enable evolving shields
-    EVOLVING_SHIELDS_EXP_THRESHOLD("evolving.shields.exp.threshold") // threshold in which you will require to do player damage to continue upgrading your shield
+    EVOLVING_SHIELDS_EXP_THRESHOLD("evolving.shields.exp.threshold"), // threshold in which you will require to do player damage to continue upgrading your shield
+    EVOLVING_SHIELDS_MINECRAFT_EXP_MULTIPLIER("evolving.shields.minecraft.exp.multiplier") // multiplier for regular minecraft exp
 
     ;
 

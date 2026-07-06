@@ -88,6 +88,7 @@ public class Defaults {
     // Evolving shields
     public static boolean ENABLE_EVOLVING_SHIELDS = false;
     public static int EVOLVING_SHIELDS_EXP_THRESHOLD = -1;
+    public static int EVOLVING_SHIELDS_MINECRAFT_EXP_MULTIPLIER = 4;
 
     /* -- End of defaults -- */
 

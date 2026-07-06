@@ -33,6 +33,7 @@ import static com.stefancooper.EasyUHC.base.ConfigKey.ENABLE_EVOLVING_SHIELDS;
 import static com.stefancooper.EasyUHC.base.ConfigKey.ENABLE_PERFORMANCE_TRACKING;
 import static com.stefancooper.EasyUHC.base.ConfigKey.ENABLE_TIMESTAMPS;
 import static com.stefancooper.EasyUHC.base.ConfigKey.EVOLVING_SHIELDS_EXP_THRESHOLD;
+import static com.stefancooper.EasyUHC.base.ConfigKey.EVOLVING_SHIELDS_MINECRAFT_EXP_MULTIPLIER;
 import static com.stefancooper.EasyUHC.base.ConfigKey.GRACE_PERIOD_TIMER;
 import static com.stefancooper.EasyUHC.base.ConfigKey.LOOT_CHEST_ENABLED;
 import static com.stefancooper.EasyUHC.base.ConfigKey.LOOT_CHEST_GRACE_PERIOD;
@@ -163,6 +164,7 @@ public class ConfigParser {
             // Evolving shields
             case ENABLE_EVOLVING_SHIELDS -> new Configurable<>(ENABLE_EVOLVING_SHIELDS, Boolean.parseBoolean(value));
             case EVOLVING_SHIELDS_EXP_THRESHOLD -> new Configurable<>(EVOLVING_SHIELDS_EXP_THRESHOLD, Integer.valueOf(value));
+            case EVOLVING_SHIELDS_MINECRAFT_EXP_MULTIPLIER -> new Configurable<>(EVOLVING_SHIELDS_MINECRAFT_EXP_MULTIPLIER, Integer.parseInt(value));
             case null -> null;
         };
     }
