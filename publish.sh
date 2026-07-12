@@ -24,3 +24,6 @@ curl --fail-with-body \
   -F "file1=@${PLUGIN_LOCATION}" \
   "${DISCORD_WEBHOOK}"
 
+git checkout "${COMMIT_SHA}"
+git tag "${PLUGIN_VERSION}"
+git push origin --tags
