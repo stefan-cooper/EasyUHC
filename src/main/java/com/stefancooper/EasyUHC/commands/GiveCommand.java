@@ -18,7 +18,8 @@ public class GiveCommand extends AbstractCommand {
     public static final String SHIELD_XP = "shieldxp";
 
     private enum Giveable {
-        SHIELD_XP("shieldxp");
+        SHIELD_XP("shieldxp"),
+        SHIELD("shield");
 
         public final String giveable;
 
@@ -46,44 +47,64 @@ public class GiveCommand extends AbstractCommand {
     public void execute() {
 
         final Giveable giveable = Giveable.fromString(getArgs()[0]);
-        if (giveable == null || getArgs().length < 2) {
+        if (giveable == null) {
             getConfig().getPlugin().getLogger().log(Level.WARNING, "Invalid giveable: " + getArgs()[0]);
             getSender().sendMessage("Invalid giveable: " + getArgs()[0]);
         }
         try {
             switch (giveable) {
                 case SHIELD_XP -> {
+                    if (getArgs().length < 2) {
+                        getConfig().getPlugin().getLogger().log(Level.WARNING, "Invalid shield XP give. No XP provided");
+                        getSender().sendMessage("Invalid shield XP give. No XP provided");
+                    }
                     final int total = Integer.parseInt(getArgs()[1]);
                     if (getArgs().length == 2) {
                         final Player sender = Bukkit.getPlayer(getSender().getName());
                         final Optional<ItemStack> getShield = EvolvingShield.getEvolvingShieldFromPlayer(getConfig(), sender);
-                        if (getShield.isPresent()) {
-                            final ItemStack shield = getShield.get();
-                            EvolvingShield.updateXP(
-                                    getConfig(),
-                                    shield,
-                                    sender,
-                                    total,
-                                    EvolvingShield.EvolvingShieldXPType.MANUAL
-                            );
-                        }
+                        getShield.ifPresent(shield -> EvolvingShield.updateXP(
+                                getConfig(),
+                                shield,
+                                sender,
+                                total,
+                                EvolvingShield.EvolvingShieldXPType.MANUAL
+                        ));
                     } else {
                         for (int i = 2; i < getArgs().length; i++) {
                             final Player player = Bukkit.getPlayer(getArgs()[i]);
                             final Optional<ItemStack> getShield = EvolvingShield.getEvolvingShieldFromPlayer(getConfig(), player);
-                            if (getShield.isPresent()) {
-                                final ItemStack shield = getShield.get();
-                                EvolvingShield.updateXP(
-                                        getConfig(),
-                                        shield,
-                                        player,
-                                        total,
-                                        EvolvingShield.EvolvingShieldXPType.MANUAL
-                                );
+                            getShield.ifPresent(shield -> EvolvingShield.updateXP(
+                                    getConfig(),
+                                    shield,
+                                    player,
+                                    total,
+                                    EvolvingShield.EvolvingShieldXPType.MANUAL
+                            ));
+                        }
+                    }
+                }
+                case SHIELD -> {
+                    if (getArgs().length == 1) {
+                        final Player sender = Bukkit.getPlayer(getSender().getName());
+                        final Optional<ItemStack> getShield = EvolvingShield.getEvolvingShieldFromPlayer(getConfig(), sender);
+                        if (getShield.isEmpty()) {
+                            EvolvingShield.createEvolvingShield(getConfig(), sender);
+                        } else {
+                            getConfig().getPlugin().getLogger().log(Level.WARNING, "Not giving " + sender.getName() + " an evolving shield, as they already have one");
+                            getSender().sendMessage("Not giving " + sender.getName() + " an evolving shield, as they already have one");
+                        }
+                    } else {
+                        for (int i = 1; i < getArgs().length; i++) {
+                            final Player player = Bukkit.getPlayer(getArgs()[i]);
+                            final Optional<ItemStack> getShield = EvolvingShield.getEvolvingShieldFromPlayer(getConfig(), player);
+                            if (getShield.isEmpty()) {
+                                EvolvingShield.createEvolvingShield(getConfig(), player);
+                            } else {
+                                getConfig().getPlugin().getLogger().log(Level.WARNING, "Not giving " + player.getName() + " an evolving shield, as they already have one");
+                                getSender().sendMessage("Not giving " + player.getName() + " an evolving shield, as they already have one");
                             }
                         }
                     }
-
                 }
             }
         } catch (Exception e) {
