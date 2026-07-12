@@ -56,7 +56,7 @@
     <dependency>
       <groupId>io.papermc.paper</groupId>
       <artifactId>paper-api</artifactId>
-      <version>[26.1.2.build,)</version>
+      <version>26.1.2.build.72-stable</version>
       <scope>provided</scope>
       <exclusions>
         <exclusion>
@@ -100,11 +100,11 @@
           <groupId>org.apache.maven</groupId>
         </exclusion>
         <exclusion>
-          <artifactId>adventure-api</artifactId>
-          <groupId>net.kyori</groupId>
+          <artifactId>jspecify</artifactId>
+          <groupId>org.jspecify</groupId>
         </exclusion>
         <exclusion>
-          <artifactId>adventure-key</artifactId>
+          <artifactId>adventure-api</artifactId>
           <groupId>net.kyori</groupId>
         </exclusion>
         <exclusion>
@@ -126,10 +126,6 @@
         <exclusion>
           <artifactId>adventure-text-logger-slf4j</artifactId>
           <groupId>net.kyori</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>jspecify</artifactId>
-          <groupId>org.jspecify</groupId>
         </exclusion>
         <exclusion>
           <artifactId>checker-qual</artifactId>
@@ -168,7 +164,7 @@
     <dependency>
       <groupId>org.mockbukkit.mockbukkit</groupId>
       <artifactId>mockbukkit-v26.1.2</artifactId>
-      <version>4.113.3</version>
+      <version>4.114.0</version>
       <scope>test</scope>
       <exclusions>
         <exclusion>
@@ -240,7 +236,7 @@
   <properties>
     <maven.compiler.target>25</maven.compiler.target>
     <maven.compiler.source>25</maven.compiler.source>
-    <UHCPlugin.version>11.1.3</UHCPlugin.version>
+    <UHCPlugin.version>11.1.4</UHCPlugin.version>
   </properties>
 </project>
 

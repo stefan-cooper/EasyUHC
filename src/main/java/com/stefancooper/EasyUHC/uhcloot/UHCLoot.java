@@ -34,7 +34,7 @@ import static com.stefancooper.EasyUHC.base.ConfigKey.LOOT_CHEST_Z_RANGE;
 
 public class UHCLoot {
 
-    private static List<Material> lowTier = List.of(
+    private static final List<Material> lowTier = List.of(
             Material.APPLE,
             Material.IRON_INGOT,
             Material.STRING,
@@ -58,7 +58,7 @@ public class UHCLoot {
             Material.PUFFERFISH
     );
 
-    private static List<Material> midTier = List.of(
+    private static final List<Material> midTier = List.of(
             Material.TNT,
             Material.SPYGLASS,
             Material.DIAMOND,
@@ -78,7 +78,6 @@ public class UHCLoot {
             Material.SPLASH_POTION,
             Material.DRIED_GHAST,
             Material.HORSE_SPAWN_EGG,
-            Material.END_CRYSTAL,
             Material.GOLDEN_SWORD
     );
 
@@ -91,10 +90,9 @@ public class UHCLoot {
             Material.DIAMOND_BLOCK,
             Material.TRIDENT,
             Material.POTION,
-            Material.SPLASH_POTION
+            Material.SPLASH_POTION,
+            Material.END_CRYSTAL
     );
-
-
 
     public UHCLoot(final Config config) {
         if (!UHCLoot.isConfigured(config)) return;
