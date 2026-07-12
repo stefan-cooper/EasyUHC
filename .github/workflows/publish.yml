@@ -7,6 +7,7 @@ on:
 
 env:
   DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+  GITHUB_PAT: ${{ secrets.GITHUB_PAT }}
   COMMIT_MSG: ${{ github.event.head_commit.message }}
   COMMIT_SHA: ${{ github.event.after }}
 
@@ -15,7 +16,7 @@ jobs:
 
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       packages: write
 
     steps:

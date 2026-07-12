@@ -60,7 +60,11 @@ public class UHCCommandTabCompleter  {
         }
 
         else if (args.length == 2 && args[0].equalsIgnoreCase("give")) {
-           suggestions.add("shieldxp");
+           suggestions.addAll(List.of("shieldxp", "shield"));
+        }
+
+        else if (args.length >= 3 && args[0].equalsIgnoreCase("give") && args[1].equalsIgnoreCase("shield")) {
+            Bukkit.getOnlinePlayers().forEach(player -> suggestions.add(player.getName()));
         }
 
         else if (args.length >= 4 && args[0].equalsIgnoreCase("give") && args[1].equalsIgnoreCase("shieldxp")) {
