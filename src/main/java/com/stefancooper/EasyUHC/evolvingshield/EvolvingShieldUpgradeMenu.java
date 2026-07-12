@@ -63,32 +63,39 @@ public class EvolvingShieldUpgradeMenu {
 
             switch (stage) {
                 case 0:
-                    inv.setItem(10, createUpgradeItem(
+                    inv.setItem(9, createUpgradeItem(
                             Material.COOKED_BEEF,
                             "§6Steak",
                             "§7Some food (x32) to get you started",
                             Constants.FOOD,
                             false
                     ));
-                    inv.setItem(12, createUpgradeItem(
+                    inv.setItem(11, createUpgradeItem(
                             Material.BOOK,
                             "§6Book",
                             "§7Some books (x4) for your future enchantment table ;o",
                             Constants.BOOKS,
                             false
                     ));
-                    inv.setItem(14, createUpgradeItem(
+                    inv.setItem(13, createUpgradeItem(
                             Material.APPLE,
                             "§6Apples",
                             "§7Don't go punching leaves and take these apples (x4)",
                             Constants.APPLES,
                             false
                     ));
-                    inv.setItem(16, createUpgradeItem(
+                    inv.setItem(15, createUpgradeItem(
                             Material.IRON_INGOT,
                             "§6Iron Ingots",
                             "§7Enough ingots (x12) for some armour, or tools? Use it wisely.",
                             Constants.IRON,
+                            false
+                    ));
+                    inv.setItem(17, createUpgradeItem(
+                            Material.COAL,
+                            "§6Coal",
+                            "§7Enough coal (x64) to light those caves up.",
+                            Constants.COAL,
                             false
                     ));
                     break;
@@ -410,6 +417,9 @@ public class EvolvingShieldUpgradeMenu {
                     break;
                 case Constants.APPLES:
                     player.give(new ItemStack(Material.APPLE, 4));
+                    break;
+                case Constants.COAL:
+                    player.give(new ItemStack(Material.COAL, 64));
                     break;
                 case Constants.IRON:
                     player.give(new ItemStack(Material.IRON_INGOT, 12));

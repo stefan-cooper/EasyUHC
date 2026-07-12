@@ -11,6 +11,7 @@ public class Constants {
     public static final String BOOKS = "books";
     public static final String APPLES = "apples";
     public static final String IRON = "iron";
+    public static final String COAL = "coal";
 
     // Kits
     public static final String REAPER_KIT = "reaper_kit";
