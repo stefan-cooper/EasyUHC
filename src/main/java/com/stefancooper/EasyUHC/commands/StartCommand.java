@@ -119,6 +119,7 @@ public class StartCommand extends AbstractCommand {
             player.addPotionEffect(PotionEffectType.MINING_FATIGUE.createEffect((int) Utils.secondsToTicks(countdownTimer), 3));
             player.addPotionEffect(PotionEffectType.REGENERATION.createEffect((int) Utils.secondsToTicks(countdownTimer) + (int) Utils.secondsToTicks(30), 3));
             player.addPotionEffect(PotionEffectType.FIRE_RESISTANCE.createEffect((int) Utils.secondsToTicks(countdownTimer) + (int) Utils.secondsToTicks(30), 3));
+            player.addPotionEffect(PotionEffectType.WATER_BREATHING.createEffect((int) Utils.secondsToTicks(countdownTimer) + (int) Utils.secondsToTicks(30), 3));
             if (getConfig().getProperty(RANDOM_FINAL_LOCATION, Defaults.RANDOM_FINAL_LOCATION)) {
                 player.getInventory().addItem(RandomFinalLocation.generateWorldCenterCompass());
                 player.setCompassTarget(world.getWorldBorder().getCenter());

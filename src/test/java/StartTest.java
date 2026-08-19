@@ -245,6 +245,7 @@ public class StartTest {
             assertEquals(3, player.getPotionEffect(PotionEffectType.MINING_FATIGUE).getAmplifier());
             assertEquals(3, player.getPotionEffect(PotionEffectType.REGENERATION).getAmplifier());
             assertEquals(3, player.getPotionEffect(PotionEffectType.FIRE_RESISTANCE).getAmplifier());
+            assertEquals(3, player.getPotionEffect(PotionEffectType.WATER_BREATHING).getAmplifier());
         });
 
         admin.assertSaid(Component.text("UHC: Countdown starting now. Don't forget to record your POV if you can. GLHF!", Style.style(NamedTextColor.GRAY, TextDecoration.ITALIC)));
@@ -257,6 +258,7 @@ public class StartTest {
             assertNull(player.getPotionEffect(PotionEffectType.MINING_FATIGUE));
             assertEquals(3, player.getPotionEffect(PotionEffectType.REGENERATION).getAmplifier());
             assertEquals(3, player.getPotionEffect(PotionEffectType.FIRE_RESISTANCE).getAmplifier());
+            assertEquals(3, player.getPotionEffect(PotionEffectType.WATER_BREATHING).getAmplifier());
         });
         assertWorldValues((world) -> {
             assertEquals(0, world.getWorldBorder().getDamageAmount());
@@ -275,6 +277,7 @@ public class StartTest {
             assertNull(player.getPotionEffect(PotionEffectType.MINING_FATIGUE));
             assertEquals(3, player.getPotionEffect(PotionEffectType.REGENERATION).getAmplifier());
             assertEquals(3, player.getPotionEffect(PotionEffectType.FIRE_RESISTANCE).getAmplifier());
+            assertEquals(3, player.getPotionEffect(PotionEffectType.WATER_BREATHING).getAmplifier());
         });
         assertWorldValues((world) -> {
             assertEquals(0, world.getWorldBorder().getDamageAmount());
@@ -292,6 +295,7 @@ public class StartTest {
             assertNull(player.getPotionEffect(PotionEffectType.MINING_FATIGUE));
             assertNull(player.getPotionEffect(PotionEffectType.REGENERATION));
             assertNull(player.getPotionEffect(PotionEffectType.FIRE_RESISTANCE));
+            assertNull(player.getPotionEffect(PotionEffectType.WATER_BREATHING));
         });
         assertWorldValues((world) -> {
             assertEquals(0.2, world.getWorldBorder().getDamageAmount());
@@ -308,6 +312,7 @@ public class StartTest {
             assertNull(player.getPotionEffect(PotionEffectType.MINING_FATIGUE));
             assertNull(player.getPotionEffect(PotionEffectType.REGENERATION));
             assertNull(player.getPotionEffect(PotionEffectType.FIRE_RESISTANCE));
+            assertNull(player.getPotionEffect(PotionEffectType.WATER_BREATHING));
         });
         assertWorldValues((world) -> {
             assertEquals(0.2, world.getWorldBorder().getDamageAmount());
