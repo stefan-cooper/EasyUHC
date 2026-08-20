@@ -54,7 +54,7 @@ public class WinEvents implements Listener {
             }
 
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                onlinePlayer.sendTitle(NamedTextColor.GOLD + "Congratulations to Team " + winningTeamName + "!", "GG " + formattedWinningMembers + "!", 10, 100, 10);
+                onlinePlayer.showTitle(Title.title(Component.text("Congratulations to Team " + winningTeamName + "!", NamedTextColor.GOLD), Component.text("GG " + formattedWinningMembers + "!"),  10, 100, 10));
             }
 
             // cancel timers that might have been running
