@@ -53,7 +53,7 @@
     </build>
 
     <properties>
-        <UHCPlugin.version>11.2.2</UHCPlugin.version>
+        <UHCPlugin.version>11.2.3</UHCPlugin.version>
         <maven.compiler.source>25</maven.compiler.source>
         <maven.compiler.target>25</maven.compiler.target>
     </properties>
