@@ -1,9 +1,7 @@
 package com.stefancooper.EasyUHC.evolvingshield;
 
 import com.stefancooper.EasyUHC.Config;
-import com.stefancooper.EasyUHC.Defaults;
 import com.stefancooper.EasyUHC.base.PerformanceTrackingEvent;
-import com.stefancooper.EasyUHC.base.Utils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.Style;
@@ -28,11 +26,12 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Level;
 
-import static com.stefancooper.EasyUHC.base.ConfigKey.ENABLE_TIMESTAMPS;
 import static com.stefancooper.EasyUHC.evolvingshield.EvolvingShield.STAGE_1;
 import static com.stefancooper.EasyUHC.evolvingshield.EvolvingShield.STAGE_10;
 import static com.stefancooper.EasyUHC.evolvingshield.EvolvingShield.STAGE_11;
@@ -59,7 +58,7 @@ public class EvolvingShieldUpgradeMenu {
             final NamespacedKey stageKey = config.getManagedResources().getKeys().getEvolvingShieldUpgradeStageKey();
             final ItemMeta shieldMeta = shield.get().getItemMeta();
             final int stage = shieldMeta.getPersistentDataContainer().get(stageKey, PersistentDataType.INTEGER);
-            final Inventory inv = Bukkit.createInventory(null, 27, "§8Select your upgrade!");
+            final Inventory inv = Bukkit.createInventory(null, 45, "§8Select your upgrade!");
 
             switch (stage) {
                 case 0:
@@ -67,51 +66,92 @@ public class EvolvingShieldUpgradeMenu {
                             Material.COOKED_BEEF,
                             "§6Steak",
                             "§7Some food (x32) to get you started",
-                            Constants.FOOD,
+                            EvolvingShieldUpgradeType.FOOD,
                             false
                     ));
                     inv.setItem(11, createUpgradeItem(
                             Material.BOOK,
                             "§6Book",
                             "§7Some books (x4) for your future enchantment table ;o",
-                            Constants.BOOKS,
+                            EvolvingShieldUpgradeType.BOOKS,
                             false
                     ));
                     inv.setItem(13, createUpgradeItem(
                             Material.APPLE,
                             "§6Apples",
                             "§7Don't go punching leaves and take these apples (x4)",
-                            Constants.APPLES,
+                            EvolvingShieldUpgradeType.APPLES,
                             false
                     ));
                     inv.setItem(15, createUpgradeItem(
                             Material.IRON_INGOT,
                             "§6Iron Ingots",
                             "§7Enough ingots (x12) for some armour, or tools? Use it wisely.",
-                            Constants.IRON,
+                            EvolvingShieldUpgradeType.IRON,
                             false
                     ));
                     inv.setItem(17, createUpgradeItem(
                             Material.COAL,
                             "§6Coal",
                             "§7Enough coal (x64) to light those caves up.",
-                            Constants.COAL,
+                            EvolvingShieldUpgradeType.COAL,
                             false
                     ));
-                    break;
-                case 1:
-                    inv.setItem(12, createUpgradeItem(
+                    inv.setItem(28, createUpgradeItem(
+                            Material.ICE,
+                            "§6Swift Defense",
+                            "§7Apply Swift Defense to your shield. Chance of gaining swiftness after blocking an attack (1/16)",
+                            EvolvingShieldUpgradeType.SWIFTNESS
+                    ));
+                    inv.setItem(30, createUpgradeItem(
                             Material.PISTON,
                             "§6Knockback",
                             "§7Apply Knockback to your shield. Blocked attacks will knock your attacker away.",
-                            Constants.KNOCKBACK
+                            EvolvingShieldUpgradeType.KNOCKBACK
                     ));
-
-                    inv.setItem(14, createUpgradeItem(
+                    inv.setItem(32, createUpgradeItem(
                             Material.CACTUS,
                             "§6Thorns",
                             "§7Apply Thorns to your shield. Blocked attacks will deal damage to your attacker.",
-                            Constants.THORNS
+                            EvolvingShieldUpgradeType.THORNS
+                    ));
+                    inv.setItem(34, createUpgradeItem(
+                            Material.PARROT_SPAWN_EGG,
+                            "§6Jester",
+                            "§7A random upgrade or enchantment across.",
+                            EvolvingShieldUpgradeType.JESTER
+                    ));
+                    break;
+                case 1:
+                    inv.setItem(11, createUpgradeItem(
+                            Material.PISTON,
+                            "§6Knockback",
+                            "§7Upgrade or add Knockback to your shield. Blocked attacks will knock your attacker away.",
+                            EvolvingShieldUpgradeType.KNOCKBACK
+                    ));
+                    inv.setItem(13, createUpgradeItem(
+                            Material.CACTUS,
+                            "§6Thorns",
+                            "§7Upgrade or add Knockback to your shield. Blocked attacks will knock your attacker away.",
+                            EvolvingShieldUpgradeType.THORNS
+                    ));
+                    inv.setItem(15, createUpgradeItem(
+                            Material.RABBIT_FOOT,
+                            "§6Leap Guard",
+                            "§7Apply Leap Guard to your shield. Chance of gaining jump boost after blocking an attack (1/8)",
+                            EvolvingShieldUpgradeType.JUMP
+                    ));
+                    inv.setItem(30, createUpgradeItem(
+                            Material.DIAMOND_SWORD,
+                            "§6Counterforce",
+                            "§7Apply Counterforce to your shield. Chance of gaining strength after blocking an attack (1/24)",
+                            EvolvingShieldUpgradeType.STRENGTH
+                    ));
+                    inv.setItem(32, createUpgradeItem(
+                            Material.PARROT_SPAWN_EGG,
+                            "§6Jester",
+                            "§7A random upgrade or enchantment across.",
+                            EvolvingShieldUpgradeType.JESTER
                     ));
                     break;
                 case 2:
@@ -119,19 +159,25 @@ public class EvolvingShieldUpgradeMenu {
                             Material.GOLDEN_APPLE,
                             "§6Absorption",
                             "§7Gain permanent Absorption (2 extra hearts)",
-                            Constants.ABSORPTION
+                            EvolvingShieldUpgradeType.ABSORPTION
                     ));
                     inv.setItem(13, createUpgradeItem(
                             Material.POTION,
                             "§6Regenerate 4 hearts",
                             "§7Immediately regenerate 4 hearts.",
-                            Constants.REGEN
+                            EvolvingShieldUpgradeType.REGEN
                     ));
                     inv.setItem(15, createUpgradeItem(
                             Material.PLAYER_HEAD,
                             "§6Player Head",
                             "§7Gain a player head for you to use at your own discretion ;o",
-                            Constants.PLAYER_HEAD
+                            EvolvingShieldUpgradeType.PLAYER_HEAD
+                    ));
+                    inv.setItem(31, createUpgradeItem(
+                            Material.PARROT_SPAWN_EGG,
+                            "§6Jester",
+                            "§7A random upgrade or enchantment across.",
+                            EvolvingShieldUpgradeType.JESTER
                     ));
                     break;
                 case 3:
@@ -139,159 +185,155 @@ public class EvolvingShieldUpgradeMenu {
                             Material.ARROW,
                             "§6Arrows",
                             "§7Gain some arrows (x18)",
-                            Constants.ARROWS,
+                            EvolvingShieldUpgradeType.ARROWS,
                             false
                     ));
                     inv.setItem(13, createUpgradeItem(
                             Material.SPECTRAL_ARROW,
                             "§6Spectral arrows",
                             "§7Gain some spectral arrows (x12)",
-                            Constants.ARROWS_SPECTRAL,
+                            EvolvingShieldUpgradeType.ARROWS_SPECTRAL,
                             false
                     ));
                     inv.setItem(15, createUpgradeItem(
                             Material.ARROW,
                             "§6Tipped Arrows",
                             "§7Gain some very powerful arrows (x3)",
-                            Constants.ARROWS_TIPPED,
+                            EvolvingShieldUpgradeType.ARROWS_TIPPED,
                             true
+                    ));
+                    inv.setItem(30, createUpgradeItem(
+                            Material.WOODEN_SWORD,
+                            "§6Sapping Guard",
+                            "§7Apply Sapping Guard to your shield. Chance of giving weakness after blocking an attack (1/16)",
+                            EvolvingShieldUpgradeType.WEAKNESS
+                    ));
+                    inv.setItem(32, createUpgradeItem(
+                            Material.PARROT_SPAWN_EGG,
+                            "§6Jester",
+                            "§7A random upgrade or enchantment across.",
+                            EvolvingShieldUpgradeType.JESTER
                     ));
                     break;
                 case 4:
                     inv.setItem(11, createUpgradeItem(
-                            Material.ICE,
-                            "§6Swift Defense",
-                            "§7Apply Swift Defense to your shield. Chance of gaining swiftness after blocking an attack (1/16)",
-                            Constants.SWIFTNESS
-                    ));
-
-                    inv.setItem(13, createUpgradeItem(
-                            Material.RABBIT_FOOT,
-                            "§6Leap Guard",
-                            "§7Apply Leap Guard to your shield. Chance of gaining jump boost after blocking an attack (1/8)",
-                            Constants.JUMP
-                    ));
-                    inv.setItem(15, createUpgradeItem(
-                            Material.DIAMOND_SWORD,
-                            "§6Counterforce",
-                            "§7Apply Counterforce to your shield. Chance of gaining strength after blocking an attack (1/24)",
-                            Constants.STRENGTH
-                    ));
-                    break;
-                case 5:
-                    inv.setItem(12, createUpgradeItem(
-                            Material.WOODEN_SWORD,
-                            "§6Sapping Guard",
-                            "§7Apply Sapping Guard to your shield. Chance of giving weakness after blocking an attack (1/16)",
-                            Constants.WEAKNESS
-                    ));
-
-                    inv.setItem(14, createUpgradeItem(
-                            Material.SOUL_SAND,
-                            "§6Snare Guard",
-                            "§7Apply Snare Guard to your shield. Chance of giving slowness after blocking an attack (1/8)",
-                            Constants.SLOWNESS
-                    ));
-                    break;
-                case 6:
-                    inv.setItem(12, createUpgradeItem(
-                            Material.PISTON,
-                            "§6Knockback",
-                            "§7Upgrade or add Knockback to your shield. Blocked attacks will knock your attacker away.",
-                            Constants.KNOCKBACK
-                    ));
-
-                    inv.setItem(14, createUpgradeItem(
-                            Material.CACTUS,
-                            "§6Thorns",
-                            "§7Upgrade or add Thorns to your shield. Blocked attacks will deal damage to your attacker.",
-                            Constants.THORNS
-                    ));
-                    break;
-                case 7:
-                    inv.setItem(11, createUpgradeItem(
                             Material.OBSIDIAN,
                             "§6Nether Explorer Kit",
                             "§7Gain the Nether Explorer kit",
-                            Constants.NETHER_EXPLORER_KIT,
+                            EvolvingShieldUpgradeType.NETHER_EXPLORER_KIT,
                             true
                     ));
                     inv.setItem(13, createUpgradeItem(
                             Material.BREWING_STAND,
                             "§6Apothecary Kit",
                             "§7Gain the Apothecary kit",
-                            Constants.APOTHECARY_KIT,
+                            EvolvingShieldUpgradeType.APOTHECARY_KIT,
                             true
                     ));
                     inv.setItem(15, createUpgradeItem(
                             Material.BOOK,
                             "§6Librarians Kit",
                             "§7Gain the Librarian kit",
-                            Constants.LIBRARIAN_KIT,
+                            EvolvingShieldUpgradeType.LIBRARIAN_KIT,
                             true
                     ));
+                    inv.setItem(30, createUpgradeItem(
+                            Material.SOUL_SAND,
+                            "§6Snare Guard",
+                            "§7Apply Snare Guard to your shield. Chance of giving slowness after blocking an attack (1/8)",
+                            EvolvingShieldUpgradeType.SLOWNESS
+                    ));
+                    inv.setItem(32, createUpgradeItem(
+                            Material.PARROT_SPAWN_EGG,
+                            "§6Jester",
+                            "§7A random upgrade or enchantment across.",
+                            EvolvingShieldUpgradeType.JESTER
+                    ));
                     break;
-                case 8:
+                case 5:
                     inv.setItem(11, createUpgradeItem(
                             Material.TNT,
                             "§6Fast TNT",
                             "§7Gain a fast exploding TNT (Quickboom IV)",
-                            Constants.FAST_TNT
+                            EvolvingShieldUpgradeType.FAST_TNT
                     ));
                     inv.setItem(13, createUpgradeItem(
                             Material.TNT,
                             "§6Powerful TNT",
                             "§7Gain an extremely powerful TNT (Blastwave IV)",
-                            Constants.BIG_TNT
+                            EvolvingShieldUpgradeType.BIG_TNT
                     ));
                     inv.setItem(15, createUpgradeItem(
                             Material.TNT,
                             "§6Mixed Enchanted TNT",
                             "§7Gain an enchanted TNT with a mix of enchantments (Blastwave II, Quickboom II)",
-                            Constants.MIXED_TNT
+                            EvolvingShieldUpgradeType.MIXED_TNT
+                    ));
+                    inv.setItem(30, createUpgradeItem(
+                            Material.CACTUS,
+                            "§6Thorns",
+                            "§7Upgrade or add Knockback to your shield. Blocked attacks will knock your attacker away.",
+                            EvolvingShieldUpgradeType.THORNS
+                    ));
+                    inv.setItem(32, createUpgradeItem(
+                            Material.PARROT_SPAWN_EGG,
+                            "§6Jester",
+                            "§7A random upgrade or enchantment across.",
+                            EvolvingShieldUpgradeType.JESTER
                     ));
                     break;
-                case 9:
+                case 6:
                     inv.setItem(10, createUpgradeItem(
                             Material.FIRE_CHARGE,
                             "§6Fire Elemental",
                             "§7Apply Fire Elemental to your shield. Blocking whilst sneaking will shoot a fire charge (60 second cooldown)",
-                            Constants.FIRE
+                            EvolvingShieldUpgradeType.FIRE
                     ));
-
                     inv.setItem(12, createUpgradeItem(
                             Material.LIGHTNING_ROD,
                             "§6Thunder Elemental",
                             "§7Apply Thunder Elemental to your shield. Blocking whilst sneaking will strike a thunderbolt on the block you're looking at. (60 second cooldown)",
-                            Constants.THUNDER
+                            EvolvingShieldUpgradeType.THUNDER
                     ));
                     inv.setItem(14, createUpgradeItem(
                             Material.WIND_CHARGE,
                             "§6Air Elemental",
                             "§7Apply Air Elemental to your shield. Blocking whilst sneaking will shoot a wind charge (30 second cooldown)",
-                            Constants.WIND
+                            EvolvingShieldUpgradeType.WIND
                     ));
                     inv.setItem(16, createUpgradeItem(
                             Material.WATER_BUCKET,
                             "§6Water Elemental",
                             "§7Apply Water Elemental to your shield. Blocking whilst sneaking will shoot a snowball that creates a bucket of water (10 second cooldown)",
-                            Constants.WATER
+                            EvolvingShieldUpgradeType.WATER
+                    ));
+                    inv.setItem(31, createUpgradeItem(
+                            Material.PARROT_SPAWN_EGG,
+                            "§6Jester",
+                            "§7A random upgrade or enchantment across.",
+                            EvolvingShieldUpgradeType.JESTER
                     ));
                     break;
-                case 10:
+                case 7:
                     inv.setItem(12, createUpgradeItem(
                             Material.NETHERITE_HOE,
                             "§6Reaper Form",
                             "§7Become the Reaper",
-                            Constants.REAPER_KIT,
+                            EvolvingShieldUpgradeType.REAPER_KIT,
                             true
                     ));
                     inv.setItem(14, createUpgradeItem(
                             Material.ELYTRA,
                             "§6Phoenix Form",
                             "§7Become the Phoenix",
-                            Constants.PHOENIX_KIT,
+                            EvolvingShieldUpgradeType.PHOENIX_KIT,
                             true
+                    ));
+                    inv.setItem(31, createUpgradeItem(
+                            Material.PARROT_SPAWN_EGG,
+                            "§6Jester",
+                            "§7A random upgrade or enchantment across.",
+                            EvolvingShieldUpgradeType.JESTER
                     ));
                     break;
             }
@@ -320,12 +362,12 @@ public class EvolvingShieldUpgradeMenu {
         return result;
     }
 
-    private ItemStack createUpgradeItem(final Material mat, final String name, final String desc, final String key, final boolean glint) {
+    private ItemStack createUpgradeItem(final Material mat, final String name, final String desc, final EvolvingShieldUpgradeType key, final boolean glint) {
         final ItemStack item = new ItemStack(mat);
         final ItemMeta meta = item.getItemMeta();
 
         meta.setEnchantmentGlintOverride(glint);
-        meta.getPersistentDataContainer().set(config.getManagedResources().getKeys().getEvolvingShieldUpgradeTypeKey(), PersistentDataType.STRING, key);
+        meta.getPersistentDataContainer().set(config.getManagedResources().getKeys().getEvolvingShieldUpgradeTypeKey(), PersistentDataType.STRING, key.getId());
         meta.setDisplayName(name);
 
         final List<Component> lore = splitStringForLore(desc);
@@ -336,12 +378,16 @@ public class EvolvingShieldUpgradeMenu {
         return item;
     }
 
-    private ItemStack createUpgradeItem(final Material mat, final String name, final String desc, final String key) {
+    private ItemStack createUpgradeItem(final Material mat, final String name, final String desc, final EvolvingShieldUpgradeType key) {
         return createUpgradeItem(mat, name, desc, key, true);
     }
 
     public static void applyUpgrade(final Config config, final Player player, final ItemStack selectedUpgrade) {
-        final String type = selectedUpgrade.getItemMeta().getPersistentDataContainer().get(config.getManagedResources().getKeys().getEvolvingShieldUpgradeTypeKey(), PersistentDataType.STRING);
+        final EvolvingShieldUpgradeType type = EvolvingShieldUpgradeType.fromString(selectedUpgrade.getItemMeta().getPersistentDataContainer().get(config.getManagedResources().getKeys().getEvolvingShieldUpgradeTypeKey(), PersistentDataType.STRING));
+        applyUpgrade(config, player, type);
+    }
+
+    public static void applyUpgrade(final Config config, final Player player, final EvolvingShieldUpgradeType type) {
         final NamespacedKey xpKey = config.getManagedResources().getKeys().getEvolvingShieldXPKey();
         final Optional<ItemStack> getShield = EvolvingShield.getEvolvingShieldFromPlayer(config, player);
 
@@ -349,7 +395,7 @@ public class EvolvingShieldUpgradeMenu {
             final ItemStack shield = getShield.get();
 
             switch (type) {
-                case Constants.THORNS:
+                case EvolvingShieldUpgradeType.THORNS:
                     if (shield.getEnchantmentLevel(Enchantment.THORNS) > 0) {
                         shield.addUnsafeEnchantment(Enchantment.THORNS, 2);
                     } else {
@@ -360,7 +406,7 @@ public class EvolvingShieldUpgradeMenu {
                             PatternType.TRIANGLES_TOP
                     ));
                     break;
-                case Constants.KNOCKBACK:
+                case EvolvingShieldUpgradeType.KNOCKBACK:
                     if (shield.getEnchantmentLevel(Enchantment.KNOCKBACK) > 0) {
                         shield.addUnsafeEnchantment(Enchantment.KNOCKBACK, 2);
                     } else {
@@ -370,61 +416,61 @@ public class EvolvingShieldUpgradeMenu {
                             PatternType.BORDER
                     ));
                     break;
-                case Constants.SWIFTNESS:
+                case EvolvingShieldUpgradeType.SWIFTNESS:
                     shield.addUnsafeEnchantment(config.getManagedResources().getShieldSwiftnessEnchantment(), 1);
                     break;
-                case Constants.STRENGTH:
+                case EvolvingShieldUpgradeType.STRENGTH:
                     shield.addUnsafeEnchantment(config.getManagedResources().getShieldStrengthEnchantment(), 1);
                     break;
-                case Constants.JUMP:
+                case EvolvingShieldUpgradeType.JUMP:
                     shield.addUnsafeEnchantment(config.getManagedResources().getShieldJumpEnchantment(), 1);
                     break;
-                case Constants.SLOWNESS:
+                case EvolvingShieldUpgradeType.SLOWNESS:
                     shield.addUnsafeEnchantment(config.getManagedResources().getShieldSlownessEnchantment(), 1);
                     break;
-                case Constants.WEAKNESS:
+                case EvolvingShieldUpgradeType.WEAKNESS:
                     shield.addUnsafeEnchantment(config.getManagedResources().getShieldWeaknessEnchantment(), 1);
                     break;
-                case Constants.FIRE:
+                case EvolvingShieldUpgradeType.FIRE:
                     shield.addUnsafeEnchantment(config.getManagedResources().getShieldFireEnchantment(), 1);
                     setShieldBanner(config, player, shield, List.of(
                             PatternType.FLOWER
                     ));
                     break;
-                case Constants.WIND:
+                case EvolvingShieldUpgradeType.WIND:
                     shield.addUnsafeEnchantment(config.getManagedResources().getShieldWindEnchantment(), 1);
                     setShieldBanner(config, player, shield, List.of(
                             PatternType.GUSTER
                     ));
                     break;
-                case Constants.WATER:
+                case EvolvingShieldUpgradeType.WATER:
                     shield.addUnsafeEnchantment(config.getManagedResources().getShieldWaterEnchantment(), 1);
                     setShieldBanner(config, player, shield, List.of(
                             PatternType.GLOBE
                     ));
                     break;
-                case Constants.THUNDER:
+                case EvolvingShieldUpgradeType.THUNDER:
                     shield.addUnsafeEnchantment(config.getManagedResources().getShieldThunderEnchantment(), 1);
                     setShieldBanner(config, player, shield, List.of(
                             PatternType.SKULL
                     ));
                     break;
-                case Constants.FOOD:
+                case EvolvingShieldUpgradeType.FOOD:
                     player.give(new ItemStack(Material.COOKED_BEEF, 32));
                     break;
-                case Constants.BOOKS:
+                case EvolvingShieldUpgradeType.BOOKS:
                     player.give(new ItemStack(Material.BOOK, 4));
                     break;
-                case Constants.APPLES:
+                case EvolvingShieldUpgradeType.APPLES:
                     player.give(new ItemStack(Material.APPLE, 4));
                     break;
-                case Constants.COAL:
+                case EvolvingShieldUpgradeType.COAL:
                     player.give(new ItemStack(Material.COAL, 64));
                     break;
-                case Constants.IRON:
+                case EvolvingShieldUpgradeType.IRON:
                     player.give(new ItemStack(Material.IRON_INGOT, 12));
                     break;
-                case Constants.PHOENIX_KIT:
+                case EvolvingShieldUpgradeType.PHOENIX_KIT:
                     player.give(new ItemStack(Material.FIREWORK_ROCKET, 8));
                     final ItemStack phoenixWings = new ItemStack(Material.ELYTRA, 1);
                     final ItemMeta phoenixWingsMeta = phoenixWings.getItemMeta();
@@ -446,7 +492,7 @@ public class EvolvingShieldUpgradeMenu {
                     phoenixSpear.addEnchantment(Enchantment.FIRE_ASPECT, 1);
                     player.give(phoenixSpear);
                     break;
-                case Constants.REAPER_KIT:
+                case EvolvingShieldUpgradeType.REAPER_KIT:
                     player.give(new ItemStack(Material.ENDER_PEARL, 2));
                     final ItemStack reaperArrows = new ItemStack(Material.TIPPED_ARROW, 4);
                     final PotionMeta reaperArrowsMeta = (PotionMeta) reaperArrows.getItemMeta();
@@ -478,7 +524,7 @@ public class EvolvingShieldUpgradeMenu {
                     player.give(reapersHoe);
 
                     break;
-                case Constants.APOTHECARY_KIT:
+                case EvolvingShieldUpgradeType.APOTHECARY_KIT:
                     final ItemStack waterBottle1 = new ItemStack(Material.POTION, 1);
                     final PotionMeta waterBottle1Meta = (PotionMeta) waterBottle1.getItemMeta();
                     waterBottle1Meta.setBasePotionType(PotionType.WATER);
@@ -499,7 +545,7 @@ public class EvolvingShieldUpgradeMenu {
                     player.give(waterBottle2);
                     player.give(waterBottle3);
                     break;
-                case Constants.LIBRARIAN_KIT:
+                case EvolvingShieldUpgradeType.LIBRARIAN_KIT:
                     final ItemStack knockbackBook = new ItemStack(Material.ENCHANTED_BOOK);
                     final EnchantmentStorageMeta knockbackBookMeta = (EnchantmentStorageMeta) knockbackBook.getItemMeta();
                     knockbackBookMeta.addStoredEnchant(Enchantment.KNOCKBACK, 2, true);
@@ -521,31 +567,31 @@ public class EvolvingShieldUpgradeMenu {
                     player.give(sharpnessBook);
                     player.give(protBook);
                     break;
-                case Constants.NETHER_EXPLORER_KIT:
+                case EvolvingShieldUpgradeType.NETHER_EXPLORER_KIT:
                     player.give(new ItemStack(Material.OBSIDIAN, 10));
                     player.give(new ItemStack(Material.GOLDEN_HELMET, 1));
                     player.give(new ItemStack(Material.FLINT_AND_STEEL, 1));
                     break;
-                case Constants.ARROWS:
+                case EvolvingShieldUpgradeType.ARROWS:
                     player.give(new ItemStack(Material.ARROW, 18));
                     break;
-                case Constants.ARROWS_SPECTRAL:
+                case EvolvingShieldUpgradeType.ARROWS_SPECTRAL:
                     player.give(new ItemStack(Material.SPECTRAL_ARROW, 12));
                     break;
-                case Constants.ARROWS_TIPPED:
+                case EvolvingShieldUpgradeType.ARROWS_TIPPED:
                     final ItemStack tippedArrow = new ItemStack(Material.TIPPED_ARROW, 3);
                     final PotionMeta tippedArrowMeta = (PotionMeta) tippedArrow.getItemMeta();
                     tippedArrowMeta.setBasePotionType(PotionType.STRONG_HARMING);
                     tippedArrow.setItemMeta(tippedArrowMeta);
                     player.give(tippedArrow);
                     break;
-                case Constants.PLAYER_HEAD:
+                case EvolvingShieldUpgradeType.PLAYER_HEAD:
                     player.give(new ItemStack(Material.PLAYER_HEAD, 1));
                     break;
-                case Constants.REGEN:
+                case EvolvingShieldUpgradeType.REGEN:
                     player.setHealth(Math.min(player.getHealth() + 8.0, player.getAttribute(Attribute.MAX_HEALTH).getValue()));
                     break;
-                case Constants.ABSORPTION:
+                case EvolvingShieldUpgradeType.ABSORPTION:
                     player.addPotionEffect(new PotionEffect(
                             PotionEffectType.ABSORPTION,
                             PotionEffect.INFINITE_DURATION,
@@ -555,22 +601,25 @@ public class EvolvingShieldUpgradeMenu {
                             false
                     ));
                     break;
-                case Constants.FAST_TNT:
+                case EvolvingShieldUpgradeType.FAST_TNT:
                     final ItemStack fastTnt = new ItemStack(Material.TNT);
                     fastTnt.addUnsafeEnchantment(config.getManagedResources().getQuickboomEnchantment(), 4);
                     player.give(fastTnt);
                     break;
-                case Constants.BIG_TNT:
+                case EvolvingShieldUpgradeType.BIG_TNT:
                     final ItemStack bigTnt = new ItemStack(Material.TNT);
                     bigTnt.addUnsafeEnchantment(config.getManagedResources().getBlastwaveEnchantment(), 4);
                     player.give(bigTnt);
                     break;
-                case Constants.MIXED_TNT:
+                case EvolvingShieldUpgradeType.MIXED_TNT:
                     final ItemStack mixedTnt = new ItemStack(Material.TNT);
                     mixedTnt.addUnsafeEnchantment(config.getManagedResources().getBlastwaveEnchantment(), 2);
                     mixedTnt.addUnsafeEnchantment(config.getManagedResources().getQuickboomEnchantment(), 2);
                     player.give(mixedTnt);
                     break;
+                case EvolvingShieldUpgradeType.JESTER:
+                    applyJesterUpgrade(config, shield, player);
+                    return;
                 case null:
                 default:
                     throw new IllegalStateException("Unexpected value: " + type);
@@ -592,6 +641,31 @@ public class EvolvingShieldUpgradeMenu {
         }
     }
 
+    private static void applyJesterUpgrade(final Config config, final ItemStack shield, final Player player) {
+        final boolean canAddKnockback = shield.getEnchantmentLevel(Enchantment.KNOCKBACK) <= 1;
+        final boolean canAddThorns = shield.getEnchantmentLevel(Enchantment.THORNS) <= 2;
+        final boolean canAddSwiftness = shield.getEnchantmentLevel(config.getManagedResources().getShieldSwiftnessEnchantment()) == 0;
+        final boolean canAddSlowness = shield.getEnchantmentLevel(config.getManagedResources().getShieldSlownessEnchantment()) == 0;
+        final boolean canAddStrength = shield.getEnchantmentLevel(config.getManagedResources().getShieldStrengthEnchantment()) == 0;
+        final boolean canAddJump = shield.getEnchantmentLevel(config.getManagedResources().getShieldJumpEnchantment()) == 0;
+        final List<EvolvingShieldUpgradeType> allAvailableUpgrades = Arrays.stream(EvolvingShieldUpgradeType.values()).filter(upgrade -> switch (upgrade) {
+            case EvolvingShieldUpgradeType.KNOCKBACK -> canAddKnockback;
+            case EvolvingShieldUpgradeType.THORNS -> canAddThorns;
+            case EvolvingShieldUpgradeType.SWIFTNESS -> canAddSwiftness;
+            case EvolvingShieldUpgradeType.SLOWNESS -> canAddSlowness;
+            case EvolvingShieldUpgradeType.STRENGTH -> canAddStrength;
+            case EvolvingShieldUpgradeType.JUMP -> canAddJump;
+            case EvolvingShieldUpgradeType.THUNDER, EvolvingShieldUpgradeType.WIND, EvolvingShieldUpgradeType.WATER,
+                 EvolvingShieldUpgradeType.FIRE, EvolvingShieldUpgradeType.JESTER -> false;
+            default -> true;
+        }).toList();
+        final EvolvingShieldUpgradeType selectedUpgrade =  allAvailableUpgrades.get(
+                ThreadLocalRandom.current().nextInt(allAvailableUpgrades.size())
+        );
+        player.sendMessage(Component.text(String.format("The random selected upgrade was: %s", selectedUpgrade.getJesterDescription()), Style.style(NamedTextColor.LIGHT_PURPLE, TextDecoration.ITALIC)));
+        applyUpgrade(config, player, selectedUpgrade);
+    }
+
     public static boolean calculateUpgradeAvailable(final int xp, final int currentStage) {
         if (xp >= STAGE_1 && xp < STAGE_2 && currentStage <= 0) {
             return true;
@@ -607,16 +681,19 @@ public class EvolvingShieldUpgradeMenu {
             return true;
         } else if (xp >= STAGE_7 && xp < STAGE_8 && currentStage <= 6) {
             return true;
-        } else if (xp >= STAGE_8 && xp < STAGE_9 && currentStage <= 7) {
-            return true;
-        } else if (xp >= STAGE_9 && xp < STAGE_10 && currentStage <= 8) {
-            return true;
-        } else if (xp >= STAGE_10 && xp < STAGE_11 && currentStage <= 9) {
-            return true;
-        } else if (xp >= STAGE_10 && currentStage <= 10) {
+        } else if (xp >= STAGE_8 && currentStage <= 7) {
             return true;
         } else {
             return false;
         }
+//        } else if (xp >= STAGE_9 && xp < STAGE_10 && currentStage <= 8) {
+//            return true;
+//        } else if (xp >= STAGE_10 && xp < STAGE_11 && currentStage <= 9) {
+//            return true;
+//        } else if (xp >= STAGE_10 && currentStage <= 10) {
+//            return true;
+//        } else {
+//            return false;
+//        }
     }
 }

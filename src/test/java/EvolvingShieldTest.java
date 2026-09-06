@@ -1,13 +1,12 @@
 import com.destroystokyo.paper.event.player.PlayerPickupExperienceEvent;
 import com.stefancooper.EasyUHC.Plugin;
 import com.stefancooper.EasyUHC.base.Utils;
-import com.stefancooper.EasyUHC.evolvingshield.Constants;
 import com.stefancooper.EasyUHC.evolvingshield.EvolvingShield;
+import com.stefancooper.EasyUHC.evolvingshield.EvolvingShieldUpgradeType;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.Style;
 import net.kyori.adventure.text.format.TextDecoration;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.World;
@@ -18,8 +17,6 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
@@ -121,7 +118,7 @@ public class EvolvingShieldTest {
         server.getPluginManager().callEvent(new InventoryClickEvent(invView, InventoryType.SlotType.CRAFTING, 0, ClickType.SHIFT_LEFT, InventoryAction.NOTHING));
     }
 
-    private void selectUpgradeInUpgradeMenu(final PlayerMock player, final String upgrade) {
+    private void selectUpgradeInUpgradeMenu(final PlayerMock player, final EvolvingShieldUpgradeType upgrade) {
         final InventoryViewMock invView = new InventoryViewMock(
                 player,
                 player.getInventory(),
@@ -131,7 +128,7 @@ public class EvolvingShieldTest {
         final ItemStack selectedItem = new ItemStack(Material.CACTUS);
         final ItemMeta itemMeta = selectedItem.getItemMeta();
         itemMeta.getPersistentDataContainer()
-                .set(plugin.getUHCConfig().getManagedResources().getKeys().getEvolvingShieldUpgradeTypeKey(), PersistentDataType.STRING, upgrade);
+                .set(plugin.getUHCConfig().getManagedResources().getKeys().getEvolvingShieldUpgradeTypeKey(), PersistentDataType.STRING, upgrade.getId());
         selectedItem.setItemMeta(itemMeta);
 
         invView.setItem(10, selectedItem);
@@ -186,7 +183,7 @@ public class EvolvingShieldTest {
         );
 
         openUpgradeMenu(player1);
-        selectUpgradeInUpgradeMenu(player1, Constants.KNOCKBACK);
+        selectUpgradeInUpgradeMenu(player1, EvolvingShieldUpgradeType.KNOCKBACK);
 
         assertUpdatedXP(
                 player1.getInventory().getItemInMainHand(),
@@ -251,7 +248,7 @@ public class EvolvingShieldTest {
         );
 
         openUpgradeMenu(player1);
-        selectUpgradeInUpgradeMenu(player1, Constants.THORNS);
+        selectUpgradeInUpgradeMenu(player1, EvolvingShieldUpgradeType.THORNS);
 
         assertUpdatedXP(
                 player1.getInventory().getItemInMainHand(),
@@ -315,7 +312,7 @@ public class EvolvingShieldTest {
         );
 
         openUpgradeMenu(player1);
-        selectUpgradeInUpgradeMenu(player1, Constants.KNOCKBACK);
+        selectUpgradeInUpgradeMenu(player1, EvolvingShieldUpgradeType.KNOCKBACK);
 
         assertUpdatedXP(
                 player1.getInventory().getItemInMainHand(),
@@ -342,7 +339,7 @@ public class EvolvingShieldTest {
         );
 
         openUpgradeMenu(player1);
-        selectUpgradeInUpgradeMenu(player1, Constants.THORNS);
+        selectUpgradeInUpgradeMenu(player1, EvolvingShieldUpgradeType.THORNS);
 
         assertUpdatedXP(
                 player1.getInventory().getItemInMainHand(),
@@ -478,7 +475,7 @@ public class EvolvingShieldTest {
 //        );
 //
 //        openUpgradeMenu(player1);
-//        selectUpgradeInUpgradeMenu(player1, Constants.KNOCKBACK);
+//        selectUpgradeInUpgradeMenu(player1, EvolvingShieldUpgradeType.KNOCKBACK);
 //
 //        assertUpdatedXP(
 //                player1.getInventory().getItemInMainHand(),
@@ -503,7 +500,7 @@ public class EvolvingShieldTest {
 //        );
 //
 //        openUpgradeMenu(player1);
-//        selectUpgradeInUpgradeMenu(player1, Constants.STRENGTH);
+//        selectUpgradeInUpgradeMenu(player1, EvolvingShieldUpgradeType.STRENGTH);
 //
 //        assertUpdatedXP(
 //                player1.getInventory().getItemInMainHand(),
