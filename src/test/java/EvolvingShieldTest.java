@@ -1,9 +1,12 @@
 import com.destroystokyo.paper.event.player.PlayerPickupExperienceEvent;
 import com.stefancooper.EasyUHC.Plugin;
+import com.stefancooper.EasyUHC.base.Utils;
 import com.stefancooper.EasyUHC.evolvingshield.Constants;
 import com.stefancooper.EasyUHC.evolvingshield.EvolvingShield;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.Style;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -29,6 +32,7 @@ import org.mockbukkit.mockbukkit.MockBukkit;
 import org.mockbukkit.mockbukkit.ServerMock;
 import org.mockbukkit.mockbukkit.entity.PlayerMock;
 import org.mockbukkit.mockbukkit.inventory.InventoryViewMock;
+import org.mockbukkit.mockbukkit.scheduler.BukkitSchedulerMock;
 import utils.TestUtils;
 
 import java.util.List;
@@ -214,6 +218,8 @@ public class EvolvingShieldTest {
 
         TestUtils.executeCommand(plugin, admin, "start");
 
+
+
         assertTrue(EvolvingShield.isEvolvingShield(plugin.getUHCConfig(), player1.getInventory().getItemInMainHand()));
         assertUpdatedXP(
                 player1.getInventory().getItemInMainHand(),
@@ -364,6 +370,66 @@ public class EvolvingShieldTest {
                 )
         );
 
+
+        TestUtils.executeCommand(plugin, admin, "cancel");
+    }
+
+    @Test
+    @DisplayName("upgrade event is debounced by 10 seconds")
+    void evolvingShieldsDebounceTest() {
+        BukkitSchedulerMock schedule = server.getScheduler();
+        PlayerMock admin = server.addPlayer();
+        admin.setOp(true);
+
+        TestUtils.executeCommand(plugin, admin, "set",
+                "enable.evolving.shields=true",
+                "evolving.shields.minecraft.exp.multiplier=1"
+        );
+
+        PlayerMock player1 = server.addPlayer();
+        player1.setName("stefan");
+
+        TestUtils.executeCommand(plugin, admin, "start");
+        schedule.performTicks(Utils.secondsToTicks(1));
+        player1.assertSaid(Component.text("UHC: Countdown starting now. Don't forget to record your POV if you can. GLHF!", Style.style(NamedTextColor.GRAY, TextDecoration.ITALIC)));
+
+        assertTrue(EvolvingShield.isEvolvingShield(plugin.getUHCConfig(), player1.getInventory().getItemInMainHand()));
+        assertUpdatedXP(
+                player1.getInventory().getItemInMainHand(),
+                player1,
+                0,
+                false,
+                false,
+                Map.of()
+        );
+
+        addXPViaEvent(player1, 100);
+        assertUpdatedXP(
+                player1.getInventory().getItemInMainHand(),
+                player1,
+                100,
+                true,
+                false,
+                Map.of()
+        );
+        player1.assertSaid(Component.text("Shield upgrade available. Open your inventory and shift click your shield to upgrade!", Style.style(NamedTextColor.GOLD, TextDecoration.ITALIC)));
+
+        addXPViaEvent(player1, 100);
+        assertUpdatedXP(
+                player1.getInventory().getItemInMainHand(),
+                player1,
+                200,
+                true,
+                false,
+                Map.of()
+        );
+        player1.assertNoMoreSaid();
+        schedule.performTicks(Utils.secondsToTicks(1));
+        player1.assertNoMoreSaid();
+        schedule.performTicks(Utils.secondsToTicks(5));
+        player1.assertNoMoreSaid();
+        schedule.performTicks(Utils.secondsToTicks(5));
+        player1.assertSaid(Component.text("Shield upgrade available. Open your inventory and shift click your shield to upgrade!", Style.style(NamedTextColor.GOLD, TextDecoration.ITALIC)));
 
         TestUtils.executeCommand(plugin, admin, "cancel");
     }
