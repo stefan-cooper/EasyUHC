@@ -7,6 +7,7 @@ import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
+
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import static com.stefancooper.EasyUHC.base.ConfigKey.REVIVE_ENABLED;

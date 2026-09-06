@@ -582,6 +582,7 @@ public class EvolvingShieldUpgradeMenu {
             final boolean isUpgradeAvailable = calculateUpgradeAvailable(currentXP, newStage);
             EvolvingShield.setUpgradeAvailable(config, shieldMeta, isUpgradeAvailable);
             EvolvingShield.updateLore(config, shieldMeta, isUpgradeAvailable);
+            EvolvingShield.cancelPendingUpgradeSoundForPlayer(player);
             shield.setItemMeta(shieldMeta);
             player.playSound(player.getLocation(), Sound.BLOCK_ENCHANTMENT_TABLE_USE, 1, 1);
             config.getManagedResources().addTimestamp(String.format("[Evolving shield] %s selected the %s upgrade. Latest XP: %s", player.getName(), type, currentXP));

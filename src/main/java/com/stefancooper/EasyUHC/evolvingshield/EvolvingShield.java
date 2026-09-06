@@ -15,17 +15,14 @@ import org.bukkit.block.Banner;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.block.banner.PatternType;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemRarity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import org.bukkit.scheduler.BukkitTask;
+
+import java.util.*;
 import java.util.logging.Level;
 
 import static com.stefancooper.EasyUHC.base.ConfigKey.EVOLVING_SHIELDS_EXP_THRESHOLD;
@@ -236,8 +233,7 @@ public class EvolvingShield {
         shieldMeta.getPersistentDataContainer().set(xpKey, PersistentDataType.INTEGER, updatedXP);
 
         if (calculateUpgradeAvailable(updatedXP, currentUpgradeStage)) {
-            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 1, 1);
-            player.sendMessage(Component.text("Shield upgrade available. Open your inventory and shift click your shield to upgrade!", Style.style(NamedTextColor.GOLD, TextDecoration.ITALIC)));
+            debounceShieldXPUpgradeAvailableEvent(config, player);
             setUpgradeAvailable(config, shieldMeta, true);
             updateLore(config, shieldMeta, updatedXP, true);
         } else {
@@ -257,4 +253,42 @@ public class EvolvingShield {
 
         return meta.getPersistentDataContainer().has(config.getManagedResources().getKeys().getEvolvingShieldUserKey());
     }
+
+    private static final Map<UUID, BukkitTask> pending = new HashMap<>();
+    private static void debounceShieldXPUpgradeAvailableEvent(final Config config, final Player player) {
+        final UUID uuid = player.getUniqueId();
+        final Runnable doSound = () -> {
+            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 1, 1);
+            player.sendMessage(Component.text("Shield upgrade available. Open your inventory and shift click your shield to upgrade!", Style.style(NamedTextColor.GOLD, TextDecoration.ITALIC)));
+        };
+        final int debounceTime = 10;
+
+        if (!pending.containsKey(uuid)) {
+            doSound.run();
+            final BukkitTask task = config.getManagedResources().runTaskLater(() -> {
+                pending.remove(uuid);
+            }, debounceTime);
+            pending.put(uuid, task);
+        } else {
+            final BukkitTask oldTask = pending.remove(uuid);
+            if (oldTask != null) {
+                oldTask.cancel();
+            }
+
+            final BukkitTask task = config.getManagedResources().runTaskLater(() -> {
+                pending.remove(uuid);
+                doSound.run();
+            }, debounceTime);
+
+            pending.put(uuid, task);
+        }
+    }
+    public static void cancelPendingUpgradeSoundForPlayer(final Player player) {
+        final UUID uuid = player.getUniqueId();
+        final BukkitTask existing = pending.remove(uuid);
+        if (existing != null) {
+            existing.cancel();
+        }
+    }
+
 }

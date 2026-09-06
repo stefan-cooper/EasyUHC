@@ -2,16 +2,17 @@
 
 set -ex
 
-# if you are not seeing this version of mvn installed, set REFRESH_BUILD env var to true
-if [ -z "$MAVEN_HOME" ]; then
-  export MAVEN_HOME=./server/apache-maven-3.9.6
-  export PATH="${PATH}":${MAVEN_HOME}/bin
+# JAVA_HOME must be set
+if [ -z "$JAVA_HOME" ]; then
+  echo JAVA_HOME not set, exiting...
 fi
 
-# if you are seeing mvn not found, set this
-if [ "$(uname)" != "Darwin" ]; then
-  export JAVA_HOME=/c/Program\ Files/Java/jdk-25
+# MAVEN_HOME must be set
+if [ -z "$MAVEN_HOME" ]; then
+  echo MAVEN_HOME not set, exiting...
 fi
+
+export PATH="${PATH}":${MAVEN_HOME}/bin
 
 REFRESH_BUILD=${REFRESH_BUILD:-false}
 MINECRAFT_VERSION=${MINECRAFT_VERSION:-26.1.2}
