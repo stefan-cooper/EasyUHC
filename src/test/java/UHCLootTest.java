@@ -17,6 +17,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockbukkit.mockbukkit.world.WorldMock;
 import utils.TestUtils;
 
 import java.util.Arrays;
@@ -65,6 +66,8 @@ public class UHCLootTest {
     void lootChestTestHighTierLootMessage() {
         BukkitSchedulerMock schedule = server.getScheduler();
         PlayerMock admin = server.addPlayer();
+        PlayerMock netherPlayer = server.addPlayer();
+
         admin.setOp(true);
         String x = "750,1000";
         String z = "250,500";
@@ -84,11 +87,33 @@ public class UHCLootTest {
 
         schedule.performOneTick();
         admin.assertSaid(Component.text("UHC: Countdown starting now. Don't forget to record your POV if you can. GLHF!", Style.style(NamedTextColor.GRAY, TextDecoration.ITALIC)));
+        netherPlayer.assertSaid(Component.text("UHC: Countdown starting now. Don't forget to record your POV if you can. GLHF!", Style.style(NamedTextColor.GRAY, TextDecoration.ITALIC)));
 
         schedule.performTicks(Utils.secondsToTicks(3));
 
         admin.assertSaid(Component.text("UHC: High tier loot item(s) have spawned in the overworld loot chest!", Style.style(NamedTextColor.GOLD, TextDecoration.BOLD)));
         admin.assertNoMoreSaid();
+
+        netherPlayer.assertSaid(Component.text("UHC: High tier loot item(s) have spawned in the overworld loot chest!", Style.style(NamedTextColor.GOLD, TextDecoration.BOLD)));
+        netherPlayer.assertNoMoreSaid();
+
+        netherPlayer.teleport(nether.getSpawnLocation());
+        schedule.performTicks(Utils.secondsToTicks(lootFrequency));
+
+        admin.assertSaid(Component.text("UHC: High tier loot item(s) have spawned in the overworld loot chest!", Style.style(NamedTextColor.GOLD, TextDecoration.BOLD)));
+        admin.assertNoMoreSaid();
+
+        netherPlayer.assertSaid(Component.text("UHC: High tier loot item(s) have spawned in the nether loot chest! Players in the overworld do not see this message", Style.style(NamedTextColor.GOLD, TextDecoration.BOLD)));
+        netherPlayer.assertNoMoreSaid();
+
+        netherPlayer.teleport(world.getSpawnLocation());
+        schedule.performTicks(Utils.secondsToTicks(lootFrequency));
+
+        admin.assertSaid(Component.text("UHC: High tier loot item(s) have spawned in the overworld loot chest!", Style.style(NamedTextColor.GOLD, TextDecoration.BOLD)));
+        admin.assertNoMoreSaid();
+
+        netherPlayer.assertSaid(Component.text("UHC: High tier loot item(s) have spawned in the overworld loot chest!", Style.style(NamedTextColor.GOLD, TextDecoration.BOLD)));
+        netherPlayer.assertNoMoreSaid();
     }
 
     @Test

@@ -156,6 +156,7 @@ public class UHCLoot {
 
             // Nether
             // Nether loot chest has same rates but double the spins
+            boolean didHighTierSpawn = false;
             for (int i = 0; i < spawnRate * 2; i++) {
                 final int spin = random.nextInt(100) + 1;
                 final Material itemToAdd;
@@ -164,6 +165,7 @@ public class UHCLoot {
                 if (spin < highLootOdds) {
                     itemToAdd = highTier.get(random.nextInt(highTier.size()));
                     tier = Tier.HIGH;
+                    didHighTierSpawn = true;
                 } else if (spin < midLootOdds) {
                     itemToAdd = midTier.get(random.nextInt(midTier.size()));
                     tier = Tier.MID;
@@ -178,8 +180,18 @@ public class UHCLoot {
                 netherLootChest.getBlockInventory().addItem(item);
             }
 
+            if (didHighTierSpawn) {
+                Bukkit.getOnlinePlayers().forEach(player -> {
+                    if (player.getWorld().equals(config.getWorlds().getNether())) {
+                        player.playSound(player, Sound.ITEM_GOAT_HORN_SOUND_7, 2, 1);
+                        player.sendMessage(Component.text("UHC: High tier loot item(s) have spawned in the nether loot chest! Players in the overworld do not see this message", Style.style(NamedTextColor.GOLD, TextDecoration.BOLD)));
+                    }
+                });
+                config.getManagedResources().addTimestamp("[UHC Loot] High tier loot item(s) have spawned in the nether loot chest");
+            }
+
             // Overworld
-            boolean didHighTierSpawn = false;
+            didHighTierSpawn = false;
             for (int i = 0; i < spawnRate; i++) {
                 final int spin = random.nextInt(100) + 1;
                 final Material itemToAdd;
@@ -204,8 +216,12 @@ public class UHCLoot {
             }
 
             if (didHighTierSpawn) {
-                Bukkit.getOnlinePlayers().forEach(player -> player.playSound(player, Sound.ITEM_GOAT_HORN_SOUND_7, 2, 1));
-                Bukkit.getServer().broadcast(Component.text("UHC: High tier loot item(s) have spawned in the overworld loot chest!", Style.style(NamedTextColor.GOLD, TextDecoration.BOLD)));
+                Bukkit.getOnlinePlayers().forEach(player -> {
+                    if (player.getWorld().equals(config.getWorlds().getOverworld())) {
+                        player.playSound(player, Sound.ITEM_GOAT_HORN_SOUND_7, 2, 1);
+                        player.sendMessage(Component.text("UHC: High tier loot item(s) have spawned in the overworld loot chest!", Style.style(NamedTextColor.GOLD, TextDecoration.BOLD)));
+                    }
+                });
                 config.getManagedResources().addTimestamp("[UHC Loot] High tier loot item(s) have spawned in the overworld loot chest");
             }
 
