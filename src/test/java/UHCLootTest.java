@@ -46,9 +46,10 @@ public class UHCLootTest {
         admin.setOp(true);
     }
 
+
     @BeforeEach
     public void cleanUp() {
-        TestUtils.executeCommand(plugin, admin, "start");
+        TestUtils.executeCommand(plugin, admin, "cancel");
         plugin.getUHCConfig().resetToDefaults();
     }
 
