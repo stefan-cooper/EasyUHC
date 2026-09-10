@@ -126,10 +126,10 @@ public class UHCLoot {
             netherLootChestBlock = nether.getBlockAt(netherSurfaceBlock.getX(), netherSurfaceBlock.getY() + 1, netherSurfaceBlock.getZ());
             BukkitTask beam = config.getManagedResources().runRepeatingTask(() -> {
                 for (int y = lootChestBlock.getY() + 3; y < 256; y += 3) {
-                    Utils.spawnDustParticle(world, new Location(world, lootChestBlock.getLocation().getX() + 0.5, y, lootChestBlock.getZ() + 0.5), 10, new Particle.DustOptions(Color.FUCHSIA, 100));
+                    Utils.spawnDustParticle(world, new Location(world, lootChestBlock.getLocation().getX() + 0.5, y, lootChestBlock.getZ() + 0.5), 10, new Particle.DustOptions(Color.FUCHSIA, 4f));
                 }
                 for (int y = netherLootChestBlock.getY() + 3; y < 256; y += 3) {
-                    Utils.spawnDustParticle(nether, new Location(nether, netherLootChestBlock.getLocation().getX() + 0.5, y, netherLootChestBlock.getZ() + 0.5), 10, new Particle.DustOptions(Color.FUCHSIA, 100));
+                    Utils.spawnDustParticle(nether, new Location(nether, netherLootChestBlock.getLocation().getX() + 0.5, y, netherLootChestBlock.getZ() + 0.5), 10, new Particle.DustOptions(Color.FUCHSIA, 4f));
                 }
             }, 2);
             config.getManagedResources().setDynamicLootChestLocation(lootChestBlock);
