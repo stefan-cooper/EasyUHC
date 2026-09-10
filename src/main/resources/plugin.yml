@@ -1,8 +1,8 @@
 name: EasyUHC
-version: 11.4.0
+version: 12.0.0
 author: Stefan Cooper
 main: com.stefancooper.EasyUHC.Plugin
-api-version: 26.1.2
+api-version: 26.2
 website: https://stefancooper.com
 permissions:
   easyuhc.command:

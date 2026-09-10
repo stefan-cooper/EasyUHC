@@ -1,8 +1,8 @@
 name: EasyUHC
-version: 11.4.0
+version: 12.0.0
 main: com.stefancooper.EasyUHC.Plugin
 description: A Plugin for running UHCs on Paper servers
-api-version: 26.1.2
+api-version: 26.2
 bootstrapper: com.stefancooper.EasyUHC.Bootstrap
 permissions:
   easyuhc.command:
