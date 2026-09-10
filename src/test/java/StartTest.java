@@ -543,7 +543,7 @@ public class StartTest {
 
         assertEquals(Material.BEDROCK, world.getBlockAt(99, 5,0).getType());
         assertEquals(99, Math.round(player.getLocation().getX()));
-        assertEquals(6, Math.round(player.getLocation().getY()));
+        assertEquals(7, Math.round(player.getLocation().getY()));
         assertEquals(0, Math.round(player.getLocation().getZ()));
 
         TestUtils.executeCommand(plugin, admin, "cancel");

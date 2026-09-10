@@ -2,6 +2,7 @@ package com.stefancooper.EasyUHC.commands;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
 
 import com.stefancooper.EasyUHC.Defaults;
 import com.stefancooper.EasyUHC.base.ConfigKey;
@@ -52,9 +53,11 @@ import static com.stefancooper.EasyUHC.base.Constants.MAXIMUM_FINAL_SIZE_FOR_Y_S
 public class StartCommand extends AbstractCommand {
 
     public static final String COMMAND_KEY = "start";
+    public static final String FORCE_KEY = "force";
 
     private static int shrinkYBorderBlock;
     private BukkitTask runner;
+    private boolean isForce = false;
 
     public StartCommand(CommandSender sender, String cmd, String[] args, Config config) {
         super(sender, cmd, args, config);
@@ -63,6 +66,10 @@ public class StartCommand extends AbstractCommand {
     @Override
     public void execute() {
         shrinkYBorderBlock = -64;
+
+        if (getArgs().length > 0 && getArgs()[0].equalsIgnoreCase(FORCE_KEY)) {
+            isForce = true;
+        }
 
         // Worlds
         final World world = getConfig().getWorlds().getOverworld();
@@ -84,6 +91,16 @@ public class StartCommand extends AbstractCommand {
             finalLocation = location.getLocation();
         } else {
             finalLocation = new Location(world, centerX, 64, centerZ);
+        }
+
+        // Spread players
+        try {
+            final SpreadPlayers spread = new SpreadPlayers(getConfig());
+            spread.trigger(isForce);
+        } catch (final RuntimeException e) {
+            getConfig().getPlugin().getLogger().log(Level.WARNING, "UHC Start command cancelled. Not all coordinates to be teleported to have been loaded. Use Chunky to load the chunks before doing a UHC start");
+            getSender().sendMessage("UHC not started because some of the coordinates to be teleported to have not been loaded. Use Chunky to load the chunks before starting.");
+            return;
         }
 
         // Wipe existing achievements
@@ -125,10 +142,6 @@ public class StartCommand extends AbstractCommand {
                 player.setCompassTarget(world.getWorldBorder().getCenter());
             }
         });
-
-        // Spread players
-        final SpreadPlayers spread = new SpreadPlayers(getConfig());
-        spread.trigger();
 
         Bukkit.getServer().broadcast(Component.text("UHC: Countdown starting now. Don't forget to record your POV if you can. GLHF!", Style.style(NamedTextColor.GRAY, TextDecoration.ITALIC)));
 

@@ -4,6 +4,7 @@ import com.stefancooper.EasyUHC.Config;
 import com.stefancooper.EasyUHC.Defaults;
 import com.stefancooper.EasyUHC.base.records.Coordinate;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -29,7 +30,7 @@ public class SpreadPlayers {
     }
 
 
-    public void trigger() {
+    public void trigger(final boolean force) {
         final int centerX = config.getProperty(WORLD_BORDER_CENTER_X, Defaults.WORLD_BORDER_CENTER_X);
         final int centerZ = config.getProperty(WORLD_BORDER_CENTER_Z, Defaults.WORLD_BORDER_CENTER_Z);
         final int diameter = config.getProperty(WORLD_BORDER_INITIAL_SIZE, Defaults.WORLD_BORDER_INITIAL_SIZE);
@@ -52,7 +53,22 @@ public class SpreadPlayers {
             gridSize = root * root;
         }
 
-        final List<Coordinate> coordinatesToTeleportTo = splitEvenly(centerX, centerZ, diameter - splitPadding, gridSize);
+        List<Coordinate> coordinatesToTeleportTo = splitEvenly(centerX, centerZ, diameter - splitPadding, gridSize);
+
+        final List<Coordinate> loadedCoordinatesToTeleportTo = new ArrayList<>(filterToCoordinatesWithLoadedChunks(
+                coordinatesToTeleportTo,
+                overworld
+        ));
+
+        if (loadedCoordinatesToTeleportTo.size() < groups.size()) {
+            if (force) {
+                config.getPlugin().getLogger().log(Level.WARNING, "UHC force started. Not all coordinates to be teleported to have been loaded, but 'force' was used, so continuing anyway.");
+            } else {
+                throw new RuntimeException("Not enough chunks generated to teleport to.");
+            }
+        } else {
+            coordinatesToTeleportTo = loadedCoordinatesToTeleportTo;
+        }
 
         final List<Coordinate> notIdealCoordinates = new ArrayList<>();
         for (final Coordinate startingLocation : coordinatesToTeleportTo) {
@@ -71,7 +87,7 @@ public class SpreadPlayers {
         }
 
         if (coordinatesToTeleportTo.size() < groups.size()) {
-            throw new RuntimeException("something went wrong!");
+            throw new RuntimeException("something went wrong and we do not have enough coordinates to teleport to!");
         }
 
         Collections.shuffle(coordinatesToTeleportTo);
@@ -83,11 +99,21 @@ public class SpreadPlayers {
                 if (player != null) {
                     final Block startingBlock = overworld.getHighestBlockAt((int) startingLocation.x(), (int) startingLocation.z());
                     startingBlock.setType(Material.BEDROCK);
-                    player.teleport(startingBlock.getLocation().add(0, 1,0));
+                    player.teleport(startingBlock.getLocation().add(0, 2,0));
                 }
             }
         }
 
+    }
+
+    private List<Coordinate> filterToCoordinatesWithLoadedChunks(final List<Coordinate> coordinates, final World world) {
+        return coordinates.stream().filter(coordinate -> {
+            final Location location = new Location(world, coordinate.x(), 64, coordinate.z());
+            final int chunkX = location.getBlockX() >> 4;
+            final int chunkZ = location.getBlockZ() >> 4;
+            // World.isChunkGenerated() is not supported my MockBukkit, so always return true when testing
+            return Utils.testMode() || world.isChunkGenerated(chunkX, chunkZ);
+        }).toList();
     }
 
     private List<List<Player>> getAllTeams() {
