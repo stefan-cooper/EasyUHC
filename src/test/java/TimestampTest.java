@@ -1,3 +1,5 @@
+import mocks.servers.RespawnPlayerServerMock;
+import mocks.types.RespawnPlayerMock;
 import org.junit.jupiter.api.AfterEach;
 import org.mockbukkit.mockbukkit.MockBukkit;
 import org.mockbukkit.mockbukkit.ServerMock;
@@ -28,14 +30,14 @@ import static com.stefancooper.EasyUHC.Defaults.WORLD_NAME;
 
 public class TimestampTest {
 
-    private static ServerMock server;
+    private static RespawnPlayerServerMock server;
     private static Plugin plugin;
     private static World world;
     private static PlayerMock admin;
 
     @BeforeEach
     public void setup() {
-        server = MockBukkit.mock();
+        server = MockBukkit.mock(new RespawnPlayerServerMock());
         plugin = MockBukkit.load(Plugin.class);
         world = server.getWorld(WORLD_NAME);
         admin = server.addPlayer();
@@ -74,9 +76,9 @@ public class TimestampTest {
     @Test
     @DisplayName("When start is run, and a player dies, the timestamps is updated")
     void deathTimestamp() throws IOException {
-        PlayerMock player1 = server.addPlayer();
-        PlayerMock player2 = server.addPlayer();
-        PlayerMock player3 = server.addPlayer();
+        RespawnPlayerMock player1 = server.addPlayer("jawad");
+        RespawnPlayerMock player2 = server.addPlayer("stefan");
+        RespawnPlayerMock player3 = server.addPlayer("sean");
         player1.setName("jawad");
         player1.setDisplayName("jawad");
         player2.setName("stefan");
@@ -102,7 +104,7 @@ public class TimestampTest {
     @Test
     @DisplayName("When start is run, a timestamp is added. When start is run again, the old timestamps are wiped.")
     void timestampsResetOnStart() throws IOException {
-        PlayerMock player = server.addPlayer();
+        RespawnPlayerMock player = server.addPlayer("stefan");
         player.setDisplayName("stefan");
         player.setName("stefan");
 

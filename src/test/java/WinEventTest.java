@@ -1,3 +1,5 @@
+import mocks.servers.RespawnPlayerServerMock;
+import mocks.types.RespawnPlayerMock;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.mockbukkit.mockbukkit.MockBukkit;
 import org.mockbukkit.mockbukkit.ServerMock;
@@ -14,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class WinEventTest {
 
-    private static ServerMock server;
+    private static RespawnPlayerServerMock server;
     private static Plugin plugin;
     private static World world;
     private static World nether;
@@ -23,7 +25,7 @@ public class WinEventTest {
     @BeforeAll
     public static void load()
     {
-        server = MockBukkit.mock();
+        server = MockBukkit.mock(new RespawnPlayerServerMock());
         plugin = MockBukkit.load(Plugin.class);
         world = server.getWorld(WORLD_NAME);
         nether = server.getWorld(NETHER_WORLD_NAME);
@@ -47,9 +49,9 @@ public class WinEventTest {
 
         BukkitSchedulerMock schedule = server.getScheduler();
 
-        PlayerMock winner = server.addPlayer("almer");
-        PlayerMock loser1 = server.addPlayer("po");
-        PlayerMock loser2 = server.addPlayer("lozz");
+        RespawnPlayerMock winner = server.addPlayer("almer");
+        RespawnPlayerMock loser1 = server.addPlayer("po");
+        RespawnPlayerMock loser2 = server.addPlayer("lozz");
 
         PlayerMock admin = server.addPlayer();
         admin.setOp(true);
