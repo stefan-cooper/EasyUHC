@@ -3,6 +3,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.Style;
 import net.kyori.adventure.text.format.TextDecoration;
+import org.bukkit.entity.EntityType;
 import org.mockbukkit.mockbukkit.MockBukkit;
 import org.mockbukkit.mockbukkit.ServerMock;
 import org.mockbukkit.mockbukkit.block.state.ChestStateMock;
@@ -115,6 +116,9 @@ public class UHCLootTest {
 
         netherPlayer.assertSaid(Component.text("UHC: High tier loot item(s) have spawned in the overworld loot chest!", Style.style(NamedTextColor.GOLD, TextDecoration.BOLD)));
         netherPlayer.assertNoMoreSaid();
+
+        assertEquals(0, world.getEntities().stream().filter(entity -> !entity.getType().equals(EntityType.PLAYER)).toList().size());
+
     }
 
     @Test

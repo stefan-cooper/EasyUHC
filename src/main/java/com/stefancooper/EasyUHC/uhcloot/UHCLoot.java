@@ -135,6 +135,10 @@ public class UHCLoot {
             config.getManagedResources().setDynamicLootChestLocation(lootChestBlock);
             config.getManagedResources().setDynamicNetherLootChestLocation(netherLootChestBlock);
             config.getManagedResources().runTaskLater(() -> {
+                final Chest lootChest = (Chest) lootChestBlock.getState();
+                final Chest netherLootChest = (Chest) netherLootChestBlock.getState();
+                lootChest.getBlockInventory().clear();
+                netherLootChest.getBlockInventory().clear();
                 lootChestBlock.setType(Material.AIR);
                 netherLootChestBlock.setType(Material.AIR);
                 config.getManagedResources().cancelRepeatingTask(beam.getTaskId());
