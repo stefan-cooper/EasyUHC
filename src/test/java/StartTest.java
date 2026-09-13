@@ -1,4 +1,6 @@
 import com.stefancooper.EasyUHC.evolvingshield.EvolvingShield;
+import mocks.servers.RespawnPlayerServerMock;
+import mocks.types.RespawnPlayerMock;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.Style;
@@ -41,7 +43,7 @@ import static utils.TestUtils.WorldAssertion;
 
 public class StartTest {
 
-    private static ServerMock server;
+    private static RespawnPlayerServerMock server;
     private static Plugin plugin;
     private static World world;
     private static World nether;
@@ -51,7 +53,7 @@ public class StartTest {
     @BeforeAll
     public static void load()
     {
-        server = MockBukkit.mock();
+        server = MockBukkit.mock(new RespawnPlayerServerMock());
         plugin = MockBukkit.load(Plugin.class);
         world = server.getWorld(WORLD_NAME);
         nether = server.getWorld(NETHER_WORLD_NAME);
@@ -490,13 +492,12 @@ public class StartTest {
     void startSpreadPlayersChoosesAnIdealLocation() throws InterruptedException {
         BukkitSchedulerMock schedule = server.getScheduler();
 
-
-
         PlayerMock admin = server.addPlayer();
         admin.setOp(true);
 
-        PlayerMock player = server.addPlayer();
+        RespawnPlayerMock player = server.addPlayer("stefan");
         player.setName("stefan");
+        player.damage(10000);
 
         TestUtils.executeCommand(plugin, admin, "set",
                 "world.border.initial.size=200",

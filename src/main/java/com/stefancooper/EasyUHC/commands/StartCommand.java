@@ -93,6 +93,13 @@ public class StartCommand extends AbstractCommand {
             finalLocation = new Location(world, centerX, 64, centerZ);
         }
 
+        // Respawn players who are dead
+        Bukkit.getOnlinePlayers().forEach(player -> {
+            if (player.isDead()) {
+                player.spigot().respawn();
+            }
+        });
+
         // Spread players
         try {
             final SpreadPlayers spread = new SpreadPlayers(getConfig());
