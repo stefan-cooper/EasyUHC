@@ -114,41 +114,31 @@ See the stages below:
 - 4x Book
 - 4x Apple
 - 12x Iron Ingots
+- 64x Coal
+- Jester
 
 ### Stage 2 (100 EXP)
 
-- Add 'Knockback I' to your shield
-- Add 'Thorns I' to your shield
+- Apply or upgrade Thorns
+- Apply or upgrade Knockback
+- Apply Counterforce
+- Jester
 
 ### Stage 3 (400 EXP)
 
 - Gain permanent Absorption (2 extra hearts)
 - Regenerate 4 hearts immediately
 - Gain a player head
+- Jester
 
 ### Stage 4 (700 EXP)
 
 - 18x Arrow
 - 12x Spectral Arrow
 - 3x Tipped Arrow with Instant Damage II applied
+- Jester
 
 ### Stage 5 (1100 EXP)
-
-- Add 'Swift Defense' to your shield. Chance of gaining swiftness after blocking an attack (1/16)
-- Add 'Leap Guard' to your shield. Chance of gaining jump boost after blocking an attack (1/8)
-- Add 'Counterforce' to your shield. Chance of gaining strength after blocking an attack (1/24)
-
-### Stage 6 (1600 EXP)
-
-- Add 'Sapping Guard' to your shield. Chance of giving weakness after blocking an attack (1/16)
-- Add 'Snare Guard' to your shield. Chance of giving slowness after blocking an attack (1/8)
-
-### Stage 7 (2100 EXP)
-
-- Upgrade or add 'Knockback' to your shield.
-- Upgrade or add 'Thorns' to your shield.
-
-### Stage 8 (3000 EXP)
 
 - Gain the _Nether Explorer_ kit
   - 10x Obsidian
@@ -165,21 +155,24 @@ See the stages below:
   - 1x Protection II Enchanted Book
   - 4x Bookshelf
   - 32x EXP Bottle
+- Jester
 
-### Stage 9 (3500 EXP)
+### Stage 6 (1600 EXP)
 
 - 1x Quickboom IV TNT
 - 1x Blastwave IV TNT
 - 1x Quickboom II & Blastwave II TNT
+- Jester
 
-### Stage 10 (5000 EXP)
+### Stage 7 (2100 EXP)
 
 - Add 'Fire Elemental' to your shield. Blocking whilst sneaking will shoot a fire charge (60 second cooldown)
 - Add 'Thunder Elemental' to your shield. Blocking whilst sneaking will strike a thunderbolt on the block you're looking at. (120 second cooldown)
 - Add 'Air Elemental' to your shield. Blocking whilst sneaking will shoot a wind charge (30 second cooldown)
 - Add 'Water Elemental' to your shield. Blocking whilst sneaking will shoot a snowball that creates a bucket of water (30 second cooldown)
+- Jester
 
-### Stage 11 (7500 EXP)
+### Stage 8 (3000 EXP)
 
 - Become the **Reaper**
   - 2x Ender Pearl
@@ -191,3 +184,16 @@ See the stages below:
   - 1x Iron Spear (Fire Aspect I)
   - Iron Boots (Feather Falling IV, Fire Protection IV)
   - 8x Firework Rocket
+- Jester
+
+### Stage 9 (3500 EXP)
+
+- Jester
+
+### Stage 10 (5000 EXP)
+
+- Jester
+
+### Stage 11 (7500 EXP)
+
+- Jester

@@ -97,18 +97,6 @@ public class EvolvingShieldUpgradeMenu {
                             EvolvingShieldUpgradeType.COAL,
                             false
                     ));
-                    inv.setItem(28, createUpgradeItem(
-                            Material.ICE,
-                            "§6Swift Defense",
-                            "§7Apply Swift Defense to your shield. Chance of gaining swiftness after blocking an attack (1/16)",
-                            EvolvingShieldUpgradeType.SWIFTNESS
-                    ));
-                    inv.setItem(30, createUpgradeItem(
-                            Material.PISTON,
-                            "§6Knockback",
-                            "§7Apply Knockback to your shield. Blocked attacks will knock your attacker away.",
-                            EvolvingShieldUpgradeType.KNOCKBACK
-                    ));
                     inv.setItem(32, createUpgradeItem(
                             Material.CACTUS,
                             "§6Thorns",
@@ -118,39 +106,33 @@ public class EvolvingShieldUpgradeMenu {
                     inv.setItem(34, createUpgradeItem(
                             Material.PARROT_SPAWN_EGG,
                             "§6Jester",
-                            "§7A random upgrade or enchantment across.",
+                            "§7A random upgrade or enchantment.",
                             EvolvingShieldUpgradeType.JESTER
                     ));
                     break;
                 case 1:
                     inv.setItem(11, createUpgradeItem(
-                            Material.PISTON,
-                            "§6Knockback",
-                            "§7Upgrade or add Knockback to your shield. Blocked attacks will knock your attacker away.",
-                            EvolvingShieldUpgradeType.KNOCKBACK
-                    ));
-                    inv.setItem(13, createUpgradeItem(
                             Material.CACTUS,
                             "§6Thorns",
                             "§7Upgrade or add Knockback to your shield. Blocked attacks will knock your attacker away.",
                             EvolvingShieldUpgradeType.THORNS
                     ));
-                    inv.setItem(15, createUpgradeItem(
-                            Material.RABBIT_FOOT,
-                            "§6Leap Guard",
-                            "§7Apply Leap Guard to your shield. Chance of gaining jump boost after blocking an attack (1/8)",
-                            EvolvingShieldUpgradeType.JUMP
+                    inv.setItem(13, createUpgradeItem(
+                            Material.PISTON,
+                            "§6Knockback",
+                            "§7Apply Knockback to your shield. Blocked attacks will knock your attacker away.",
+                            EvolvingShieldUpgradeType.KNOCKBACK
                     ));
-                    inv.setItem(30, createUpgradeItem(
+                    inv.setItem(15, createUpgradeItem(
                             Material.DIAMOND_SWORD,
                             "§6Counterforce",
                             "§7Apply Counterforce to your shield. Chance of gaining strength after blocking an attack (1/24)",
                             EvolvingShieldUpgradeType.STRENGTH
                     ));
-                    inv.setItem(32, createUpgradeItem(
+                    inv.setItem(31, createUpgradeItem(
                             Material.PARROT_SPAWN_EGG,
                             "§6Jester",
-                            "§7A random upgrade or enchantment across.",
+                            "§7A random upgrade or enchantment.",
                             EvolvingShieldUpgradeType.JESTER
                     ));
                     break;
@@ -176,7 +158,7 @@ public class EvolvingShieldUpgradeMenu {
                     inv.setItem(31, createUpgradeItem(
                             Material.PARROT_SPAWN_EGG,
                             "§6Jester",
-                            "§7A random upgrade or enchantment across.",
+                            "§7A random upgrade or enchantment.",
                             EvolvingShieldUpgradeType.JESTER
                     ));
                     break;
@@ -202,16 +184,10 @@ public class EvolvingShieldUpgradeMenu {
                             EvolvingShieldUpgradeType.ARROWS_TIPPED,
                             true
                     ));
-                    inv.setItem(30, createUpgradeItem(
-                            Material.WOODEN_SWORD,
-                            "§6Sapping Guard",
-                            "§7Apply Sapping Guard to your shield. Chance of giving weakness after blocking an attack (1/16)",
-                            EvolvingShieldUpgradeType.WEAKNESS
-                    ));
-                    inv.setItem(32, createUpgradeItem(
+                    inv.setItem(31, createUpgradeItem(
                             Material.PARROT_SPAWN_EGG,
                             "§6Jester",
-                            "§7A random upgrade or enchantment across.",
+                            "§7A random upgrade or enchantment.",
                             EvolvingShieldUpgradeType.JESTER
                     ));
                     break;
@@ -237,16 +213,10 @@ public class EvolvingShieldUpgradeMenu {
                             EvolvingShieldUpgradeType.LIBRARIAN_KIT,
                             true
                     ));
-                    inv.setItem(30, createUpgradeItem(
-                            Material.SOUL_SAND,
-                            "§6Snare Guard",
-                            "§7Apply Snare Guard to your shield. Chance of giving slowness after blocking an attack (1/8)",
-                            EvolvingShieldUpgradeType.SLOWNESS
-                    ));
-                    inv.setItem(32, createUpgradeItem(
+                    inv.setItem(31, createUpgradeItem(
                             Material.PARROT_SPAWN_EGG,
                             "§6Jester",
-                            "§7A random upgrade or enchantment across.",
+                            "§7A random upgrade or enchantment.",
                             EvolvingShieldUpgradeType.JESTER
                     ));
                     break;
@@ -269,16 +239,10 @@ public class EvolvingShieldUpgradeMenu {
                             "§7Gain an enchanted TNT with a mix of enchantments (Blastwave II, Quickboom II)",
                             EvolvingShieldUpgradeType.MIXED_TNT
                     ));
-                    inv.setItem(30, createUpgradeItem(
-                            Material.CACTUS,
-                            "§6Thorns",
-                            "§7Upgrade or add Knockback to your shield. Blocked attacks will knock your attacker away.",
-                            EvolvingShieldUpgradeType.THORNS
-                    ));
                     inv.setItem(32, createUpgradeItem(
                             Material.PARROT_SPAWN_EGG,
                             "§6Jester",
-                            "§7A random upgrade or enchantment across.",
+                            "§7A random upgrade or enchantment.",
                             EvolvingShieldUpgradeType.JESTER
                     ));
                     break;
@@ -310,7 +274,7 @@ public class EvolvingShieldUpgradeMenu {
                     inv.setItem(31, createUpgradeItem(
                             Material.PARROT_SPAWN_EGG,
                             "§6Jester",
-                            "§7A random upgrade or enchantment across.",
+                            "§7A random upgrade or enchantment.",
                             EvolvingShieldUpgradeType.JESTER
                     ));
                     break;
@@ -332,7 +296,23 @@ public class EvolvingShieldUpgradeMenu {
                     inv.setItem(31, createUpgradeItem(
                             Material.PARROT_SPAWN_EGG,
                             "§6Jester",
-                            "§7A random upgrade or enchantment across.",
+                            "§7A random upgrade or enchantment.",
+                            EvolvingShieldUpgradeType.JESTER
+                    ));
+                    break;
+                case 8:
+                    inv.setItem(22, createUpgradeItem(
+                            Material.PARROT_SPAWN_EGG,
+                            "§6Jester",
+                            "§7A random upgrade or enchantment.",
+                            EvolvingShieldUpgradeType.JESTER
+                    ));
+                    break;
+                case 9:
+                    inv.setItem(22, createUpgradeItem(
+                            Material.PARROT_SPAWN_EGG,
+                            "§6Jester",
+                            "§7A random upgrade or enchantment ",
                             EvolvingShieldUpgradeType.JESTER
                     ));
                     break;
@@ -681,19 +661,16 @@ public class EvolvingShieldUpgradeMenu {
             return true;
         } else if (xp >= STAGE_7 && xp < STAGE_8 && currentStage <= 6) {
             return true;
-        } else if (xp >= STAGE_8 && currentStage <= 7) {
+        } else if (xp >= STAGE_8 && xp < STAGE_9 && currentStage <= 7) {
+            return true;
+        } else if (xp >= STAGE_9 && xp < STAGE_10 && currentStage <= 8) {
+            return true;
+        } else if (xp >= STAGE_10 && xp < STAGE_11 && currentStage <= 9) {
+            return true;
+        } else if (xp >= STAGE_10 && currentStage <= 10) {
             return true;
         } else {
             return false;
         }
-//        } else if (xp >= STAGE_9 && xp < STAGE_10 && currentStage <= 8) {
-//            return true;
-//        } else if (xp >= STAGE_10 && xp < STAGE_11 && currentStage <= 9) {
-//            return true;
-//        } else if (xp >= STAGE_10 && currentStage <= 10) {
-//            return true;
-//        } else {
-//            return false;
-//        }
     }
 }
