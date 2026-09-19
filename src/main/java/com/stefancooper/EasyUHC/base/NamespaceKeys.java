@@ -24,6 +24,7 @@ import static com.stefancooper.EasyUHC.enchants.Constants.SHIELD_THUNDER_ENCHANT
 import static com.stefancooper.EasyUHC.enchants.Constants.SHIELD_WATER_ENCHANTMENT;
 import static com.stefancooper.EasyUHC.enchants.Constants.SHIELD_WEAKNESS_ENCHANTMENT;
 import static com.stefancooper.EasyUHC.enchants.Constants.SHIELD_WIND_ENCHANTMENT;
+import static com.stefancooper.EasyUHC.warmup.constants.WARMUP_BUTTON;
 
 public class NamespaceKeys {
 
@@ -50,6 +51,8 @@ public class NamespaceKeys {
     final private NamespacedKey evolvingShieldUpgradeReadyKey;
     final private NamespacedKey evolvingShieldUpgradeStageKey;
 
+    final private NamespacedKey warmupButtonKey;
+
     final private NamespacedKey reapersMarkEnchantment;
 
     public NamespaceKeys(final Config config) {
@@ -57,6 +60,9 @@ public class NamespaceKeys {
         this.playerHead = new NamespacedKey(config.getPlugin(), PLAYER_HEAD);
         this.craftablePlayerHead = new NamespacedKey(config.getPlugin(), CRAFTABLE_PLAYER_HEAD);
         this.notchApple = new NamespacedKey(config.getPlugin(), NOTCH_APPLE);
+
+        // Warmup
+        this.warmupButtonKey = new NamespacedKey(config.getPlugin(), WARMUP_BUTTON);
 
         // Enchantments
         this.quickboomEnchantment = new NamespacedKey(NAMESPACE, QUICKBOOM_ENCHANTMENT);
@@ -137,5 +143,7 @@ public class NamespaceKeys {
     public NamespacedKey getEvolvingShieldUpgradeStageKey() {
         return evolvingShieldUpgradeStageKey;
     }
+
+    public NamespacedKey getWarmupButtonKey() { return warmupButtonKey; }
 
 }
