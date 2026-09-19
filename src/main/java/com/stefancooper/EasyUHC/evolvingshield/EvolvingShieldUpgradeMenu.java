@@ -97,13 +97,13 @@ public class EvolvingShieldUpgradeMenu {
                             EvolvingShieldUpgradeType.COAL,
                             false
                     ));
-                    inv.setItem(32, createUpgradeItem(
+                    inv.setItem(30, createUpgradeItem(
                             Material.CACTUS,
                             "§6Thorns",
                             "§7Apply Thorns to your shield. Blocked attacks will deal damage to your attacker.",
                             EvolvingShieldUpgradeType.THORNS
                     ));
-                    inv.setItem(34, createUpgradeItem(
+                    inv.setItem(32, createUpgradeItem(
                             Material.PARROT_SPAWN_EGG,
                             "§6Jester",
                             "§7A random upgrade or enchantment.",

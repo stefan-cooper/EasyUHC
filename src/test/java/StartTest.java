@@ -95,7 +95,7 @@ public class StartTest {
         world.dropItem(new Location(world, 0, 100, 0), ItemStack.of(Material.DIAMOND_SWORD));
 
         assertEquals(1, world.getEntities().stream().filter(entity -> entity.getType().equals(EntityType.ITEM)).toList().size());
-        assertEquals(Boolean.FALSE, world.getGameRuleValue(GameRules.PVP));
+        assertEquals(Boolean.TRUE, world.getGameRuleValue(GameRules.PVP));
         assertEquals(Boolean.FALSE, world.getGameRuleValue(GameRules.FALL_DAMAGE));
         assertEquals(Boolean.FALSE, world.getGameRuleValue(GameRules.REDUCED_DEBUG_INFO));
         assertEquals(3, player1.getPotionEffect(PotionEffectType.JUMP_BOOST).getAmplifier());
@@ -146,7 +146,7 @@ public class StartTest {
         world.dropItem(new Location(world, 0, 100, 0), ItemStack.of(Material.DIAMOND_SWORD));
 
         assertEquals(1, world.getEntities().stream().filter(entity -> entity.getType().equals(EntityType.ITEM)).toList().size());
-        assertEquals(Boolean.FALSE, world.getGameRuleValue(GameRules.PVP));
+        assertEquals(Boolean.TRUE, world.getGameRuleValue(GameRules.PVP));
         assertEquals(Boolean.FALSE, world.getGameRuleValue(GameRules.FALL_DAMAGE));
         assertEquals(Boolean.TRUE, world.getGameRuleValue(GameRules.REDUCED_DEBUG_INFO));
         assertEquals(3, player1.getPotionEffect(PotionEffectType.JUMP_BOOST).getAmplifier());

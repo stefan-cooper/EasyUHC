@@ -89,6 +89,10 @@ public class Defaults {
     public static int EVOLVING_SHIELDS_EXP_THRESHOLD = -1;
     public static int EVOLVING_SHIELDS_MINECRAFT_EXP_MULTIPLIER = 4;
 
+    // Warmup
+    public static String WARMUP_LOCATION_1 = "10000,100,10000";
+    public static String WARMUP_LOCATION_2 = "10005,100,10000";
+
     /* -- End of defaults -- */
 
     public static Properties createDefaultConfig() {
@@ -121,8 +125,8 @@ public class Defaults {
             world.setGameRule(GameRules.SPAWN_PHANTOMS, false);
             world.setGameRule(GameRules.LOCATOR_BAR, false);
             world.setGameRule(GameRules.MAX_BLOCK_MODIFICATIONS, MAXIMUM_FINAL_SIZE_FOR_Y_SHRINK * MAXIMUM_FINAL_SIZE_FOR_Y_SHRINK); // square the maximum final size to be used in y shrink
-            // set pvp to false, will be enabled when /uhc start is ran
-            world.setGameRule(GameRules.PVP, false);
+            // set pvp to true to handle ourselves for warmup, will be false on uhc start until grace period
+            world.setGameRule(GameRules.PVP, true);
             world.setGameRule(GameRules.FALL_DAMAGE, false);
         });
         config.getPlugin().setCountingDown(false);

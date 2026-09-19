@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 import com.stefancooper.EasyUHC.base.Utils;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -17,70 +18,8 @@ import org.bukkit.WorldBorder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
-import static com.stefancooper.EasyUHC.base.ConfigKey.ADDITIONAL_ENCHANTS_TNT;
-import static com.stefancooper.EasyUHC.base.ConfigKey.ALL_TREES_SPAWN_APPLES;
-import static com.stefancooper.EasyUHC.base.ConfigKey.COUNTDOWN_TIMER_LENGTH;
-import static com.stefancooper.EasyUHC.base.ConfigKey.CRAFTABLE_NOTCH_APPLE;
-import static com.stefancooper.EasyUHC.base.ConfigKey.CRAFTABLE_PLAYER_HEAD;
-import static com.stefancooper.EasyUHC.base.ConfigKey.DIFFICULTY;
-import static com.stefancooper.EasyUHC.base.ConfigKey.DISABLE_DEBUG_INFO;
-import static com.stefancooper.EasyUHC.base.ConfigKey.DISABLE_ENDER_PEARL_DAMAGE;
-import static com.stefancooper.EasyUHC.base.ConfigKey.DISABLE_END_GAME_AUTOMATICALLY;
-import static com.stefancooper.EasyUHC.base.ConfigKey.DISABLE_WITCHES;
-import static com.stefancooper.EasyUHC.base.ConfigKey.ENABLE_AUTOSMELT;
-import static com.stefancooper.EasyUHC.base.ConfigKey.ENABLE_DEATH_CHAT;
-import static com.stefancooper.EasyUHC.base.ConfigKey.ENABLE_EVOLVING_SHIELDS;
-import static com.stefancooper.EasyUHC.base.ConfigKey.ENABLE_PERFORMANCE_TRACKING;
-import static com.stefancooper.EasyUHC.base.ConfigKey.ENABLE_TIMESTAMPS;
-import static com.stefancooper.EasyUHC.base.ConfigKey.EVOLVING_SHIELDS_EXP_THRESHOLD;
-import static com.stefancooper.EasyUHC.base.ConfigKey.EVOLVING_SHIELDS_MINECRAFT_EXP_MULTIPLIER;
-import static com.stefancooper.EasyUHC.base.ConfigKey.GRACE_PERIOD_TIMER;
-import static com.stefancooper.EasyUHC.base.ConfigKey.LOOT_CHEST_ENABLED;
-import static com.stefancooper.EasyUHC.base.ConfigKey.LOOT_CHEST_GRACE_PERIOD;
-import static com.stefancooper.EasyUHC.base.ConfigKey.LOOT_CHEST_HIGH_LOOT_ODDS;
-import static com.stefancooper.EasyUHC.base.ConfigKey.LOOT_CHEST_MID_LOOT_ODDS;
-import static com.stefancooper.EasyUHC.base.ConfigKey.LOOT_CHEST_SPINS_PER_GEN;
-import static com.stefancooper.EasyUHC.base.ConfigKey.LOOT_CHEST_X_RANGE;
-import static com.stefancooper.EasyUHC.base.ConfigKey.LOOT_CHEST_FREQUENCY;
-import static com.stefancooper.EasyUHC.base.ConfigKey.LOOT_CHEST_Z_RANGE;
-import static com.stefancooper.EasyUHC.base.ConfigKey.MOB_GRACE_PERIOD;
-import static com.stefancooper.EasyUHC.base.ConfigKey.ON_DEATH_ACTION;
-import static com.stefancooper.EasyUHC.base.ConfigKey.PLAYER_HEAD_GOLDEN_APPLE;
-import static com.stefancooper.EasyUHC.base.ConfigKey.RANDOM_FINAL_LOCATION;
-import static com.stefancooper.EasyUHC.base.ConfigKey.RANDOM_TEAMS_POT_ONE;
-import static com.stefancooper.EasyUHC.base.ConfigKey.RANDOM_TEAMS_POT_THREE;
-import static com.stefancooper.EasyUHC.base.ConfigKey.RANDOM_TEAMS_POT_TWO;
-import static com.stefancooper.EasyUHC.base.ConfigKey.REVIVE_ANY_HEAD;
-import static com.stefancooper.EasyUHC.base.ConfigKey.REVIVE_ENABLED;
-import static com.stefancooper.EasyUHC.base.ConfigKey.REVIVE_HP;
-import static com.stefancooper.EasyUHC.base.ConfigKey.REVIVE_LOSE_MAX_HEALTH;
-import static com.stefancooper.EasyUHC.base.ConfigKey.SPLIT_WITHIN_TEAMS_SIZE;
-import static com.stefancooper.EasyUHC.base.ConfigKey.TEAM_BLUE;
-import static com.stefancooper.EasyUHC.base.ConfigKey.TEAM_GREEN;
-import static com.stefancooper.EasyUHC.base.ConfigKey.TEAM_ORANGE;
-import static com.stefancooper.EasyUHC.base.ConfigKey.TEAM_PINK;
-import static com.stefancooper.EasyUHC.base.ConfigKey.TEAM_PURPLE;
-import static com.stefancooper.EasyUHC.base.ConfigKey.TEAM_RED;
-import static com.stefancooper.EasyUHC.base.ConfigKey.TEAM_YELLOW;
-import static com.stefancooper.EasyUHC.base.ConfigKey.WHISPER_TEAMMATE_DEAD_LOCATION;
-import static com.stefancooper.EasyUHC.base.ConfigKey.WORLD_BORDER_CENTER_X;
-import static com.stefancooper.EasyUHC.base.ConfigKey.WORLD_BORDER_CENTER_Z;
-import static com.stefancooper.EasyUHC.base.ConfigKey.WORLD_BORDER_FINAL_SIZE;
-import static com.stefancooper.EasyUHC.base.ConfigKey.WORLD_BORDER_FINAL_Y;
-import static com.stefancooper.EasyUHC.base.ConfigKey.WORLD_BORDER_GRACE_PERIOD;
-import static com.stefancooper.EasyUHC.base.ConfigKey.WORLD_BORDER_INITIAL_SIZE;
-import static com.stefancooper.EasyUHC.base.ConfigKey.WORLD_BORDER_IN_BOSSBAR;
-import static com.stefancooper.EasyUHC.base.ConfigKey.WORLD_BORDER_SHRINKING_PERIOD;
-import static com.stefancooper.EasyUHC.base.ConfigKey.WORLD_BORDER_SPAWN_PADDING;
-import static com.stefancooper.EasyUHC.base.ConfigKey.WORLD_BORDER_Y_SHRINKING_PERIOD;
-import static com.stefancooper.EasyUHC.base.ConfigKey.WORLD_NAME;
-import static com.stefancooper.EasyUHC.base.ConfigKey.WORLD_NAME_END;
-import static com.stefancooper.EasyUHC.base.ConfigKey.WORLD_NAME_NETHER;
-import static com.stefancooper.EasyUHC.base.ConfigKey.WORLD_SPAWN_X;
-import static com.stefancooper.EasyUHC.base.ConfigKey.WORLD_SPAWN_Y;
-import static com.stefancooper.EasyUHC.base.ConfigKey.WORLD_SPAWN_Z;
-import static com.stefancooper.EasyUHC.base.ConfigKey.ADDITIONAL_ENCHANTS_SHIELD;
-import static com.stefancooper.EasyUHC.base.ConfigKey.fromString;
+
+import static com.stefancooper.EasyUHC.base.ConfigKey.*;
 import static com.stefancooper.EasyUHC.base.UHCTeam.createTeam;
 
 import com.stefancooper.EasyUHC.base.UHCTeam;
@@ -165,6 +104,9 @@ public class ConfigParser {
             case ENABLE_EVOLVING_SHIELDS -> new Configurable<>(ENABLE_EVOLVING_SHIELDS, Boolean.parseBoolean(value));
             case EVOLVING_SHIELDS_EXP_THRESHOLD -> new Configurable<>(EVOLVING_SHIELDS_EXP_THRESHOLD, Integer.valueOf(value));
             case EVOLVING_SHIELDS_MINECRAFT_EXP_MULTIPLIER -> new Configurable<>(EVOLVING_SHIELDS_MINECRAFT_EXP_MULTIPLIER, Integer.parseInt(value));
+            // Warmup
+            case WARMUP_LOCATION_1 -> new Configurable<>(WARMUP_LOCATION_1, value);
+            case WARMUP_LOCATION_2 -> new Configurable<>(WARMUP_LOCATION_2, value);
             case null -> null;
         };
     }
@@ -178,6 +120,25 @@ public class ConfigParser {
         World nether = config.getWorlds().getNether();
         World end = config.getWorlds().getEnd();
         switch (configurable.key()) {
+            case WARMUP_LOCATION_1:
+            case WARMUP_LOCATION_2:
+                try {
+                    final String value = (String) configurable.value();
+                    final List<Integer> coordinates = Arrays.stream(value.split(",")).map(Integer::parseInt).toList();
+                    if (coordinates.size() != 3) {
+                        throw new Exception("bad coordinates set");
+                    }
+                    // if it didn't throw, then we good
+                } catch (Exception e) {
+                    config.getPlugin().getLogger().log(Level.WARNING, "Invalid warmup location set, value attempted to be executed, resetting to default...");
+                    if (configurable.key().equals(WARMUP_LOCATION_1)) {
+                        config.setProp(WARMUP_LOCATION_1.configName, Defaults.WARMUP_LOCATION_1);
+                    } else {
+                        config.setProp(WARMUP_LOCATION_2.configName, Defaults.WARMUP_LOCATION_2);
+                    }
+
+                }
+                break;
             case WORLD_BORDER_CENTER_X:
                 int newWorldCenterX = (int) configurable.value();
                 Utils.setWorldEffects(List.of(overworld, nether, end), (world) -> {

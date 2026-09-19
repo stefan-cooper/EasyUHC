@@ -1,3 +1,4 @@
+import mocks.servers.RespawnPlayerServerMock;
 import org.mockbukkit.mockbukkit.MockBukkit;
 import org.mockbukkit.mockbukkit.ServerMock;
 import org.mockbukkit.mockbukkit.entity.PlayerMock;
@@ -13,26 +14,37 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.junit.jupiter.api.BeforeEach;
-import static com.stefancooper.EasyUHC.Defaults.WORLD_NAME;
+
+import static com.stefancooper.EasyUHC.Defaults.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.*;
 import utils.TestUtils;
 
 public class EventTest {
 
-    private static ServerMock server;
+    private static RespawnPlayerServerMock server;
     private static Plugin plugin;
     private static World world;
+    private static PlayerMock serverOp;
+
+    @BeforeAll
+    public static void beforeAll() {
+        server = MockBukkit.mock(new RespawnPlayerServerMock());
+        plugin = MockBukkit.load(Plugin.class);
+        world = server.getWorld(WORLD_NAME);
+        serverOp = server.addPlayer();
+        serverOp.setOp(true);
+    }
 
     @BeforeEach
     public void load() {
-        server = MockBukkit.mock();
-        plugin = MockBukkit.load(Plugin.class);
-        world = server.getWorld(WORLD_NAME);
+        plugin.getUHCConfig().resetToDefaults();
+        TestUtils.executeCommand(plugin, serverOp, "cancel");
     }
 
-    @AfterEach
-    public void unload() {
+    @AfterAll
+    public static void unload() {
+        plugin.getUHCConfig().resetToDefaults();
         MockBukkit.unmock();
     }
 
@@ -40,8 +52,9 @@ public class EventTest {
     @DisplayName("Test the on death event to ensure a player is set to Spectator after death")
     void testOnDeathEventSpectate() {
         PlayerMock player = server.addPlayer();
+        TestUtils.executeCommand(plugin, player, "set", "on.death.action=spectate");
+        TestUtils.executeCommand(plugin, player, "start");
         player.damage(100);
-        player.getGameMode();
         assertEquals(GameMode.SPECTATOR, player.getGameMode());
     }
 
@@ -53,8 +66,9 @@ public class EventTest {
         player.setOp(true);
         TestUtils.executeCommand(plugin, player, "set", "on.death.action=kick");
         assertEquals(16, server.getOnlinePlayers().size());
+
+        TestUtils.executeCommand(plugin, player, "start");
         player.damage(100);
-        server.getOnlinePlayers();
         assertEquals(15, server.getOnlinePlayers().size());
     }
 
@@ -77,7 +91,8 @@ public class EventTest {
     @DisplayName("Test the on respawn event to ensure a player respawns at their death location")
     void testPlayerRespawnOnDeathLocation() {
         PlayerMock player = server.addPlayer();
-        World world = player.getWorld();
+        TestUtils.executeCommand(plugin, serverOp, "start");
+
         Location deathLocation = new Location(world, 100, 65, 100);
         player.damage(100);
         player.setLastDeathLocation(deathLocation);

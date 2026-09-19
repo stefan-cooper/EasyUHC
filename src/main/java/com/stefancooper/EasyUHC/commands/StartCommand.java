@@ -6,6 +6,7 @@ import java.util.logging.Level;
 
 import com.stefancooper.EasyUHC.Defaults;
 import com.stefancooper.EasyUHC.base.ConfigKey;
+import com.stefancooper.EasyUHC.events.WarmupEvents;
 import com.stefancooper.EasyUHC.evolvingshield.EvolvingShield;
 import com.stefancooper.EasyUHC.base.BossBarBorder;
 import com.stefancooper.EasyUHC.base.RandomFinalLocation;
@@ -65,6 +66,7 @@ public class StartCommand extends AbstractCommand {
 
     @Override
     public void execute() {
+        getConfig().getManagedResources().cancelTimer();
         shrinkYBorderBlock = -64;
 
         if (getArgs().length > 0 && getArgs()[0].equalsIgnoreCase(FORCE_KEY)) {
@@ -76,10 +78,14 @@ public class StartCommand extends AbstractCommand {
         final World nether = getConfig().getWorlds().getNether();
         final World end = getConfig().getWorlds().getEnd();
 
+        // Clear any warmup events
+        WarmupEvents.clearWarmupQueue();
+
         // Config Values
         final int centerX = getConfig().getProperty(WORLD_BORDER_CENTER_X, Defaults.WORLD_BORDER_CENTER_X);
         final int centerZ = getConfig().getProperty(WORLD_BORDER_CENTER_Z, Defaults.WORLD_BORDER_CENTER_Z);
         final int initialBorderSize = getConfig().getProperty(WORLD_BORDER_INITIAL_SIZE, Defaults.WORLD_BORDER_INITIAL_SIZE);
+//        final int initialBorder = getConfig().getProperty(WORLD_BORDER_INITIAL_SIZE, Defaults.WORLD_BORDER_INITIAL_SIZE);
 
         // World and Countdown timer are both configs that will always be set
         final int countdownTimer = getConfig().getProperty(COUNTDOWN_TIMER_LENGTH, Defaults.COUNTDOWN_TIMER_LENGTH);
@@ -123,11 +129,15 @@ public class StartCommand extends AbstractCommand {
             worldBorder.setDamageAmount(0);
             worldBorder.setCenter(finalLocation.getX(), finalLocation.getZ());
 
+            cbWorld.setGameRule(GameRules.PVP, false);
             cbWorld.setDifficulty(Difficulty.PEACEFUL);
             cbWorld.getEntities().stream().filter(entity -> entity.getType().equals(EntityType.ITEM)).forEach(Entity::remove);
             cbWorld.setGameRule(GameRules.FALL_DAMAGE, true);
             cbWorld.setGameRule(GameRules.REDUCED_DEBUG_INFO, getConfig().getProperty(DISABLE_DEBUG_INFO, Defaults.DISABLE_DEBUG_INFO));
         });
+
+        // Turn off friendly fire
+        Bukkit.getScoreboardManager().getMainScoreboard().getTeams().forEach(team -> team.setAllowFriendlyFire(false));
 
         // Actions on the player
         Bukkit.getOnlinePlayers().forEach(player -> {
