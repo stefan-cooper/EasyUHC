@@ -236,7 +236,7 @@
   <properties>
     <maven.compiler.target>25</maven.compiler.target>
     <maven.compiler.source>25</maven.compiler.source>
-    <UHCPlugin.version>12.1.2</UHCPlugin.version>
+    <UHCPlugin.version>12.1.3</UHCPlugin.version>
   </properties>
 </project>
 
