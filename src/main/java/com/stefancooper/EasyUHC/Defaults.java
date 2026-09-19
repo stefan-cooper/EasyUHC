@@ -3,10 +3,7 @@ package com.stefancooper.EasyUHC;
 import com.stefancooper.EasyUHC.base.ConfigKey;
 import com.stefancooper.EasyUHC.base.Utils;
 import net.kyori.adventure.text.Component;
-import org.bukkit.Bukkit;
-import org.bukkit.Difficulty;
-import org.bukkit.GameMode;
-import org.bukkit.GameRules;
+import org.bukkit.*;
 import org.bukkit.scoreboard.Criteria;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
@@ -115,6 +112,9 @@ public class Defaults {
 
     public static void setDefaultGameRules(Config config) {
         Utils.setWorldEffects(List.of(config.getWorlds().getOverworld(), config.getWorlds().getNether(), config.getWorlds().getEnd()), (world) -> {
+            final WorldBorder worldBorder = world.getWorldBorder();
+            worldBorder.setSize(100000);
+            worldBorder.setDamageAmount(0);
             world.setGameRule(GameRules.NATURAL_HEALTH_REGENERATION, false);
             world.setGameRule(GameRules.SPAWN_PHANTOMS, false);
             world.setGameRule(GameRules.LOCATOR_BAR, false);
