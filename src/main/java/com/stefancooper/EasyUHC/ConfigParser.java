@@ -178,14 +178,6 @@ public class ConfigParser {
         World nether = config.getWorlds().getNether();
         World end = config.getWorlds().getEnd();
         switch (configurable.key()) {
-            case WORLD_BORDER_INITIAL_SIZE:
-                int newWorldBorderSize = (int) configurable.value();
-                Utils.setWorldEffects(List.of(overworld, nether, end), (world) -> {
-                    WorldBorder worldBorder = world.getWorldBorder();
-                    worldBorder.setSize(newWorldBorderSize);
-                    worldBorder.setDamageAmount(0);
-                });
-                break;
             case WORLD_BORDER_CENTER_X:
                 int newWorldCenterX = (int) configurable.value();
                 Utils.setWorldEffects(List.of(overworld, nether, end), (world) -> {

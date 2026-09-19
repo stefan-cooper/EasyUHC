@@ -79,6 +79,7 @@ public class StartCommand extends AbstractCommand {
         // Config Values
         final int centerX = getConfig().getProperty(WORLD_BORDER_CENTER_X, Defaults.WORLD_BORDER_CENTER_X);
         final int centerZ = getConfig().getProperty(WORLD_BORDER_CENTER_Z, Defaults.WORLD_BORDER_CENTER_Z);
+        final int initialBorderSize = getConfig().getProperty(WORLD_BORDER_INITIAL_SIZE, Defaults.WORLD_BORDER_INITIAL_SIZE);
 
         // World and Countdown timer are both configs that will always be set
         final int countdownTimer = getConfig().getProperty(COUNTDOWN_TIMER_LENGTH, Defaults.COUNTDOWN_TIMER_LENGTH);
@@ -115,14 +116,17 @@ public class StartCommand extends AbstractCommand {
 
         // Actions on the world
         Bukkit.setDefaultGameMode(GameMode.SURVIVAL);
+        world.setTime(1000);
         Utils.setWorldEffects(List.of(world, nether, end), (cbWorld) -> {
-            world.getWorldBorder().setSize(getConfig().getProperty(WORLD_BORDER_INITIAL_SIZE, Defaults.WORLD_BORDER_INITIAL_SIZE));
-            world.getWorldBorder().setCenter(finalLocation.getX(), finalLocation.getZ());
-            world.setTime(1000);
-            world.setDifficulty(Difficulty.PEACEFUL);
-            world.getEntities().stream().filter(entity -> entity.getType().equals(EntityType.ITEM)).forEach(Entity::remove);
-            world.setGameRule(GameRules.FALL_DAMAGE, true);
-            world.setGameRule(GameRules.REDUCED_DEBUG_INFO, getConfig().getProperty(DISABLE_DEBUG_INFO, Defaults.DISABLE_DEBUG_INFO));
+            final WorldBorder worldBorder = cbWorld.getWorldBorder();
+            worldBorder.setSize(initialBorderSize);
+            worldBorder.setDamageAmount(0);
+            worldBorder.setCenter(finalLocation.getX(), finalLocation.getZ());
+
+            cbWorld.setDifficulty(Difficulty.PEACEFUL);
+            cbWorld.getEntities().stream().filter(entity -> entity.getType().equals(EntityType.ITEM)).forEach(Entity::remove);
+            cbWorld.setGameRule(GameRules.FALL_DAMAGE, true);
+            cbWorld.setGameRule(GameRules.REDUCED_DEBUG_INFO, getConfig().getProperty(DISABLE_DEBUG_INFO, Defaults.DISABLE_DEBUG_INFO));
         });
 
         // Actions on the player
@@ -248,7 +252,7 @@ public class StartCommand extends AbstractCommand {
             int shrinkingTime = getConfig().getProperty(WORLD_BORDER_SHRINKING_PERIOD, Defaults.WORLD_BORDER_SHRINKING_PERIOD);
 
             Utils.setWorldEffects(List.of(getConfig().getWorlds().getOverworld(), getConfig().getWorlds().getNether(), getConfig().getWorlds().getEnd()), (cbWorld) -> {
-                WorldBorder wb = cbWorld.getWorldBorder();
+                final WorldBorder wb = cbWorld.getWorldBorder();
                 wb.setDamageBuffer(5);
                 wb.setDamageAmount(0.2);
                 wb.changeSize(finalWorldBorderSize, Utils.secondsToTicks(shrinkingTime));

@@ -61,7 +61,7 @@ public class PluginTest {
         assertNotNull(world.getWorldBorder());
         assertEquals(0, world.getWorldBorder().getDamageAmount());
         assertEquals(5, world.getWorldBorder().getDamageBuffer());
-        assertEquals(WORLD_BORDER_INITIAL_SIZE, world.getWorldBorder().getSize());
+        assertEquals(100000, world.getWorldBorder().getSize());
         assertEquals(WORLD_BORDER_CENTER_X, world.getWorldBorder().getCenter().getX());
         assertEquals(WORLD_BORDER_CENTER_Z, world.getWorldBorder().getCenter().getZ());
     }

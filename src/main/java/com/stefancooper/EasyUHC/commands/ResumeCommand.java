@@ -58,9 +58,9 @@ public class ResumeCommand extends StartCommand {
         Bukkit.setDefaultGameMode(GameMode.SURVIVAL);
 
         // Actions on the world
-        Utils.setWorldEffects(List.of(world, nether, end), (cbWorld) -> world.getWorldBorder().setSize(getConfig().getProperty(WORLD_BORDER_INITIAL_SIZE, Defaults.WORLD_BORDER_INITIAL_SIZE)));
+        Utils.setWorldEffects(List.of(world, nether, end), (cbWorld) -> cbWorld.getWorldBorder().setSize(getConfig().getProperty(WORLD_BORDER_INITIAL_SIZE, Defaults.WORLD_BORDER_INITIAL_SIZE)));
         Utils.setWorldEffects(List.of(getConfig().getWorlds().getOverworld(), getConfig().getWorlds().getNether(), getConfig().getWorlds().getEnd()), (cbWorld) -> cbWorld.setDifficulty(getConfig().getProperty(DIFFICULTY, Defaults.DIFFICULTY)));
-        Utils.setWorldEffects(List.of(world, nether, end), (cbWorld) -> world.setGameRule(GameRules.FALL_DAMAGE, true));
+        Utils.setWorldEffects(List.of(world, nether, end), (cbWorld) -> cbWorld.setGameRule(GameRules.FALL_DAMAGE, true));
 
         if (getConfig().getProperty(ConfigKey.WORLD_BORDER_IN_BOSSBAR, Defaults.WORLD_BORDER_IN_BOSSBAR)) {
             BossBarBorder bossBarBorder = getConfig().getManagedResources().getBossBarBorder();

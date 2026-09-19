@@ -43,16 +43,6 @@ public class SetConfigTest {
     }
 
     @Test
-    @DisplayName("Test set initial world border command")
-    void testPlayerSetInitialWorldBorderSize() {
-        PlayerMock player = server.addPlayer();
-        player.setOp(true);
-        Assertions.assertEquals(Double.parseDouble("2000"), world.getWorldBorder().getSize());
-        TestUtils.executeCommand(plugin, player, "set", "world.border.initial.size=50");
-        Assertions.assertEquals(Double.parseDouble("50"), world.getWorldBorder().getSize());
-    }
-
-    @Test
     @DisplayName("Test set world border center x")
     void testPlayerSetWorldBorderCenterX() {
         PlayerMock player = server.addPlayer();
