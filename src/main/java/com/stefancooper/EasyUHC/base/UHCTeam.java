@@ -49,7 +49,7 @@ public class UHCTeam {
             team.addEntry(player);
         });
         team.color(uhcTeam.getColor());
-        team.setAllowFriendlyFire(false);
+//        team.setAllowFriendlyFire(false);
         team.prefix(Component.text(String.format("[%s] ", uhcTeam.getName())));
         config.getManagedResources().addTeam(uhcTeam);
     }

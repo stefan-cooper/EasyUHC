@@ -57,32 +57,20 @@ public class BaseEvents implements Listener {
 
     // View docs for various events https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/event/package-summary.html
 
-    @Nullable
-    private Location getWorldSpawn() {
-        Optional<Integer> worldSpawnX = Optional.ofNullable(config.getProperty(WORLD_SPAWN_X));
-        Optional<Integer> worldSpawnY = Optional.ofNullable(config.getProperty(WORLD_SPAWN_Y));
-        Optional<Integer> worldSpawnZ = Optional.ofNullable(config.getProperty(WORLD_SPAWN_Z));
-        if (worldSpawnX.isPresent() && worldSpawnY.isPresent() && worldSpawnZ.isPresent()) {
-            int x = worldSpawnX.get();
-            int y = worldSpawnY.get();
-            int z = worldSpawnZ.get();
-            return new Location(config.getWorlds().getOverworld(), x, y, z);
-        }
-        return null;
-    }
-
     @EventHandler
     public void onDeath(PlayerDeathEvent event) {
-        switch (DeathAction.fromString(config.getProperty(ON_DEATH_ACTION, Defaults.ON_DEATH_ACTION))) {
-            case SPECTATE:
-                event.getEntity().setGameMode(GameMode.SPECTATOR);
-                break;
-            case KICK:
-                event.getEntity().kick(Component.text("GG, you suck"));
-                break;
-            case null:
-            default:
-                break;
+        if (config.getPlugin().isUHCLive()) {
+            switch (DeathAction.fromString(config.getProperty(ON_DEATH_ACTION, Defaults.ON_DEATH_ACTION))) {
+                case SPECTATE:
+                    event.getEntity().setGameMode(GameMode.SPECTATOR);
+                    break;
+                case KICK:
+                    event.getEntity().kick(Component.text("GG, you suck"));
+                    break;
+                case null:
+                default:
+                    break;
+            }
         }
 
         if (config.getProperty(PLAYER_HEAD_GOLDEN_APPLE, Defaults.PLAYER_HEAD_GOLDEN_APPLE)) {
@@ -137,7 +125,7 @@ public class BaseEvents implements Listener {
             event.setRespawnLocation(deathLocation);
         }
         if (!config.getPlugin().isUHCLive()) {
-            final Location worldSpawn = getWorldSpawn();
+            final Location worldSpawn = Utils.getWorldSpawn(config);
             if (worldSpawn != null) {
                 event.setRespawnLocation(worldSpawn);
             }
@@ -154,7 +142,7 @@ public class BaseEvents implements Listener {
             event.getPlayer().setGameMode(GameMode.SURVIVAL);
         } else {
             event.getPlayer().setGameMode(GameMode.ADVENTURE);
-            final Location worldSpawn = getWorldSpawn();
+            final Location worldSpawn = Utils.getWorldSpawn(config);
             final int inventorySize = Arrays.stream(event.getPlayer().getInventory().getContents()).filter(item -> item != null && item.getType() != Material.AIR).toList().size();
             // don't teleport them if their inventory has something inside it (this suggests that the uhc has started and maybe the server crashed)
             if (inventorySize == 0 && worldSpawn != null) {

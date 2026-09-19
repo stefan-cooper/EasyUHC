@@ -60,7 +60,7 @@ public class UHCCommandTabCompleter  {
         }
 
         else if (args.length == 2 && args[0].equalsIgnoreCase("give")) {
-           suggestions.addAll(List.of("shieldxp", "shield"));
+           suggestions.addAll(List.of("shieldxp", "shield", "warmupbutton"));
         }
 
         else if (args.length >= 3 && args[0].equalsIgnoreCase("give") && args[1].equalsIgnoreCase("shield")) {

@@ -7,10 +7,14 @@ import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
-import static com.stefancooper.EasyUHC.base.ConfigKey.REVIVE_ENABLED;
+
+import static com.stefancooper.EasyUHC.base.ConfigKey.*;
+import static com.stefancooper.EasyUHC.base.ConfigKey.WORLD_SPAWN_Z;
 
 public class Utils {
 
@@ -89,5 +93,19 @@ public class Utils {
 
     public static boolean checkOddsOf(final int outOf) {
         return ThreadLocalRandom.current().nextInt(outOf) == 0;
+    }
+
+    @Nullable
+    public static Location getWorldSpawn(final Config config) {
+        Optional<Integer> worldSpawnX = Optional.ofNullable(config.getProperty(WORLD_SPAWN_X));
+        Optional<Integer> worldSpawnY = Optional.ofNullable(config.getProperty(WORLD_SPAWN_Y));
+        Optional<Integer> worldSpawnZ = Optional.ofNullable(config.getProperty(WORLD_SPAWN_Z));
+        if (worldSpawnX.isPresent() && worldSpawnY.isPresent() && worldSpawnZ.isPresent()) {
+            int x = worldSpawnX.get();
+            int y = worldSpawnY.get();
+            int z = worldSpawnZ.get();
+            return new Location(config.getWorlds().getOverworld(), x, y, z);
+        }
+        return null;
     }
 }

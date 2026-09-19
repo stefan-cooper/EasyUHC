@@ -3,12 +3,17 @@ package com.stefancooper.EasyUHC.commands;
 import com.stefancooper.EasyUHC.Config;
 import com.stefancooper.EasyUHC.base.ConfigKey;
 import com.stefancooper.EasyUHC.evolvingshield.EvolvingShield;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 
@@ -19,7 +24,8 @@ public class GiveCommand extends AbstractCommand {
 
     private enum Giveable {
         SHIELD_XP("shieldxp"),
-        SHIELD("shield");
+        SHIELD("shield"),
+        WARMUP_BUTTON("warmupbutton");
 
         public final String giveable;
 
@@ -82,6 +88,16 @@ public class GiveCommand extends AbstractCommand {
                             ));
                         }
                     }
+                }
+                case WARMUP_BUTTON -> {
+                    final Player sender = Bukkit.getPlayer(getSender().getName());
+                    final ItemStack warmupButton = new ItemStack(Material.POLISHED_BLACKSTONE_BUTTON);
+                    final ItemMeta btnMeta = warmupButton.getItemMeta();
+                    btnMeta.displayName(Component.text("Warmup Button"));
+                    btnMeta.getPersistentDataContainer().set(getConfig().getManagedResources().getKeys().getWarmupButtonKey(), PersistentDataType.BOOLEAN, true);
+                    btnMeta.setEnchantmentGlintOverride(true);
+                    warmupButton.setItemMeta(btnMeta);
+                    sender.give(warmupButton);
                 }
                 case SHIELD -> {
                     if (getArgs().length == 1) {

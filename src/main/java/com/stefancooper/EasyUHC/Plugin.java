@@ -2,15 +2,8 @@ package com.stefancooper.EasyUHC;
 
 import com.stefancooper.EasyUHC.base.Utils;
 import com.stefancooper.EasyUHC.commands.UHCCommand;
-import com.stefancooper.EasyUHC.events.EvolvingShieldEvents;
-import com.stefancooper.EasyUHC.events.BaseEvents;
-import com.stefancooper.EasyUHC.events.EnchantmentEvents;
-import com.stefancooper.EasyUHC.events.PerformanceEvents;
-import com.stefancooper.EasyUHC.events.ReviveEvents;
-import com.stefancooper.EasyUHC.events.TimestampEvents;
-import com.stefancooper.EasyUHC.events.UHCLootEvents;
+import com.stefancooper.EasyUHC.events.*;
 import com.stefancooper.EasyUHC.base.Constants;
-import com.stefancooper.EasyUHC.events.WinEvents;
 import io.papermc.paper.registry.RegistryAccess;
 import io.papermc.paper.registry.RegistryKey;
 import io.papermc.paper.registry.keys.EnchantmentKeys;
@@ -42,6 +35,7 @@ public class Plugin extends JavaPlugin implements Listener {
         Bukkit.getPluginManager().registerEvents(new EnchantmentEvents(config), this);
         Bukkit.getPluginManager().registerEvents(new PerformanceEvents(config), this);
         Bukkit.getPluginManager().registerEvents(new EvolvingShieldEvents(config), this);
+        Bukkit.getPluginManager().registerEvents(new WarmupEvents(config), this);
         isLive = false;
 
         this.getLogger().log(Level.INFO, "UHC Plugin enabled");

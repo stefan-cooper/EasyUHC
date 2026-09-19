@@ -120,7 +120,7 @@ public class Defaults {
             world.setGameRule(GameRules.LOCATOR_BAR, false);
             world.setGameRule(GameRules.MAX_BLOCK_MODIFICATIONS, MAXIMUM_FINAL_SIZE_FOR_Y_SHRINK * MAXIMUM_FINAL_SIZE_FOR_Y_SHRINK); // square the maximum final size to be used in y shrink
             // set pvp to false, will be enabled when /uhc start is ran
-            world.setGameRule(GameRules.PVP, false);
+//            world.setGameRule(GameRules.PVP, false);
             world.setGameRule(GameRules.FALL_DAMAGE, false);
         });
         config.getPlugin().setCountingDown(false);
