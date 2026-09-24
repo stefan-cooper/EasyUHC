@@ -3,6 +3,7 @@ package com.stefancooper.EasyUHC.base;
 import com.stefancooper.EasyUHC.Config;
 import com.stefancooper.EasyUHC.Defaults;
 import com.stefancooper.EasyUHC.base.records.Coordinate;
+import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -24,13 +25,23 @@ import static com.stefancooper.EasyUHC.base.ConfigKey.WORLD_BORDER_SPAWN_PADDING
 public class SpreadPlayers {
 
     final Config config;
+    final boolean force;
+    private final List<Coordinate> calculatedCoordinates;
+    private final List<List<Player>> calculatedGroups;
 
-    public SpreadPlayers(final Config config) {
+    public SpreadPlayers(final Config config, final boolean force) {
         this.config = config;
+        this.force = force;
+        final Pair<List<Coordinate>, List<List<Player>>> calculated = calculate();
+        this.calculatedCoordinates = calculated.getLeft();
+        this.calculatedGroups = calculated.getRight();
     }
 
+    public List<Coordinate> getCalculatedCoordinates() {
+        return calculatedCoordinates;
+    }
 
-    public void trigger(final boolean force) {
+    private Pair<List<Coordinate>, List<List<Player>>> calculate() {
         final int centerX = config.getProperty(WORLD_BORDER_CENTER_X, Defaults.WORLD_BORDER_CENTER_X);
         final int centerZ = config.getProperty(WORLD_BORDER_CENTER_Z, Defaults.WORLD_BORDER_CENTER_Z);
         final int diameter = config.getProperty(WORLD_BORDER_INITIAL_SIZE, Defaults.WORLD_BORDER_INITIAL_SIZE);
@@ -90,11 +101,17 @@ public class SpreadPlayers {
             throw new RuntimeException("something went wrong and we do not have enough coordinates to teleport to!");
         }
 
-        Collections.shuffle(coordinatesToTeleportTo);
+        return Pair.of(coordinatesToTeleportTo, groups);
+    }
 
-        for (int i = 0; i < groups.size(); i++) {
-            final List<Player> team = groups.get(i);
-            final Coordinate startingLocation = coordinatesToTeleportTo.get(i);
+
+    public void trigger() {
+        final World overworld = config.getWorlds().getOverworld();
+        Collections.shuffle(calculatedCoordinates);
+
+        for (int i = 0; i < calculatedGroups.size(); i++) {
+            final List<Player> team = calculatedGroups.get(i);
+            final Coordinate startingLocation = calculatedCoordinates.get(i);
             for (final Player player : team) {
                 if (player != null) {
                     final Block startingBlock = overworld.getHighestBlockAt((int) startingLocation.x(), (int) startingLocation.z());

@@ -103,8 +103,8 @@ public class StartCommand extends AbstractCommand {
 
         // Spread players
         try {
-            final SpreadPlayers spread = new SpreadPlayers(getConfig());
-            spread.trigger(isForce);
+            final SpreadPlayers spread = new SpreadPlayers(getConfig(), isForce);
+            spread.trigger();
         } catch (final RuntimeException e) {
             getConfig().getPlugin().getLogger().log(Level.WARNING, "UHC Start command cancelled. Not all coordinates to be teleported to have been loaded. Use Chunky to load the chunks before doing a UHC start");
             getSender().sendMessage("UHC not started because some of the coordinates to be teleported to have not been loaded. Use Chunky to load the chunks before starting.");

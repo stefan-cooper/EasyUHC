@@ -72,6 +72,8 @@ public class Defaults {
 
     // Loot chest
     public static boolean LOOT_CHEST_ENABLED = false;
+    public static String LOOT_CHEST_X_RANGE = "-75,75";
+    public static String LOOT_CHEST_Z_RANGE = "-75,75";
     public static int LOOT_CHEST_GRACE_PERIOD = 0;
     public static int LOOT_CHEST_FREQUENCY = 300;
     public static int LOOT_CHEST_SPINS_PER_GEN = 5;
