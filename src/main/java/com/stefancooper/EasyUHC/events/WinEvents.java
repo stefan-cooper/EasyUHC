@@ -31,6 +31,7 @@ public class WinEvents implements Listener {
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
+        if (!config.getPlugin().isUHCLive()) return;
         Player player = event.getEntity();
         String playerName = player.getName();
 

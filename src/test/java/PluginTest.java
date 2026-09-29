@@ -44,7 +44,7 @@ public class PluginTest {
         assertEquals(Boolean.FALSE, world.getGameRuleValue(GameRules.SPAWN_PHANTOMS));
         assertEquals(Boolean.FALSE, world.getGameRuleValue(GameRules.NATURAL_HEALTH_REGENERATION));
         assertEquals(Boolean.FALSE, world.getGameRuleValue(GameRules.LOCATOR_BAR));
-        assertEquals(Boolean.FALSE, world.getGameRuleValue(GameRules.PVP));
+        assertEquals(Boolean.TRUE, world.getGameRuleValue(GameRules.PVP));
         assertEquals(GameMode.ADVENTURE, player.getGameMode());
     }
 
