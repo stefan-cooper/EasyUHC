@@ -82,14 +82,16 @@ public class WinEventTest {
 
         TestUtils.executeCommand(plugin, admin, "start");
 
-        schedule.performTicks(200);
+        schedule.performTicks(300);
 
-        for (int titleCount = 0; titleCount < 8; titleCount++) {
-            // 5, 4, 3, 2, 1, Start, End Grace Period
+        for (int titleCount = 0; titleCount < 9; titleCount++) {
+            // 5, 4, 3, 2, 1, Start, End Grace Period, End World Border Grace Period
             winner.nextTitle();
             loser1.nextTitle();
             loser2.nextTitle();
         }
+
+        assertEquals(0.2, world.getWorldBorder().getDamageAmount());
 
         assertNull(winner.nextTitle());
         assertNull(loser1.nextTitle());
@@ -108,12 +110,13 @@ public class WinEventTest {
         assertEquals(NamedTextColor.GOLD + "Congratulations to Team Red!", winner.nextTitle());
         assertEquals(NamedTextColor.GOLD + "Congratulations to Team Red!", loser1.nextTitle());
         assertEquals(NamedTextColor.GOLD + "Congratulations to Team Red!", loser2.nextTitle());
+        assertEquals(0, world.getWorldBorder().getDamageAmount());
 
         schedule.performTicks(100);
 
         // winner should still be in same location after winning
         assertNotEquals(new Location(world, newX, newY, newZ), winner.getLocation());
-
+        assertEquals(0, world.getWorldBorder().getDamageAmount());
     }
 
     @Test

@@ -117,6 +117,8 @@ public class StartCommand extends AbstractCommand {
             return;
         }
 
+        getConfig().getPlugin().setUHCLive(true);
+
         // Wipe existing achievements
         getSender().getServer().dispatchCommand(getSender(), "advancement revoke @a everything");
 
@@ -137,7 +139,7 @@ public class StartCommand extends AbstractCommand {
         });
 
         // Turn off friendly fire
-        Bukkit.getScoreboardManager().getMainScoreboard().getTeams().forEach(team -> team.setAllowFriendlyFire(false));
+        // Bukkit.getScoreboardManager().getMainScoreboard().getTeams().forEach(team -> team.setAllowFriendlyFire(false));
 
         // Actions on the player
         Bukkit.getOnlinePlayers().forEach(player -> {
@@ -220,8 +222,6 @@ public class StartCommand extends AbstractCommand {
         if (endMobGracePeriod > 0) {
             getConfig().getManagedResources().runTaskLater(endMobGracePeriod(List.of(world, nether, end)), endMobGracePeriod + countdownTimer);
         }
-
-        getConfig().getPlugin().setUHCLive(true);
     }
 
     protected Runnable countdown(final int remaining, final World world) {

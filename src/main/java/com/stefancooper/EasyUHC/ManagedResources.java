@@ -162,7 +162,7 @@ public class ManagedResources {
     }
 
     public void addTimestamp(String event, boolean append) {
-        if (config.getProperty(ConfigKey.ENABLE_TIMESTAMPS, Defaults.ENABLE_TIMESTAMPS)) {
+        if (config.getProperty(ConfigKey.ENABLE_TIMESTAMPS, Defaults.ENABLE_TIMESTAMPS) && config.getPlugin().isUHCLive()) {
             try {
                 new File(TIMESTAMPS_LOCATION).createNewFile();
                 final FileWriter writer = new FileWriter(TIMESTAMPS_LOCATION, append);

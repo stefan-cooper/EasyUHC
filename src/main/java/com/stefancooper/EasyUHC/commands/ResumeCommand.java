@@ -54,7 +54,7 @@ public class ResumeCommand extends StartCommand {
 
         // Actions on the player
         Bukkit.getOnlinePlayers().forEach(player -> player.setGameMode(GameMode.SURVIVAL));
-        Bukkit.getScoreboardManager().getMainScoreboard().getTeams().forEach(team -> team.setAllowFriendlyFire(false));
+        // Bukkit.getScoreboardManager().getMainScoreboard().getTeams().forEach(team -> team.setAllowFriendlyFire(false));
 
         Bukkit.setDefaultGameMode(GameMode.SURVIVAL);
 
