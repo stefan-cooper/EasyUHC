@@ -75,11 +75,10 @@ public class WarmupEvents implements Listener {
             final Player winner = player1HP > player2HP ? activePlayer1 : activePlayer2;
             final Player loser = winner.equals(activePlayer1) ? activePlayer2 : activePlayer1;
             if (loser.equals(activePlayer1)) {
-                activePlayer1 = null;
+                activePlayer1 = warmupFightOverCallback(winner, loser);
             } else {
-                activePlayer2 = null;
+                activePlayer2 = warmupFightOverCallback(winner, loser);
             }
-            warmupFightOverCallback(winner, loser);
         }, 60);
     }
 
@@ -101,7 +100,9 @@ public class WarmupEvents implements Listener {
             }
         }, 1);
 
-        loser.sendMessage(Component.text("Unlucky... Get back in the queue and get your revenge!", Style.style(NamedTextColor.RED, TextDecoration.ITALIC)));
+        double hearts = winner.getHealth() / 2.0;
+        double rounded = Math.round(hearts * 2.0) / 2.0;
+        loser.sendMessage(Component.text(String.format("Unlucky... They survived with %s hearts. Get back in the queue and get your revenge!", rounded), Style.style(NamedTextColor.RED, TextDecoration.ITALIC)));
 
         if (!queue.isEmpty()) {
             final Player nextUp = queue.removeFirst();
@@ -195,7 +196,7 @@ public class WarmupEvents implements Listener {
         if (!(event.getEntity() instanceof Player victim)) return;
         if (!(event.getDamager() instanceof Player attacker)) return;
         if (!isPvpPair(attacker, victim)) {
-            event.setCancelled(true); // TODO - this will be annoying to test if i dont figure out a way to turn on pvp outside of uhc start
+            event.setCancelled(true);
         }
     }
 

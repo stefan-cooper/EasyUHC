@@ -7,6 +7,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.WorldBorder;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -61,6 +62,8 @@ public class WinEvents implements Listener {
             // cancel timers that might have been running
             config.getManagedResources().cancelTimer();
             config.getPlugin().setUHCLive(false);
+            final WorldBorder worldBorder = config.getWorlds().getOverworld().getWorldBorder();
+            worldBorder.setDamageAmount(0);
 
             config.getManagedResources().runTaskLater(() -> {
                 for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {

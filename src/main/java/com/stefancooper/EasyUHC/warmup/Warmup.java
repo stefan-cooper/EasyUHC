@@ -14,8 +14,10 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.util.Vector;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
 
 public class Warmup {
     final Location player1Spawn;
@@ -54,6 +56,7 @@ public class Warmup {
             player2.setSaturation(20);
 
             player1.teleport(player1Spawn);
+            faceLocation(player1, player2Spawn);
             player1.getEquipment().setBoots(new ItemStack(Material.IRON_BOOTS));
             player1.getEquipment().setLeggings(new ItemStack(Material.IRON_LEGGINGS));
             player1.getEquipment().setChestplate(new ItemStack(Material.IRON_CHESTPLATE));
@@ -65,6 +68,7 @@ public class Warmup {
             player1.give(new ItemStack(Material.ARROW, 16));
 
             player2.teleport(player2Spawn);
+            faceLocation(player2, player1Spawn);
             player2.getEquipment().setBoots(new ItemStack(Material.IRON_BOOTS));
             player2.getEquipment().setLeggings(new ItemStack(Material.IRON_LEGGINGS));
             player2.getEquipment().setChestplate(new ItemStack(Material.IRON_CHESTPLATE));
@@ -91,5 +95,16 @@ public class Warmup {
                         .getPersistentDataContainer()
                         .get(key, PersistentDataType.BOOLEAN)
         );
+    }
+
+    private void faceLocation(final Player player, final Location target) {
+        final Location loc = player.getLocation();
+
+        final Vector direction = target.toVector()
+                .subtract(loc.toVector())
+                .normalize();
+
+        loc.setDirection(direction);
+        player.setRotation(loc.getYaw(), loc.getPitch());
     }
 }

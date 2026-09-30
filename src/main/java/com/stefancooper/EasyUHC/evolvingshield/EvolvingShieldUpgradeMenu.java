@@ -239,7 +239,7 @@ public class EvolvingShieldUpgradeMenu {
                             "§7Gain an enchanted TNT with a mix of enchantments (Blastwave II, Quickboom II)",
                             EvolvingShieldUpgradeType.MIXED_TNT
                     ));
-                    inv.setItem(32, createUpgradeItem(
+                    inv.setItem(31, createUpgradeItem(
                             Material.PARROT_SPAWN_EGG,
                             "§6Jester",
                             "§7A random upgrade or enchantment.",
@@ -300,19 +300,11 @@ public class EvolvingShieldUpgradeMenu {
                             EvolvingShieldUpgradeType.JESTER
                     ));
                     break;
-                case 8:
+                case 8, 9, 10:
                     inv.setItem(22, createUpgradeItem(
                             Material.PARROT_SPAWN_EGG,
                             "§6Jester",
                             "§7A random upgrade or enchantment.",
-                            EvolvingShieldUpgradeType.JESTER
-                    ));
-                    break;
-                case 9:
-                    inv.setItem(22, createUpgradeItem(
-                            Material.PARROT_SPAWN_EGG,
-                            "§6Jester",
-                            "§7A random upgrade or enchantment ",
                             EvolvingShieldUpgradeType.JESTER
                     ));
                     break;

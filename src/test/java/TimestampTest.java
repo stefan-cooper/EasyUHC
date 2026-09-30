@@ -76,18 +76,26 @@ public class TimestampTest {
     @Test
     @DisplayName("When start is run, and a player dies, the timestamps is updated")
     void deathTimestamp() throws IOException {
+        TestUtils.executeCommand(plugin, admin, "set", "enable.timestamps=true");
+
         RespawnPlayerMock player1 = server.addPlayer("jawad");
         RespawnPlayerMock player2 = server.addPlayer("stefan");
         RespawnPlayerMock player3 = server.addPlayer("sean");
+        RespawnPlayerMock player4 = server.addPlayer("shurf");
         player1.setName("jawad");
         player1.setDisplayName("jawad");
         player2.setName("stefan");
         player2.setDisplayName("stefan");
         player3.setName("sean");
         player3.setDisplayName("sean");
+        player4.setName("shurf");
+        player4.setDisplayName("shurf");
 
-        TestUtils.executeCommand(plugin, admin, "set", "enable.timestamps=true");
+        player4.damage(100);
+
         TestUtils.executeCommand(plugin, admin, "start");
+
+        assertFileContainsText("shurf dies", false);
 
         player1.damage(100);
 
