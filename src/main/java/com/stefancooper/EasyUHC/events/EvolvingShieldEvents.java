@@ -10,10 +10,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.Style;
 import net.kyori.adventure.text.format.TextDecoration;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.damage.DamageType;
 import org.bukkit.entity.Arrow;
@@ -43,6 +40,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
 
 import java.util.*;
 
@@ -168,11 +167,15 @@ public class EvolvingShieldEvents implements Listener {
         if (event.getDamageSource().getDamageType() == DamageType.THORNS) {
             return;
         }
-        if (config.getProperty(ENABLE_EVOLVING_SHIELDS, Defaults.ENABLE_EVOLVING_SHIELDS) && event.getEntity() instanceof Player) {
+        final Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
+        if (config.getProperty(ENABLE_EVOLVING_SHIELDS, Defaults.ENABLE_EVOLVING_SHIELDS) && event.getEntity() instanceof Player victim) {
             if (event.getDamager() instanceof final Player attacker) {
+                final Team attackerTeam =  scoreboard.getEntryTeam(attacker.getName());
+                final Team victimTeam = scoreboard.getEntryTeam(victim.getName());
+                final boolean isTeamDamage = attackerTeam != null && attackerTeam.equals(victimTeam);
                 // Melee
                 final Optional<ItemStack> getShield = EvolvingShield.getEvolvingShieldFromPlayer(config, attacker);
-                if (getShield.isPresent()) {
+                if (getShield.isPresent() && !isTeamDamage) {
                     final ItemStack shield = getShield.get();
                     EvolvingShield.updateXP(
                             config,
@@ -187,7 +190,10 @@ public class EvolvingShieldEvents implements Listener {
                     && projectile.getShooter() instanceof final Player attacker) {
                 // Bow or Crossbow
                 final Optional<ItemStack> getShield = EvolvingShield.getEvolvingShieldFromPlayer(config, attacker);
-                if (getShield.isPresent()) {
+                final Team attackerTeam =  scoreboard.getEntryTeam(attacker.getName());
+                final Team victimTeam = scoreboard.getEntryTeam(victim.getName());
+                final boolean isTeamDamage = attackerTeam != null && attackerTeam.equals(victimTeam);
+                if (getShield.isPresent() && !isTeamDamage) {
                     final ItemStack shield = getShield.get();
                     EvolvingShield.updateXP(
                             config,

@@ -2,6 +2,7 @@ package com.stefancooper.EasyUHC.evolvingshield;
 
 import com.stefancooper.EasyUHC.Config;
 import com.stefancooper.EasyUHC.base.PerformanceTrackingEvent;
+import com.stefancooper.EasyUHC.base.Utils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.Style;
@@ -164,35 +165,6 @@ public class EvolvingShieldUpgradeMenu {
                     break;
                 case 3:
                     inv.setItem(11, createUpgradeItem(
-                            Material.ARROW,
-                            "§6Arrows",
-                            "§7Gain some arrows (x18)",
-                            EvolvingShieldUpgradeType.ARROWS,
-                            false
-                    ));
-                    inv.setItem(13, createUpgradeItem(
-                            Material.SPECTRAL_ARROW,
-                            "§6Spectral arrows",
-                            "§7Gain some spectral arrows (x12)",
-                            EvolvingShieldUpgradeType.ARROWS_SPECTRAL,
-                            false
-                    ));
-                    inv.setItem(15, createUpgradeItem(
-                            Material.ARROW,
-                            "§6Tipped Arrows",
-                            "§7Gain some very powerful arrows (x3)",
-                            EvolvingShieldUpgradeType.ARROWS_TIPPED,
-                            true
-                    ));
-                    inv.setItem(31, createUpgradeItem(
-                            Material.PARROT_SPAWN_EGG,
-                            "§6Jester",
-                            "§7A random upgrade or enchantment.",
-                            EvolvingShieldUpgradeType.JESTER
-                    ));
-                    break;
-                case 4:
-                    inv.setItem(11, createUpgradeItem(
                             Material.OBSIDIAN,
                             "§6Nether Explorer Kit",
                             "§7Gain the Nether Explorer kit",
@@ -211,6 +183,35 @@ public class EvolvingShieldUpgradeMenu {
                             "§6Librarians Kit",
                             "§7Gain the Librarian kit",
                             EvolvingShieldUpgradeType.LIBRARIAN_KIT,
+                            true
+                    ));
+                    inv.setItem(31, createUpgradeItem(
+                            Material.PARROT_SPAWN_EGG,
+                            "§6Jester",
+                            "§7A random upgrade or enchantment.",
+                            EvolvingShieldUpgradeType.JESTER
+                    ));
+                    break;
+                case 4:
+                    inv.setItem(11, createUpgradeItem(
+                            Material.ARROW,
+                            "§6Arrows",
+                            "§7Gain some arrows (x18)",
+                            EvolvingShieldUpgradeType.ARROWS,
+                            false
+                    ));
+                    inv.setItem(13, createUpgradeItem(
+                            Material.SPECTRAL_ARROW,
+                            "§6Spectral arrows",
+                            "§7Gain some spectral arrows (x12)",
+                            EvolvingShieldUpgradeType.ARROWS_SPECTRAL,
+                            false
+                    ));
+                    inv.setItem(15, createUpgradeItem(
+                            Material.ARROW,
+                            "§6Tipped Arrows",
+                            "§7Gain some very powerful arrows (x3)",
+                            EvolvingShieldUpgradeType.ARROWS_TIPPED,
                             true
                     ));
                     inv.setItem(31, createUpgradeItem(
@@ -589,6 +590,22 @@ public class EvolvingShieldUpgradeMenu {
                     mixedTnt.addUnsafeEnchantment(config.getManagedResources().getQuickboomEnchantment(), 2);
                     player.give(mixedTnt);
                     break;
+                case EvolvingShieldUpgradeType.EFFECT_BLINDNESS:
+                    player.playSound(player.getLocation(), Sound.ENTITY_WITHER_AMBIENT, 1, 1);
+                    player.addPotionEffect(PotionEffectType.BLINDNESS.createEffect((int) Utils.secondsToTicks(30), 2));
+                    break;
+                case EvolvingShieldUpgradeType.EFFECT_MINING_FATIGUE:
+                    player.playSound(player.getLocation(), Sound.ENTITY_WITHER_AMBIENT, 1, 1);
+                    player.addPotionEffect(PotionEffectType.MINING_FATIGUE.createEffect((int) Utils.secondsToTicks(30), 2));
+                    break;
+                case EvolvingShieldUpgradeType.EFFECT_NAUSEA:
+                    player.playSound(player.getLocation(), Sound.ENTITY_WITHER_AMBIENT, 1, 1);
+                    player.addPotionEffect(PotionEffectType.NAUSEA.createEffect((int) Utils.secondsToTicks(30), 2));
+                    break;
+                case EvolvingShieldUpgradeType.EFFECT_SLOWNESS:
+                    player.playSound(player.getLocation(), Sound.ENTITY_WITHER_AMBIENT, 1, 1);
+                    player.addPotionEffect(PotionEffectType.SLOWNESS.createEffect((int) Utils.secondsToTicks(30), 2));
+                    break;
                 case EvolvingShieldUpgradeType.JESTER:
                     applyJesterUpgrade(config, shield, player);
                     return;
@@ -620,7 +637,8 @@ public class EvolvingShieldUpgradeMenu {
         final boolean canAddSlowness = shield.getEnchantmentLevel(config.getManagedResources().getShieldSlownessEnchantment()) == 0;
         final boolean canAddStrength = shield.getEnchantmentLevel(config.getManagedResources().getShieldStrengthEnchantment()) == 0;
         final boolean canAddJump = shield.getEnchantmentLevel(config.getManagedResources().getShieldJumpEnchantment()) == 0;
-        final List<EvolvingShieldUpgradeType> allAvailableUpgrades = Arrays.stream(EvolvingShieldUpgradeType.values()).filter(upgrade -> switch (upgrade) {
+
+        final List<EvolvingShieldUpgradeType> allAvailableUpgrades = new ArrayList<>(Arrays.stream(EvolvingShieldUpgradeType.values()).filter(upgrade -> switch (upgrade) {
             case EvolvingShieldUpgradeType.KNOCKBACK -> canAddKnockback;
             case EvolvingShieldUpgradeType.THORNS -> canAddThorns;
             case EvolvingShieldUpgradeType.SWIFTNESS -> canAddSwiftness;
@@ -630,11 +648,26 @@ public class EvolvingShieldUpgradeMenu {
             case EvolvingShieldUpgradeType.THUNDER, EvolvingShieldUpgradeType.WIND, EvolvingShieldUpgradeType.WATER,
                  EvolvingShieldUpgradeType.FIRE, EvolvingShieldUpgradeType.JESTER -> false;
             default -> true;
-        }).toList();
-        final EvolvingShieldUpgradeType selectedUpgrade =  allAvailableUpgrades.get(
+        }).toList());
+        // Pad out the list to give more odds of bad upgrade
+        allAvailableUpgrades.addAll(List.of(
+                EvolvingShieldUpgradeType.EFFECT_BLINDNESS,
+                EvolvingShieldUpgradeType.EFFECT_BLINDNESS,
+                EvolvingShieldUpgradeType.EFFECT_BLINDNESS,
+                EvolvingShieldUpgradeType.EFFECT_MINING_FATIGUE,
+                EvolvingShieldUpgradeType.EFFECT_MINING_FATIGUE,
+                EvolvingShieldUpgradeType.EFFECT_MINING_FATIGUE,
+                EvolvingShieldUpgradeType.EFFECT_NAUSEA,
+                EvolvingShieldUpgradeType.EFFECT_NAUSEA,
+                EvolvingShieldUpgradeType.EFFECT_NAUSEA,
+                EvolvingShieldUpgradeType.EFFECT_SLOWNESS,
+                EvolvingShieldUpgradeType.EFFECT_SLOWNESS,
+                EvolvingShieldUpgradeType.EFFECT_SLOWNESS
+        ));
+        final EvolvingShieldUpgradeType selectedUpgrade = allAvailableUpgrades.get(
                 ThreadLocalRandom.current().nextInt(allAvailableUpgrades.size())
         );
-        player.sendMessage(Component.text(String.format("The random selected upgrade was: %s", selectedUpgrade.getJesterDescription()), Style.style(NamedTextColor.LIGHT_PURPLE, TextDecoration.ITALIC)));
+        player.sendMessage(Component.text(String.format("The Jester chose: %s", selectedUpgrade.getJesterDescription()), Style.style(NamedTextColor.LIGHT_PURPLE, TextDecoration.ITALIC)));
         applyUpgrade(config, player, selectedUpgrade);
     }
 
