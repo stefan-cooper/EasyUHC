@@ -32,16 +32,16 @@ import static com.stefancooper.EasyUHC.evolvingshield.EvolvingShieldUpgradeMenu.
 public class EvolvingShield {
 
     public static int STAGE_1 = 30;
-    public static int STAGE_2 = 100;
-    public static int STAGE_3 = 400;
-    public static int STAGE_4 = 700;
-    public static int STAGE_5 = 1100;
-    public static int STAGE_6 = 1600;
-    public static int STAGE_7 = 2100;
-    public static int STAGE_8 = 3000;
-    public static int STAGE_9 = 3500;
-    public static int STAGE_10 = 5000;
-    public static int STAGE_11 = 7500;
+    public static int STAGE_2 = 240;
+    public static int STAGE_3 = 480;
+    public static int STAGE_4 = 900;
+    public static int STAGE_5 = 1500;
+    public static int STAGE_6 = 2100;
+    public static int STAGE_7 = 2700;
+    public static int STAGE_8 = 3300;
+    public static int STAGE_9 = 3900;
+    public static int STAGE_10 = 4500;
+    public static int STAGE_11 = 5200;
 
     public static void createEvolvingShield(final Config config, final Player player) {
         final ItemStack shield = new ItemStack(Material.SHIELD, 1);
@@ -86,7 +86,7 @@ public class EvolvingShield {
             case LOOT_CHEST:
                 yield 200;
             case DAMAGE_HEARTS:
-                yield toAdd * 100;
+                yield toAdd * 50;
             case EXPERIENCE:
                 yield toAdd * mcMultiplier;
             case MANUAL:

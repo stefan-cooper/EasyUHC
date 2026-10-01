@@ -26,20 +26,26 @@ public enum EvolvingShieldUpgradeType {
     PLAYER_HEAD("player_head", "Player head"),
     REGEN("regen", "4 hearts of regeneration"),
     // Enchants
-    KNOCKBACK("knockback", "Knockback added or upgraded to your shield"),
-    THORNS("thorns", "Thorns added or upgraded to your shield"),
+    KNOCKBACK("knockback", "Knockback for your shield"),
+    THORNS("thorns", "Thorns for your shield"),
     // Buff Enchants
-    SWIFTNESS("swiftness", "Swift Defense added to your shield"),
-    JUMP("jump", "Leap Guard added to your shield"),
-    STRENGTH("strength", "Counterforce added to your shield"),
+    SWIFTNESS("swiftness", "Swift Defense for your shield"),
+    JUMP("jump", "Leap Guard for your shield"),
+    STRENGTH("strength", "Counterforce for your shield"),
     // Debuff Enchants
-    SLOWNESS("slowness", "Sapping Guard added to your shield"),
-    WEAKNESS("weakness", "Snare Guard added to your shield"),
+    SLOWNESS("slowness", "Sapping Guard for your shield"),
+    WEAKNESS("weakness", "Snare Guard for your shield"),
     // Elementals
     THUNDER("thunder"),
     WIND("wind"),
     FIRE("fire"),
     WATER("water"),
+    // Evil jesters
+    EFFECT_NAUSEA("e_nausea", "NAUSEA!"),
+    EFFECT_BLINDNESS("e_blindness", "BLINDNESS!"),
+    EFFECT_SLOWNESS("e_slowness", "SLOWNESS!"),
+    EFFECT_MINING_FATIGUE("e_mining_fatigue", "MINING FATIGUE!"),
+
     // Misc
     JESTER("jester");
 
