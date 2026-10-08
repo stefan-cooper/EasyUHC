@@ -43,7 +43,8 @@ public class WinEventTest {
         MockBukkit.unmock();
     }
 
-    @Test
+//    TODO - unskip when https://github.com/MockBukkit/MockBukkit/pull/1625 is merged
+//    @Test
     @DisplayName("When a team wins UHC, everyone sees title")
     void titleSent() {
 
@@ -119,7 +120,8 @@ public class WinEventTest {
         assertEquals(0, world.getWorldBorder().getDamageAmount());
     }
 
-    @Test
+//    TODO - unskip when https://github.com/MockBukkit/MockBukkit/pull/1625 is merged
+//    @Test
     @DisplayName("When a team wins UHC (3 players per team), everyone sees title")
     void titleSentManyMen() {
 
