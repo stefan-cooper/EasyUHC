@@ -220,13 +220,17 @@ public class WarmupEvents implements Listener {
         if (config.getPlugin().isUHCLive()) return;
         final Player quitter = event.getPlayer();
         if (!queue.remove(quitter)) {
-            if (activePlayer1 == null || activePlayer2 == null) return;
-
+            if (activePlayer1 == null && activePlayer2 == null) return;
             quitters.add(quitter);
-            if (quitter.getUniqueId().equals(activePlayer1.getUniqueId())) {
-                activePlayer1 = warmupFightOverCallback(activePlayer2, activePlayer1);
-            } else if (quitter.getUniqueId().equals(activePlayer2.getUniqueId())) {
-                activePlayer2 = warmupFightOverCallback(activePlayer1, activePlayer2);
+            if (activePlayer1 != null && activePlayer2 != null) {
+                if (quitter.getUniqueId().equals(activePlayer1.getUniqueId())) {
+                    activePlayer1 = warmupFightOverCallback(activePlayer2, activePlayer1);
+                } else if (quitter.getUniqueId().equals(activePlayer2.getUniqueId())) {
+                    activePlayer2 = warmupFightOverCallback(activePlayer1, activePlayer2);
+                }
+            } else {
+                activePlayer1 = null;
+                activePlayer2 = null;
             }
         }
     }
