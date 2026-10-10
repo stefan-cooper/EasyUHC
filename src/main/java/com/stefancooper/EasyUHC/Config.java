@@ -41,22 +41,27 @@ public class Config {
         parser.executeConfigurables(this.config.entrySet().stream().map(prop -> parser.propertyToConfigurable((String) prop.getKey(), (String) prop.getValue())).toList());
     }
 
-    private Properties loadInitialProperties() {
-        final Properties props = new Properties();
-        try {
-            boolean file = new File(CONFIG_LOCATION).createNewFile();
-            // if file had to be created, go and set the defaults
-            if (file) setDefaults();
-            else {
-                final FileInputStream in = new FileInputStream(CONFIG_LOCATION);
-                props.load(in);
-                in.close();
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        return props;
-    }
+	private Properties loadInitialProperties() {
+		final Properties props = new Properties();
+
+		try {
+			File file = new File(CONFIG_LOCATION);
+
+			if (file.createNewFile()) {
+				// New config file. Defaults will be applied
+				// after worlds and resources are initialized.
+			} else {
+				try (FileInputStream in = new FileInputStream(file)) {
+					props.load(in);
+				}
+			}
+
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+
+		return props;
+	}
 
     public ManagedResources getManagedResources() {
         return managedResources;
