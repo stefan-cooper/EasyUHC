@@ -1,5 +1,7 @@
 package mocks.types;
 
+import org.bukkit.damage.DamageSource;
+import org.jspecify.annotations.NonNull;
 import org.mockbukkit.mockbukkit.ServerMock;
 import org.mockbukkit.mockbukkit.entity.PlayerMock;
 import org.bukkit.Location;
@@ -22,6 +24,12 @@ public class RespawnPlayerMock extends PlayerMock {
         return playerSpigotMock;
     }
 
+
+//    @Override
+//    public void damage(double hp, @NonNull DamageSource source) {
+//        playerSpigotMock.
+//    }
+
     public class PlayerSpigotMock extends Player.Spigot
     {
         @Override
@@ -31,5 +39,7 @@ public class RespawnPlayerMock extends PlayerMock {
             setLocation(new Location(getWorld(), 0, 64, 0));
             alive = true;
         }
+
+
     }
 }

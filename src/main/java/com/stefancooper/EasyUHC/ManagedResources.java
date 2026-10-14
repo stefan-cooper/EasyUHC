@@ -7,6 +7,7 @@ import com.stefancooper.EasyUHC.base.BossBarBorder;
 import com.stefancooper.EasyUHC.revive.InstantRevive;
 import com.stefancooper.EasyUHC.base.UHCTeam;
 import com.stefancooper.EasyUHC.base.Utils;
+import com.stefancooper.EasyUHC.sharedinventory.SharedInventoryManager;
 import io.papermc.paper.registry.RegistryAccess;
 import io.papermc.paper.registry.RegistryKey;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -41,6 +42,7 @@ public class ManagedResources {
     Block dynamicLootChestLocation = null;
     Block dynamicNetherLootChestLocation = null;
     long startTime = System.currentTimeMillis();
+    private final SharedInventoryManager sharedInventoryManager;
 
     public ManagedResources(final Config config) {
         this.config = config;
@@ -48,6 +50,7 @@ public class ManagedResources {
         this.scheduler = Bukkit.getScheduler();
         this.keys = new NamespaceKeys(config);
         this.teams = new ArrayList<>();
+        this.sharedInventoryManager = new SharedInventoryManager(this.config);
         final boolean fileAlreadyExists;
         JSONObject json = null;
         try {
@@ -256,6 +259,10 @@ public class ManagedResources {
                 // noop
             }
         }
+    }
+
+    public SharedInventoryManager getSharedInventoryManager() {
+        return sharedInventoryManager;
     }
 
 }

@@ -7,6 +7,7 @@ import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -107,5 +108,9 @@ public class Utils {
             return new Location(config.getWorlds().getOverworld(), x, y, z);
         }
         return null;
+    }
+
+    public static Optional<UHCTeam> getTeamForPlayer(final Config config, final Player player) {
+        return config.getManagedResources().getTeams().stream().filter(t -> t.getPlayers().contains(player)).findFirst();
     }
 }

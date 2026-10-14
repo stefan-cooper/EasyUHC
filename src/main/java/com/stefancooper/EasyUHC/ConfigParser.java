@@ -102,8 +102,14 @@ public class ConfigParser {
             case ADDITIONAL_ENCHANTS_TNT -> new Configurable<>(ADDITIONAL_ENCHANTS_TNT, Boolean.parseBoolean(value));
             // Evolving shields
             case ENABLE_EVOLVING_SHIELDS -> new Configurable<>(ENABLE_EVOLVING_SHIELDS, Boolean.parseBoolean(value));
+            case ENABLE_EVOLVING_SHIELD_SHARED_CHOICE -> new Configurable<>(ENABLE_EVOLVING_SHIELD_SHARED_CHOICE, Boolean.parseBoolean(value));
             case EVOLVING_SHIELDS_EXP_THRESHOLD -> new Configurable<>(EVOLVING_SHIELDS_EXP_THRESHOLD, Integer.valueOf(value));
             case EVOLVING_SHIELDS_MINECRAFT_EXP_MULTIPLIER -> new Configurable<>(EVOLVING_SHIELDS_MINECRAFT_EXP_MULTIPLIER, Integer.parseInt(value));
+            // Shared health
+            case SHARED_TEAM_HEALTH -> new Configurable<>(SHARED_TEAM_HEALTH, Integer.parseInt(value));
+            case ENABLE_SHARED_TEAM_HEALTH -> new Configurable<>(ENABLE_SHARED_TEAM_HEALTH, Boolean.parseBoolean(value));
+            // Shared inv
+            case ENABLE_SHARED_TEAM_INVENTORY -> new Configurable<>(ENABLE_SHARED_TEAM_INVENTORY, Boolean.parseBoolean(value));
             // Warmup
             case WARMUP_LOCATION_1 -> new Configurable<>(WARMUP_LOCATION_1, value);
             case WARMUP_LOCATION_2 -> new Configurable<>(WARMUP_LOCATION_2, value);
@@ -156,25 +162,25 @@ public class ConfigParser {
                 });
                 break;
             case TEAM_RED:
-                createTeam(new UHCTeam("Red", (String) configurable.value(), NamedTextColor.RED ), config);
+                createTeam(new UHCTeam("Red", (String) configurable.value(), NamedTextColor.RED, config ), config);
                 break;
             case TEAM_BLUE:
-                createTeam(new UHCTeam("Blue", (String) configurable.value(), NamedTextColor.AQUA ), config);
+                createTeam(new UHCTeam("Blue", (String) configurable.value(), NamedTextColor.AQUA, config ), config);
                 break;
             case TEAM_GREEN:
-                createTeam(new UHCTeam("Green", (String) configurable.value(), NamedTextColor.GREEN ), config);
+                createTeam(new UHCTeam("Green", (String) configurable.value(), NamedTextColor.GREEN, config ), config);
                 break;
             case TEAM_YELLOW:
-                createTeam(new UHCTeam("Yellow", (String) configurable.value(), NamedTextColor.YELLOW ), config);
+                createTeam(new UHCTeam("Yellow", (String) configurable.value(), NamedTextColor.YELLOW, config ), config);
                 break;
             case TEAM_ORANGE:
-                createTeam(new UHCTeam("Orange", (String) configurable.value(), NamedTextColor.GOLD ), config);
+                createTeam(new UHCTeam("Orange", (String) configurable.value(), NamedTextColor.GOLD, config ), config);
                 break;
             case TEAM_PINK:
-                createTeam(new UHCTeam("Pink", (String) configurable.value(), NamedTextColor.LIGHT_PURPLE ), config);
+                createTeam(new UHCTeam("Pink", (String) configurable.value(), NamedTextColor.LIGHT_PURPLE, config ), config);
                 break;
             case TEAM_PURPLE:
-                createTeam(new UHCTeam("Purple", (String) configurable.value(), NamedTextColor.DARK_PURPLE ), config);
+                createTeam(new UHCTeam("Purple", (String) configurable.value(), NamedTextColor.DARK_PURPLE, config ), config);
                 break;
             case PLAYER_HEAD_GOLDEN_APPLE:
                 NamespacedKey playerHeadKey = config.getManagedResources().getKeys().getPlayerHeadKey();

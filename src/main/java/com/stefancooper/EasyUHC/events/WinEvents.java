@@ -93,7 +93,7 @@ public class WinEvents implements Listener {
 
             if (hasSurvivor) {
                 String playersAsString = String.join(", ", playerNames);
-                UHCTeam uhcTeam = new UHCTeam(team.getName(), playersAsString, NamedTextColor.namedColor(team.color().value()));
+                UHCTeam uhcTeam = new UHCTeam(team.getName(), playersAsString, NamedTextColor.namedColor(team.color().value()), config);
                 teamsWithSurvivors.add(uhcTeam);
             }
         }

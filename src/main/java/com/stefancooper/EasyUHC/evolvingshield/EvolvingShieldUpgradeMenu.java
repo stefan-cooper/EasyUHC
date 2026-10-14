@@ -2,6 +2,7 @@ package com.stefancooper.EasyUHC.evolvingshield;
 
 import com.stefancooper.EasyUHC.Config;
 import com.stefancooper.EasyUHC.base.PerformanceTrackingEvent;
+import com.stefancooper.EasyUHC.base.UHCTeam;
 import com.stefancooper.EasyUHC.base.Utils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -14,6 +15,7 @@ import org.bukkit.Sound;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.block.banner.PatternType;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
@@ -26,10 +28,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Level;
 
@@ -50,6 +49,7 @@ public class EvolvingShieldUpgradeMenu {
 
     final Config config;
     final Player player;
+    public static final Set<UUID> playersWithUpgradeMenusOpen = new HashSet<>();
 
     public EvolvingShieldUpgradeMenu(final Config config, final Player player) {
         this.config = config;
@@ -311,6 +311,7 @@ public class EvolvingShieldUpgradeMenu {
                     break;
             }
 
+            playersWithUpgradeMenusOpen.add(player.getUniqueId());
             player.openInventory(inv);
         }
     }
@@ -364,7 +365,16 @@ public class EvolvingShieldUpgradeMenu {
         final NamespacedKey xpKey = config.getManagedResources().getKeys().getEvolvingShieldXPKey();
         final Optional<ItemStack> getShield = EvolvingShield.getEvolvingShieldFromPlayer(config, player);
 
+
         if (getShield.isPresent()) {
+            final Optional<UHCTeam> team = Utils.getTeamForPlayer(config, player);
+            playersWithUpgradeMenusOpen.remove(player.getUniqueId());
+            if (team.isPresent() && team.get().isSharedInventory()) {
+                team.get().getPlayers().stream().filter(p -> playersWithUpgradeMenusOpen.contains(p.getUniqueId())).forEach(p -> {
+                    p.closeInventory();
+                    playersWithUpgradeMenusOpen.remove(p.getUniqueId());
+                });
+            }
             final ItemStack shield = getShield.get();
 
             switch (type) {

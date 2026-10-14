@@ -2,6 +2,8 @@ package com.stefancooper.EasyUHC.revive;
 
 import com.stefancooper.EasyUHC.Config;
 import com.stefancooper.EasyUHC.Defaults;
+import com.stefancooper.EasyUHC.base.UHCTeam;
+import com.stefancooper.EasyUHC.base.Utils;
 import com.stefancooper.EasyUHC.evolvingshield.EvolvingShield;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -62,7 +64,15 @@ public class InstantRevive {
         config.getManagedResources().addTimestamp(String.format("[Revive] %s has been revived", revivee.getName()));
 
         // Revivee effects
-        revivee.getInventory().clear();
+        final Optional<UHCTeam> team = Utils.getTeamForPlayer(config, revivee);
+        if (team.isPresent() && team.get().isSharedInventory()) {
+            config.getManagedResources().getSharedInventoryManager().applyAfterJoin(revivee);
+        } else {
+            revivee.getInventory().clear();
+            if (config.getProperty(ENABLE_EVOLVING_SHIELDS, Defaults.ENABLE_EVOLVING_SHIELDS)) {
+                EvolvingShield.createEvolvingShield(config, revivee);
+            }
+        }
         revivee.spigot().respawn();
         revivee.teleport(armorStand.getLocation());
         revivee.setGameMode(GameMode.SURVIVAL);
@@ -79,10 +89,6 @@ public class InstantRevive {
             revivee.setMaxHealth(revivee.getMaxHealth() - reviveLoseMaxHealth);
         } else {
             revivee.setMaxHealth(1);
-        }
-
-        if (config.getProperty(ENABLE_EVOLVING_SHIELDS, Defaults.ENABLE_EVOLVING_SHIELDS)) {
-            EvolvingShield.createEvolvingShield(config, revivee);
         }
 
         revivee.spawnParticle(Particle.POOF, revivee.getLocation(), 1000);

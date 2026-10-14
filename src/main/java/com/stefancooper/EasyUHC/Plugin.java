@@ -36,6 +36,8 @@ public class Plugin extends JavaPlugin implements Listener {
         Bukkit.getPluginManager().registerEvents(new PerformanceEvents(config), this);
         Bukkit.getPluginManager().registerEvents(new EvolvingShieldEvents(config), this);
         Bukkit.getPluginManager().registerEvents(new WarmupEvents(config), this);
+        Bukkit.getPluginManager().registerEvents(new SharedHealthEvents(config), this);
+        Bukkit.getPluginManager().registerEvents(new SharedInventoryEvents(config), this);
         isLive = false;
 
         this.getLogger().log(Level.INFO, "UHC Plugin enabled");
