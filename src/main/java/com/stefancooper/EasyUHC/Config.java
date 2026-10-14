@@ -133,7 +133,7 @@ public class Config {
                 throw new RuntimeException(e);
             }
 
-            switch(configKey) {
+            switch (configKey) {
                 case TEAM_BLUE:
                 case TEAM_GREEN:
                 case TEAM_ORANGE:
