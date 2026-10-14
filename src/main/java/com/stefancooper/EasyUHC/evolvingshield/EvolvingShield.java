@@ -3,6 +3,7 @@ package com.stefancooper.EasyUHC.evolvingshield;
 import com.stefancooper.EasyUHC.Config;
 import com.stefancooper.EasyUHC.Defaults;
 import com.stefancooper.EasyUHC.base.UHCTeam;
+import com.stefancooper.EasyUHC.base.Utils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.Style;
@@ -68,6 +69,37 @@ public class EvolvingShield {
         player.getInventory().addItem(shield);
     }
 
+    public static void createEvolvingShield(final Config config, final UHCTeam team) {
+        final ItemStack shield = new ItemStack(Material.SHIELD, 1);
+        ItemMeta shieldMeta = shield.getItemMeta();
+        assert shieldMeta != null;
+        shieldMeta.displayName(Component.text(String.format("Team %s's shield", team.getName())));
+        updateLore(config, shieldMeta, 0, false);
+        shieldMeta.setEnchantmentGlintOverride(true);
+        shieldMeta.setUnbreakable(true);
+        shieldMeta.setFireResistant(true);
+        shieldMeta.getPersistentDataContainer().set(config.getManagedResources().getKeys().getEvolvingShieldUserKey(), PersistentDataType.STRING, team.getName());
+        shieldMeta.getPersistentDataContainer().set(config.getManagedResources().getKeys().getEvolvingShieldXPKey(), PersistentDataType.INTEGER, 0);
+        shieldMeta.getPersistentDataContainer().set(config.getManagedResources().getKeys().getEvolvingShieldUpgradeReadyKey(), PersistentDataType.BOOLEAN, false);
+        shieldMeta.getPersistentDataContainer().set(config.getManagedResources().getKeys().getEvolvingShieldUpgradeStageKey(), PersistentDataType.INTEGER, 0);
+
+        try {
+            shieldMeta.setRarity(ItemRarity.EPIC);
+        } catch (Exception e) {
+            // noop
+            // for some reason, this function is not implemented in MockBukkit but it is not worth us mocking
+        }
+        shield.setItemMeta(shieldMeta);
+        setShieldBanner(team, shield, List.of());
+        team.getPlayers().getFirst().getInventory().addItem(shield);
+    }
+
+    // TODO
+    //      - create new constructor for creating an Evolving Shield for a UHC Team - check!
+    //      - update all 'update xp' events to have a check if shared inventory is on, if it is, it needs to update the team shield instead
+    //      - figure out a way to close the inventory of the evolving shield menu, if another teammate chose the upgrade
+
+
     public enum EvolvingShieldXPType {
         EXPERIENCE,
         DAMAGE_HEARTS,
@@ -94,31 +126,25 @@ public class EvolvingShield {
         };
     }
 
-    public static void setShieldBanner(final Config config, final Player player, final ItemStack shield, final List<PatternType> patterns) {
-        final BlockStateMeta meta = (BlockStateMeta) shield.getItemMeta();
-        final Banner banner = (Banner) meta.getBlockState();
-
-        final List<UHCTeam> teams = config.getManagedResources().getTeams();
-        final Optional<UHCTeam> playersTeam = teams.stream().filter(team -> team.getPlayers().contains(player.getName())).findFirst();
-        if (playersTeam.isEmpty()) {
-            return;
-        }
+    public static void setShieldBanner(final UHCTeam team, final ItemStack shield, final List<PatternType> patterns) {
         DyeColor patternColor = DyeColor.BLACK;
-        if (playersTeam.get().getColor() == NamedTextColor.GOLD)
+        if (team.getColor() == NamedTextColor.GOLD)
             patternColor = DyeColor.ORANGE;
-        else if (playersTeam.get().getColor() == NamedTextColor.RED)
+        else if (team.getColor() == NamedTextColor.RED)
             patternColor = DyeColor.RED;
-        else if (playersTeam.get().getColor() == NamedTextColor.AQUA)
+        else if (team.getColor() == NamedTextColor.AQUA)
             patternColor = DyeColor.LIGHT_BLUE;
-        else if (playersTeam.get().getColor() == NamedTextColor.GREEN)
+        else if (team.getColor() == NamedTextColor.GREEN)
             patternColor = DyeColor.GREEN;
-        else if (playersTeam.get().getColor() == NamedTextColor.YELLOW)
+        else if (team.getColor() == NamedTextColor.YELLOW)
             patternColor = DyeColor.YELLOW;
-        else if (playersTeam.get().getColor() == NamedTextColor.LIGHT_PURPLE)
+        else if (team.getColor() == NamedTextColor.LIGHT_PURPLE)
             patternColor = DyeColor.PINK;
-        else if (playersTeam.get().getColor() == NamedTextColor.DARK_PURPLE)
+        else if (team.getColor() == NamedTextColor.DARK_PURPLE)
             patternColor = DyeColor.PURPLE;
 
+        final BlockStateMeta meta = (BlockStateMeta) shield.getItemMeta();
+        final Banner banner = (Banner) meta.getBlockState();
         banner.setBaseColor(DyeColor.WHITE);
 
         // Base color
@@ -131,6 +157,15 @@ public class EvolvingShield {
         // only in 26.2, uncomment this later
         // meta.addItemFlags(ItemFlag.HIDE_BANNER_PATTERNS);
         shield.setItemMeta(meta);
+    }
+
+    public static void setShieldBanner(final Config config, final Player player, final ItemStack shield, final List<PatternType> patterns) {
+        final List<UHCTeam> teams = config.getManagedResources().getTeams();
+        final Optional<UHCTeam> playersTeam = teams.stream().filter(team -> team.getPlayers().contains(player.getName())).findFirst();
+        if (playersTeam.isEmpty()) {
+            return;
+        }
+        setShieldBanner(playersTeam.get(), shield, patterns);
     }
 
     public static void updateLore(final Config config, final ItemMeta shieldMeta, final boolean isUpgradeAvailable) {
@@ -186,11 +221,17 @@ public class EvolvingShield {
         final List<ItemStack> items = new ArrayList<>(Arrays.stream(player.getInventory().getStorageContents()).filter(Objects::nonNull).toList());
         items.add(player.getInventory().getItemInOffHand());
         final List<ItemStack> shields = items.stream().filter(Objects::nonNull).filter(item -> item.getType().equals(Material.SHIELD)).toList();
+        final Optional<UHCTeam> team = Utils.getTeamForPlayer(config, player);
         final List<ItemStack> evolvingShields = shields.stream().filter(item ->
                 item.getItemMeta().getPersistentDataContainer().get(xpKey, PersistentDataType.INTEGER) != null &&
                         item.getItemMeta().getPersistentDataContainer().get(userKey, PersistentDataType.STRING) != null &&
-                        Objects.equals(item.getItemMeta().getPersistentDataContainer().get(userKey, PersistentDataType.STRING), player.getName())
-        ).toList();
+                        (
+                                // belongs to the player
+                                Objects.equals(item.getItemMeta().getPersistentDataContainer().get(userKey, PersistentDataType.STRING), player.getName()) ||
+                                // or is a team shield
+                                team.isPresent() && Objects.equals(item.getItemMeta().getPersistentDataContainer().get(userKey, PersistentDataType.STRING), team.get().getName())
+                        )
+            ).toList();
 
         if (evolvingShields.isEmpty()) {
             config.getPlugin().getLogger().log(Level.FINE, String.format("Could not find player %s shield to add XP to", player.getName()));

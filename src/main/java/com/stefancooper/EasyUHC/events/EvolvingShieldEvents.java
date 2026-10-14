@@ -3,6 +3,7 @@ package com.stefancooper.EasyUHC.events;
 import com.destroystokyo.paper.event.player.PlayerPickupExperienceEvent;
 import com.stefancooper.EasyUHC.Config;
 import com.stefancooper.EasyUHC.Defaults;
+import com.stefancooper.EasyUHC.base.UHCTeam;
 import com.stefancooper.EasyUHC.evolvingshield.EvolvingShield;
 import com.stefancooper.EasyUHC.evolvingshield.EvolvingShieldUpgradeMenu;
 import com.stefancooper.EasyUHC.base.Utils;
@@ -13,17 +14,7 @@ import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.damage.DamageType;
-import org.bukkit.entity.Arrow;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Fireball;
-import org.bukkit.entity.ItemFrame;
-import org.bukkit.entity.LightningStrike;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
-import org.bukkit.entity.Snowball;
-import org.bukkit.entity.Trident;
-import org.bukkit.entity.WindCharge;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -31,6 +22,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
@@ -138,6 +130,12 @@ public class EvolvingShieldEvents implements Listener {
         if (EvolvingShield.isEvolvingShield(config, event.getPlayer().getInventory().getItemInMainHand())) {
             event.setCancelled(true);
         }
+    }
+
+    @EventHandler
+    public void onCloseInventory(final InventoryCloseEvent event) {
+        final HumanEntity player = event.getPlayer();
+        EvolvingShieldUpgradeMenu.playersWithUpgradeMenusOpen.remove(player.getUniqueId());
     }
 
     // ----- XP EVENTS -----

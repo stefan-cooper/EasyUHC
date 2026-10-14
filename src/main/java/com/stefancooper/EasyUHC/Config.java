@@ -3,6 +3,7 @@ package com.stefancooper.EasyUHC;
 import com.stefancooper.EasyUHC.base.ConfigKey;
 import com.stefancooper.EasyUHC.base.records.Configurable;
 import com.stefancooper.EasyUHC.base.Worlds;
+import com.stefancooper.EasyUHC.sharedinventory.SharedInventoryManager;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;

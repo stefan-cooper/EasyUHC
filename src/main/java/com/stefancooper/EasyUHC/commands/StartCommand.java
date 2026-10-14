@@ -29,22 +29,7 @@ import org.bukkit.potion.PotionEffectType;
 import com.stefancooper.EasyUHC.Config;
 import org.bukkit.scheduler.BukkitTask;
 
-import static com.stefancooper.EasyUHC.base.ConfigKey.COUNTDOWN_TIMER_LENGTH;
-import static com.stefancooper.EasyUHC.base.ConfigKey.DIFFICULTY;
-import static com.stefancooper.EasyUHC.base.ConfigKey.DISABLE_DEBUG_INFO;
-import static com.stefancooper.EasyUHC.base.ConfigKey.ENABLE_EVOLVING_SHIELDS;
-import static com.stefancooper.EasyUHC.base.ConfigKey.GRACE_PERIOD_TIMER;
-import static com.stefancooper.EasyUHC.base.ConfigKey.LOOT_CHEST_GRACE_PERIOD;
-import static com.stefancooper.EasyUHC.base.ConfigKey.MOB_GRACE_PERIOD;
-import static com.stefancooper.EasyUHC.base.ConfigKey.RANDOM_FINAL_LOCATION;
-import static com.stefancooper.EasyUHC.base.ConfigKey.WORLD_BORDER_CENTER_X;
-import static com.stefancooper.EasyUHC.base.ConfigKey.WORLD_BORDER_CENTER_Z;
-import static com.stefancooper.EasyUHC.base.ConfigKey.WORLD_BORDER_FINAL_SIZE;
-import static com.stefancooper.EasyUHC.base.ConfigKey.WORLD_BORDER_FINAL_Y;
-import static com.stefancooper.EasyUHC.base.ConfigKey.WORLD_BORDER_GRACE_PERIOD;
-import static com.stefancooper.EasyUHC.base.ConfigKey.WORLD_BORDER_INITIAL_SIZE;
-import static com.stefancooper.EasyUHC.base.ConfigKey.WORLD_BORDER_SHRINKING_PERIOD;
-import static com.stefancooper.EasyUHC.base.ConfigKey.WORLD_BORDER_Y_SHRINKING_PERIOD;
+import static com.stefancooper.EasyUHC.base.ConfigKey.*;
 import static com.stefancooper.EasyUHC.base.Constants.MAXIMUM_FINAL_SIZE_FOR_Y_SHRINK;
 
 public class StartCommand extends AbstractCommand {
@@ -86,6 +71,10 @@ public class StartCommand extends AbstractCommand {
         final int worldBorderGracePeriod = getConfig().getProperty(WORLD_BORDER_GRACE_PERIOD, Defaults.WORLD_BORDER_GRACE_PERIOD);
         final boolean useRandomFinalLocation = getConfig().getProperty(RANDOM_FINAL_LOCATION, Defaults.RANDOM_FINAL_LOCATION);
         final boolean reduceDebugInfo = getConfig().getProperty(DISABLE_DEBUG_INFO, Defaults.DISABLE_DEBUG_INFO);
+        final boolean enableSharedHealth = getConfig().getProperty(ENABLE_SHARED_TEAM_HEALTH, Defaults.ENABLE_SHARED_TEAM_HEALTH);
+        final int sharedHealth = getConfig().getProperty(SHARED_TEAM_HEALTH, Defaults.SHARED_TEAM_HEALTH);
+        final boolean enableSharedInventory = getConfig().getProperty(ENABLE_SHARED_TEAM_INVENTORY, Defaults.ENABLE_SHARED_TEAM_INVENTORY);
+        final boolean enableEvolvingShields = getConfig().getProperty(ENABLE_EVOLVING_SHIELDS, Defaults.ENABLE_EVOLVING_SHIELDS);
 
         // Final Center Location
         final Location finalLocation;
@@ -144,12 +133,17 @@ public class StartCommand extends AbstractCommand {
         // Actions on the player
         Bukkit.getOnlinePlayers().forEach(player -> {
             player.resetMaxHealth();
-            double maxHealth = player.getAttribute(Attribute.MAX_HEALTH).getDefaultValue();
-            player.setHealth(maxHealth);
+            if (enableSharedHealth) {
+                player.getAttribute(Attribute.MAX_HEALTH).setBaseValue(sharedHealth);
+                player.setHealth(sharedHealth);
+            } else {
+                double maxHealth = player.getAttribute(Attribute.MAX_HEALTH).getDefaultValue();
+                player.setHealth(maxHealth);
+            }
             player.setSaturation(20);
             player.setFoodLevel(20);
             player.getInventory().clear();
-            if (getConfig().getProperty(ENABLE_EVOLVING_SHIELDS, Defaults.ENABLE_EVOLVING_SHIELDS)) {
+            if (enableEvolvingShields && !enableSharedInventory) {
                 EvolvingShield.createEvolvingShield(getConfig(), player);
             }
             player.setExp(0);
@@ -163,6 +157,12 @@ public class StartCommand extends AbstractCommand {
             if (useRandomFinalLocation) {
                 player.getInventory().addItem(RandomFinalLocation.generateWorldCenterCompass());
                 player.setCompassTarget(world.getWorldBorder().getCenter());
+            }
+        });
+
+        getConfig().getManagedResources().getTeams().forEach(team -> {
+            if (enableEvolvingShields && enableSharedInventory) {
+                EvolvingShield.createEvolvingShield(getConfig(), team);
             }
         });
 
@@ -213,6 +213,9 @@ public class StartCommand extends AbstractCommand {
         if (reduceDebugInfo) {
             getConfig().getManagedResources().runRepeatingTask(updateActionBarLocation(), 1L);
         }
+
+        getConfig().getManagedResources().getTeams().forEach(team -> team.setSharedHealth(enableSharedHealth));
+        getConfig().getManagedResources().getTeams().forEach(team -> team.setSharedInventory(enableSharedInventory));
 
         final int endMobGracePeriod = getConfig().getProperty(MOB_GRACE_PERIOD, Defaults.MOB_GRACE_PERIOD);
         if (endMobGracePeriod > 0) {

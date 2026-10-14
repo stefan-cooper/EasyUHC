@@ -4,6 +4,7 @@ import com.stefancooper.EasyUHC.base.ConfigKey;
 import com.stefancooper.EasyUHC.base.Utils;
 import net.kyori.adventure.text.Component;
 import org.bukkit.*;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.scoreboard.Criteria;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
@@ -86,8 +87,16 @@ public class Defaults {
 
     // Evolving shields
     public static boolean ENABLE_EVOLVING_SHIELDS = false;
+    public static boolean ENABLE_EVOLVING_SHIELDS_SHARED_CHOICE = false;
     public static int EVOLVING_SHIELDS_EXP_THRESHOLD = -1;
     public static int EVOLVING_SHIELDS_MINECRAFT_EXP_MULTIPLIER = 4;
+
+    // Shared health
+    public static boolean ENABLE_SHARED_TEAM_HEALTH = false;
+    public static int SHARED_TEAM_HEALTH = 20;
+
+    // Shared Inventory
+    public static boolean ENABLE_SHARED_TEAM_INVENTORY = false;
 
     // Warmup
     public static String WARMUP_LOCATION_1 = "10000,100,10000";
@@ -130,7 +139,11 @@ public class Defaults {
             world.setGameRule(GameRules.FALL_DAMAGE, false);
         });
         config.getPlugin().setCountingDown(false);
-        Bukkit.getOnlinePlayers().forEach(player -> player.setGameMode(GameMode.ADVENTURE));
+        Bukkit.getOnlinePlayers().forEach(player -> {
+            player.setGameMode(GameMode.ADVENTURE);
+            player.getAttribute(Attribute.MAX_HEALTH).setBaseValue(20);
+            player.setHealth(20);
+        });
         final Scoreboard board = Bukkit.getScoreboardManager().getMainScoreboard();
         final Objective healthObjective;
         if (board.getObjective(HEALTH_OBJECTIVE) == null) {
