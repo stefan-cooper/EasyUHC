@@ -121,7 +121,8 @@ public class Config {
     }
 
     public void unsetProp(String key) {
-        if (fromString(key) != null) {
+        final ConfigKey configKey = fromString(key);
+        if (configKey != null) {
             config.remove(key);
             try {
                 File file = new File(CONFIG_LOCATION);
@@ -131,6 +132,21 @@ public class Config {
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
+
+            switch(configKey) {
+                case TEAM_BLUE:
+                case TEAM_GREEN:
+                case TEAM_ORANGE:
+                case TEAM_PINK:
+                case TEAM_PURPLE:
+                case TEAM_RED:
+                case TEAM_YELLOW:
+                    managedResources.removeTeam(configKey);
+                default: {
+                    // noop
+                }
+            }
+
         } else {
             this.getPlugin().getLogger().log(Level.WARNING, "Unknown config key. Not unsetting.");
         }

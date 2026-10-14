@@ -9,6 +9,7 @@ import com.stefancooper.EasyUHC.base.UHCTeam;
 import com.stefancooper.EasyUHC.base.Utils;
 import io.papermc.paper.registry.RegistryAccess;
 import io.papermc.paper.registry.RegistryKey;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
@@ -77,6 +78,10 @@ public class ManagedResources {
 
     public BossBarBorder getBossBarBorder() {
         return bossBarBorder;
+    }
+
+    public BukkitTask runTask(Runnable runnable) {
+        return scheduler.runTask(config.getPlugin(), runnable);
     }
 
     public BukkitTask runTaskLater(Runnable runnable, int time) {
@@ -236,6 +241,21 @@ public class ManagedResources {
     public void addTeam(final UHCTeam team) {
         teams.removeIf((existingTeam) -> existingTeam.getName().equals(team.getName()));
         teams.add(team);
+    }
+
+    public void removeTeam(final ConfigKey key) {
+        switch (key) {
+            case TEAM_BLUE -> teams.removeIf((team) -> team.getColor().equals(NamedTextColor.AQUA));
+            case TEAM_RED -> teams.removeIf((team) -> team.getColor().equals(NamedTextColor.RED));
+            case TEAM_GREEN -> teams.removeIf((team) -> team.getColor().equals(NamedTextColor.GREEN));
+            case TEAM_ORANGE -> teams.removeIf((team) -> team.getColor().equals(NamedTextColor.GOLD));
+            case TEAM_PINK -> teams.removeIf((team) -> team.getColor().equals(NamedTextColor.LIGHT_PURPLE));
+            case TEAM_PURPLE -> teams.removeIf((team) -> team.getColor().equals(NamedTextColor.DARK_PURPLE));
+            case TEAM_YELLOW -> teams.removeIf((team) -> team.getColor().equals(NamedTextColor.YELLOW));
+            default -> {
+                // noop
+            }
+        }
     }
 
 }

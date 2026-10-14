@@ -5,13 +5,10 @@ import java.util.Optional;
 import java.util.logging.Level;
 
 import com.stefancooper.EasyUHC.Defaults;
-import com.stefancooper.EasyUHC.base.ConfigKey;
+import com.stefancooper.EasyUHC.base.*;
 import com.stefancooper.EasyUHC.events.WarmupEvents;
 import com.stefancooper.EasyUHC.evolvingshield.EvolvingShield;
-import com.stefancooper.EasyUHC.base.BossBarBorder;
-import com.stefancooper.EasyUHC.base.RandomFinalLocation;
 import com.stefancooper.EasyUHC.uhcloot.UHCLoot;
-import com.stefancooper.EasyUHC.base.SpreadPlayers;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.Style;
@@ -30,7 +27,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.potion.PotionEffectType;
 import com.stefancooper.EasyUHC.Config;
-import com.stefancooper.EasyUHC.base.Utils;
 import org.bukkit.scheduler.BukkitTask;
 
 import static com.stefancooper.EasyUHC.base.ConfigKey.COUNTDOWN_TIMER_LENGTH;
@@ -81,20 +77,21 @@ public class StartCommand extends AbstractCommand {
         // Clear any warmup events
         WarmupEvents.clearWarmupQueue();
 
-        // Config Values
+        // Get relevant configs
         final int centerX = getConfig().getProperty(WORLD_BORDER_CENTER_X, Defaults.WORLD_BORDER_CENTER_X);
         final int centerZ = getConfig().getProperty(WORLD_BORDER_CENTER_Z, Defaults.WORLD_BORDER_CENTER_Z);
         final int initialBorderSize = getConfig().getProperty(WORLD_BORDER_INITIAL_SIZE, Defaults.WORLD_BORDER_INITIAL_SIZE);
-//        final int initialBorder = getConfig().getProperty(WORLD_BORDER_INITIAL_SIZE, Defaults.WORLD_BORDER_INITIAL_SIZE);
-
-        // World and Countdown timer are both configs that will always be set
         final int countdownTimer = getConfig().getProperty(COUNTDOWN_TIMER_LENGTH, Defaults.COUNTDOWN_TIMER_LENGTH);
+        final int gracePeriod = getConfig().getProperty(GRACE_PERIOD_TIMER, Defaults.GRACE_PERIOD_TIMER);
+        final int worldBorderGracePeriod = getConfig().getProperty(WORLD_BORDER_GRACE_PERIOD, Defaults.WORLD_BORDER_GRACE_PERIOD);
+        final boolean useRandomFinalLocation = getConfig().getProperty(RANDOM_FINAL_LOCATION, Defaults.RANDOM_FINAL_LOCATION);
+        final boolean reduceDebugInfo = getConfig().getProperty(DISABLE_DEBUG_INFO, Defaults.DISABLE_DEBUG_INFO);
+
 
         // Final Center Location
         final Location finalLocation;
-        if (getConfig().getProperty(RANDOM_FINAL_LOCATION, Defaults.RANDOM_FINAL_LOCATION)) {
-            final int initialWorldBorderSize = getConfig().getProperty(WORLD_BORDER_INITIAL_SIZE, Defaults.WORLD_BORDER_INITIAL_SIZE);
-            final RandomFinalLocation location = new RandomFinalLocation(world, centerX, centerZ, initialWorldBorderSize);
+        if (useRandomFinalLocation) {
+            final RandomFinalLocation location = new RandomFinalLocation(world, centerX, centerZ, initialBorderSize);
             finalLocation = location.getLocation();
         } else {
             finalLocation = new Location(world, centerX, 64, centerZ);
@@ -106,6 +103,13 @@ public class StartCommand extends AbstractCommand {
                 player.spigot().respawn();
             }
         });
+
+        // Check all teams are in server
+        if (!isForce && !getConfig().getManagedResources().getTeams().stream().allMatch(UHCTeam::teamIsInServer)) {
+            getConfig().getPlugin().getLogger().log(Level.WARNING, "UHC Start command cancelled. Some players configured in the teams were not found in the server. Use /uhc start force to ignore this check.");
+            getSender().sendMessage("UHC Start command cancelled. Some players configured in the teams were not found in the server. Use /uhc start force to ignore this check.");
+            return;
+        }
 
         // Spread players
         try {
@@ -135,7 +139,7 @@ public class StartCommand extends AbstractCommand {
             cbWorld.setDifficulty(Difficulty.PEACEFUL);
             cbWorld.getEntities().stream().filter(entity -> entity.getType().equals(EntityType.ITEM)).forEach(Entity::remove);
             cbWorld.setGameRule(GameRules.FALL_DAMAGE, true);
-            cbWorld.setGameRule(GameRules.REDUCED_DEBUG_INFO, getConfig().getProperty(DISABLE_DEBUG_INFO, Defaults.DISABLE_DEBUG_INFO));
+            cbWorld.setGameRule(GameRules.REDUCED_DEBUG_INFO, reduceDebugInfo);
         });
 
         // Turn off friendly fire
@@ -160,7 +164,7 @@ public class StartCommand extends AbstractCommand {
             player.addPotionEffect(PotionEffectType.REGENERATION.createEffect((int) Utils.secondsToTicks(countdownTimer) + (int) Utils.secondsToTicks(30), 3));
             player.addPotionEffect(PotionEffectType.FIRE_RESISTANCE.createEffect((int) Utils.secondsToTicks(countdownTimer) + (int) Utils.secondsToTicks(30), 3));
             player.addPotionEffect(PotionEffectType.WATER_BREATHING.createEffect((int) Utils.secondsToTicks(countdownTimer) + (int) Utils.secondsToTicks(30), 3));
-            if (getConfig().getProperty(RANDOM_FINAL_LOCATION, Defaults.RANDOM_FINAL_LOCATION)) {
+            if (useRandomFinalLocation) {
                 player.getInventory().addItem(RandomFinalLocation.generateWorldCenterCompass());
                 player.setCompassTarget(world.getWorldBorder().getCenter());
             }
@@ -168,9 +172,7 @@ public class StartCommand extends AbstractCommand {
 
         Bukkit.getServer().broadcast(Component.text("UHC: Countdown starting now. Don't forget to record your POV if you can. GLHF!", Style.style(NamedTextColor.GRAY, TextDecoration.ITALIC)));
 
-        // Timed actions
-        int gracePeriod = getConfig().getProperty(GRACE_PERIOD_TIMER, Defaults.GRACE_PERIOD_TIMER);
-        int worldBorderGracePeriod = getConfig().getProperty(WORLD_BORDER_GRACE_PERIOD, Defaults.WORLD_BORDER_GRACE_PERIOD);
+
 
         // World border grace period
         if (worldBorderGracePeriod > 0) getConfig().getManagedResources().runTaskLater(endWorldBorderGracePeriod(), worldBorderGracePeriod + countdownTimer);
@@ -214,7 +216,7 @@ public class StartCommand extends AbstractCommand {
             getConfig().getManagedResources().runTaskLater(() -> new UHCLoot(getConfig()), countdownTimer + uhcLootGracePeriod);
         }
 
-        if (getConfig().getProperty(DISABLE_DEBUG_INFO, Defaults.DISABLE_DEBUG_INFO)) {
+        if (reduceDebugInfo) {
             getConfig().getManagedResources().runRepeatingTask(updateActionBarLocation(), 1L);
         }
 
