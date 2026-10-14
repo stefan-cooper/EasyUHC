@@ -4,6 +4,7 @@ import com.stefancooper.EasyUHC.Config;
 import com.stefancooper.EasyUHC.Defaults;
 import com.stefancooper.EasyUHC.base.DeathAction;
 import com.stefancooper.EasyUHC.base.BossBarBorder;
+import com.stefancooper.EasyUHC.base.UHCTeam;
 import com.stefancooper.EasyUHC.base.Utils;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
@@ -26,10 +27,7 @@ import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.FurnaceRecipe;
 import org.bukkit.inventory.ItemRarity;
 import org.bukkit.inventory.ItemStack;
@@ -134,19 +132,20 @@ public class BaseEvents implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
+        final Player player = event.getPlayer();
         /* -- Setting Game mode -- */
-        final GameMode currentGamemode = event.getPlayer().getGameMode();
+        final GameMode currentGamemode = player.getGameMode();
         if (currentGamemode == GameMode.SPECTATOR) {
             return;
         } else if (config.getPlugin().isUHCLive()) {
-            event.getPlayer().setGameMode(GameMode.SURVIVAL);
+            player.setGameMode(GameMode.SURVIVAL);
         } else {
-            event.getPlayer().setGameMode(GameMode.ADVENTURE);
+            player.setGameMode(GameMode.ADVENTURE);
             final Location worldSpawn = Utils.getWorldSpawn(config);
-            final int inventorySize = Arrays.stream(event.getPlayer().getInventory().getContents()).filter(item -> item != null && item.getType() != Material.AIR).toList().size();
+            final int inventorySize = Arrays.stream(player.getInventory().getContents()).filter(item -> item != null && item.getType() != Material.AIR).toList().size();
             // don't teleport them if their inventory has something inside it (this suggests that the uhc has started and maybe the server crashed)
             if (inventorySize == 0 && worldSpawn != null) {
-                event.getPlayer().teleport(worldSpawn);
+                player.teleport(worldSpawn);
             }
         }
 
@@ -155,6 +154,34 @@ public class BaseEvents implements Listener {
             BossBarBorder bossBarBorder = config.getManagedResources().getBossBarBorder();
             bossBarBorder.getBossBar().addPlayer(event.getPlayer());
             bossBarBorder.getBossBar().setVisible(true);
+        }
+
+        /* -- Organizing teams -- */
+        if (!config.getPlugin().isUHCLive()) {
+            final List<UHCTeam> teams = config.getManagedResources().getTeams().stream().filter(team -> {
+                final List<String> playerNames = team.getPlayerNames();
+                final List<Player> players = team.getPlayers();
+                return playerNames.contains(player.getName()) && !players.contains(player);
+            }).toList();
+            if (!teams.isEmpty()) {
+                teams.getFirst().getPlayers().add(player);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onQuitEvent(final PlayerQuitEvent event) {
+        final Player player = event.getPlayer();
+        /* -- Organizing teams -- */
+        if (!config.getPlugin().isUHCLive()) {
+            final List<UHCTeam> teams = config.getManagedResources().getTeams().stream().filter(team -> {
+                final List<String> playerNames = team.getPlayerNames();
+                final List<Player> players = team.getPlayers();
+                return playerNames.contains(player.getName()) && players.contains(player);
+            }).toList();
+            if (!teams.isEmpty()) {
+                teams.getFirst().getPlayers().remove(player);
+            }
         }
     }
 

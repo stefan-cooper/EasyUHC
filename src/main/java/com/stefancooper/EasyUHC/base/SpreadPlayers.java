@@ -136,11 +136,7 @@ public class SpreadPlayers {
     private List<List<Player>> getAllTeams() {
         List<List<Player>> teams = new ArrayList<>();
         for (UHCTeam team : config.getManagedResources().getTeams()) {
-            List<Player> teamPlayers = new ArrayList<>();
-            for (String playerName : team.getPlayers()) {
-                teamPlayers.add(Bukkit.getPlayerExact(playerName));
-            }
-            teams.add(teamPlayers);
+            teams.add(team.getPlayers());
         }
         return teams;
     }
