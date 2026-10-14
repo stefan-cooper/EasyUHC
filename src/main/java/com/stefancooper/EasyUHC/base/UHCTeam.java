@@ -7,6 +7,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -22,7 +24,7 @@ public class UHCTeam {
         this.name = name;
         this.playerNames = playerNames;
         this.color = color;
-        this.players = getPlayerNames().stream().map(Bukkit::getPlayerExact).filter(Objects::nonNull).toList();
+        this.players = new ArrayList<>(getPlayerNames().stream().map(Bukkit::getPlayerExact).filter(Objects::nonNull).toList());
     }
 
     public boolean teamIsInServer() { return getPlayerNames().size() == players.size(); }

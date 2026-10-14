@@ -107,7 +107,7 @@ public class StartCommand extends AbstractCommand {
         // Check all teams are in server
         if (!isForce && !getConfig().getManagedResources().getTeams().stream().allMatch(UHCTeam::teamIsInServer)) {
             getConfig().getPlugin().getLogger().log(Level.WARNING, "UHC Start command cancelled. Some players configured in the teams were not found in the server. Use /uhc start force to ignore this check.");
-            getSender().sendMessage("UHC Start command cancelled. Some players configured in the teams were not found in the server. Use /uhc start force to ignore this check.");
+            getSender().sendMessage(Component.text("UHC Start command cancelled. Some players configured in the teams were not found in the server. Use /uhc start force to ignore this check.", Style.style(NamedTextColor.RED)));
             return;
         }
 
@@ -117,7 +117,7 @@ public class StartCommand extends AbstractCommand {
             spread.trigger();
         } catch (final RuntimeException e) {
             getConfig().getPlugin().getLogger().log(Level.WARNING, "UHC Start command cancelled. Not all coordinates to be teleported to have been loaded. Use Chunky to load the chunks before doing a UHC start");
-            getSender().sendMessage("UHC not started because some of the coordinates to be teleported to have not been loaded. Use Chunky to load the chunks before starting.");
+            getSender().sendMessage(Component.text("UHC not started because some of the coordinates to be teleported to have not been loaded. Use Chunky to load the chunks before starting.", Style.style(NamedTextColor.RED)));
             return;
         }
 

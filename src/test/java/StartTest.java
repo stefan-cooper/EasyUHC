@@ -81,16 +81,20 @@ public class StartTest {
         PlayerMock admin = server.addPlayer();
         admin.setOp(true);
 
+        TestUtils.executeCommand(plugin, admin, "set",
+                "team.red=stefan,sean,shurf"
+        );
+
         world.setGameRule(GameRules.FALL_DAMAGE, false);
 
-        PlayerMock player1 = server.addPlayer();
+        PlayerMock player1 = server.addPlayer("stefan");
         player1.setHealth(10);
         player1.giveExp(100);
         player1.setLevel(12);
         player1.addPotionEffect(new PotionEffect(PotionEffectType.JUMP_BOOST, 100, 3));
-        PlayerMock player2 = server.addPlayer();
+        PlayerMock player2 = server.addPlayer("sean");
         player2.getInventory().setItem(1, ItemStack.of(Material.DIAMOND_SWORD));
-        PlayerMock player3 = server.addPlayer();
+        PlayerMock player3 = server.addPlayer("shurf");
         player3.setFoodLevel(3);
         world.dropItem(new Location(world, 0, 100, 0), ItemStack.of(Material.DIAMOND_SWORD));
 
@@ -590,6 +594,26 @@ public class StartTest {
             assertEquals(player.getName(), meta.getPersistentDataContainer().get(plugin.getUHCConfig().getManagedResources().getKeys().getEvolvingShieldUserKey(), PersistentDataType.STRING));
             assertEquals(0, meta.getPersistentDataContainer().get(plugin.getUHCConfig().getManagedResources().getKeys().getEvolvingShieldXPKey(), PersistentDataType.INTEGER));
         });
+
+        TestUtils.executeCommand(plugin, admin, "cancel");
+    }
+
+    @Test
+    @DisplayName("Start command fails if players are not in server")
+    void startDoesNotStartWhenPlayersAreNotInServer() {
+        PlayerMock admin = server.addPlayer();
+        admin.setOp(true);
+
+        TestUtils.executeCommand(plugin, admin, "set",
+                "team.red=somerandomplayer123"
+        );
+
+        PlayerMock player1 = server.addPlayer();
+        player1.setName("stefan");
+
+        TestUtils.executeCommand(plugin, admin, "start");
+
+        admin.assertSaid(Component.text("UHC Start command cancelled. Some players configured in the teams were not found in the server. Use /uhc start force to ignore this check.", Style.style(NamedTextColor.RED)));
 
         TestUtils.executeCommand(plugin, admin, "cancel");
     }
