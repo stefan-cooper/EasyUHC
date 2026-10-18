@@ -52,8 +52,7 @@ public class LateStartTest {
         admin.setOp(true);
 
         // initial player
-        PlayerMock player1 = server.addPlayer();
-        player1.setName("stefan");
+        PlayerMock player1 = server.addPlayer("stefan");
         player1.setHealth(10);
         player1.giveExp(100);
         player1.setLevel(12);
@@ -65,8 +64,12 @@ public class LateStartTest {
 
         Assertions.assertEquals(1, world.getEntities().stream().filter(entity -> entity.getType().equals(EntityType.ITEM)).toList().size());
 
+        TestUtils.executeCommand(plugin, admin, "set",
+                "team.red=stefan,sean"
+        );
+
         // uhc starts
-        TestUtils.executeCommand(plugin, admin, "start");
+        TestUtils.executeCommand(plugin, admin, "start", "force");
 
         Assertions.assertEquals(0, world.getEntities().stream().filter(entity -> entity.getType().equals(EntityType.ITEM)).toList().size());
 
@@ -89,9 +92,7 @@ public class LateStartTest {
         player1.setFoodLevel(3);
 
         // player 2 joins server late
-        PlayerMock player2 = server.addPlayer();
-        player2.setName("sean");
-        player2.setDisplayName("sean");
+        PlayerMock player2 = server.addPlayer("sean");
         player2.setHealth(10);
         player2.setLevel(12);
         player2.getInventory().setItem(1, ItemStack.of(Material.DIAMOND_SWORD));
@@ -119,6 +120,8 @@ public class LateStartTest {
         Assertions.assertEquals(12, player1.getLevel());
         Assertions.assertEquals(1, Arrays.stream(player1.getInventory().getContents()).filter(item -> item != null && item.getType() != Material.AIR).toList().size());
         Assertions.assertEquals(GameMode.SURVIVAL, player1.getGameMode());
+
+        TestUtils.executeCommand(plugin, admin, "cancel");
     }
 
     @Test
@@ -129,8 +132,7 @@ public class LateStartTest {
         admin.setOp(true);
 
         // initial player
-        PlayerMock player1 = server.addPlayer();
-        player1.setName("jawad");
+        PlayerMock player1 = server.addPlayer("jawad");
         player1.setLocation(new Location(world, 1250, 100, 1250));
 
         schedule.performOneTick();
@@ -140,9 +142,7 @@ public class LateStartTest {
         );
 
         // player 2 joins server late
-        PlayerMock player2 = server.addPlayer();
-        player2.setName("pavey");
-        player2.setDisplayName("pavey");
+        PlayerMock player2 = server.addPlayer("pavey");
         player2.setLocation(new Location(world, 0, 100, 0));
 
         // late start is execute for late joiner
@@ -151,5 +151,7 @@ public class LateStartTest {
         // check that late joiner has the usual stats reset
         Assertions.assertEquals(new Location(world, 1250, 100, 1250), player1.getLocation());
         Assertions.assertEquals(new Location(world, 1250, 100, 1250), player2.getLocation());
+
+        TestUtils.executeCommand(plugin, admin, "cancel");
     }
 }

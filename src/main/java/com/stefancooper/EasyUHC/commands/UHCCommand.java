@@ -45,9 +45,6 @@ public class UHCCommand extends Command {
                 case CancelCommand.COMMAND_KEY:
                     new CancelCommand(sender, cmd, getCommandArgs(args), config).execute();
                     return true;
-                case ResumeCommand.COMMAND_KEY:
-                    new ResumeCommand(sender, cmd, getCommandArgs(args), config).execute();
-                    return true;
                 case LateStartCommand.COMMAND_KEY:
                     new LateStartCommand(sender, cmd, getCommandArgs(args), config).execute();
                     return true;

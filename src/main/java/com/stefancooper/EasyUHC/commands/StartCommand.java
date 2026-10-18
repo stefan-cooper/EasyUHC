@@ -87,7 +87,6 @@ public class StartCommand extends AbstractCommand {
         final boolean useRandomFinalLocation = getConfig().getProperty(RANDOM_FINAL_LOCATION, Defaults.RANDOM_FINAL_LOCATION);
         final boolean reduceDebugInfo = getConfig().getProperty(DISABLE_DEBUG_INFO, Defaults.DISABLE_DEBUG_INFO);
 
-
         // Final Center Location
         final Location finalLocation;
         if (useRandomFinalLocation) {
@@ -142,9 +141,6 @@ public class StartCommand extends AbstractCommand {
             cbWorld.setGameRule(GameRules.REDUCED_DEBUG_INFO, reduceDebugInfo);
         });
 
-        // Turn off friendly fire
-        // Bukkit.getScoreboardManager().getMainScoreboard().getTeams().forEach(team -> team.setAllowFriendlyFire(false));
-
         // Actions on the player
         Bukkit.getOnlinePlayers().forEach(player -> {
             player.resetMaxHealth();
@@ -171,8 +167,6 @@ public class StartCommand extends AbstractCommand {
         });
 
         Bukkit.getServer().broadcast(Component.text("UHC: Countdown starting now. Don't forget to record your POV if you can. GLHF!", Style.style(NamedTextColor.GRAY, TextDecoration.ITALIC)));
-
-
 
         // World border grace period
         if (worldBorderGracePeriod > 0) getConfig().getManagedResources().runTaskLater(endWorldBorderGracePeriod(), worldBorderGracePeriod + countdownTimer);
