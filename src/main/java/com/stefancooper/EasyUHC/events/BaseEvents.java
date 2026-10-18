@@ -131,7 +131,7 @@ public class BaseEvents implements Listener {
     }
 
     @EventHandler
-    public void onJoin(PlayerJoinEvent event) {
+    public void gameModeOnJoin(PlayerJoinEvent event) {
         final Player player = event.getPlayer();
         /* -- Setting Game mode -- */
         final GameMode currentGamemode = player.getGameMode();
@@ -148,24 +148,27 @@ public class BaseEvents implements Listener {
                 player.teleport(worldSpawn);
             }
         }
+    }
+
+    @EventHandler
+    public void playerEffectsOnJoin(final PlayerJoinEvent event) {
+        final Player player = event.getPlayer();
+        /* -- Organizing teams -- */
+        final List<UHCTeam> teams = config.getManagedResources().getTeams().stream().filter(team -> {
+            final List<String> playerNames = team.getPlayerNames();
+            final List<Player> players = team.getPlayers();
+            return playerNames.contains(player.getName()) && !players.contains(player);
+        }).toList();
+        if (!teams.isEmpty()) {
+            teams.getFirst().getPlayers().add(player);
+        }
+
 
         /* -- Setting boss bar -- */
         if (config.getPlugin().isUHCLive() && config.getProperty(WORLD_BORDER_IN_BOSSBAR, Defaults.WORLD_BORDER_IN_BOSSBAR)) {
             BossBarBorder bossBarBorder = config.getManagedResources().getBossBarBorder();
             bossBarBorder.getBossBar().addPlayer(event.getPlayer());
             bossBarBorder.getBossBar().setVisible(true);
-        }
-
-        /* -- Organizing teams -- */
-        if (!config.getPlugin().isUHCLive()) {
-            final List<UHCTeam> teams = config.getManagedResources().getTeams().stream().filter(team -> {
-                final List<String> playerNames = team.getPlayerNames();
-                final List<Player> players = team.getPlayers();
-                return playerNames.contains(player.getName()) && !players.contains(player);
-            }).toList();
-            if (!teams.isEmpty()) {
-                teams.getFirst().getPlayers().add(player);
-            }
         }
     }
 
