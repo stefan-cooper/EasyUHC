@@ -3,6 +3,7 @@ package com.stefancooper.EasyUHC;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
@@ -45,6 +46,7 @@ public class ConfigParser {
             case WORLD_BORDER_SPAWN_PADDING -> new Configurable<>(WORLD_BORDER_SPAWN_PADDING, Integer.parseInt(value));
             case WORLD_BORDER_Y_SHRINKING_PERIOD -> new Configurable<>(WORLD_BORDER_Y_SHRINKING_PERIOD, Integer.parseInt(value));
             case TEAM_RED -> new Configurable<>(TEAM_RED, value);
+            case TEAM_RED_SPAWN -> new Configurable<>(TEAM_RED_SPAWN, value);
             case TEAM_YELLOW -> new Configurable<>(TEAM_YELLOW, value);
             case TEAM_GREEN -> new Configurable<>(TEAM_GREEN, value);
             case TEAM_BLUE -> new Configurable<>(TEAM_BLUE, value);
@@ -157,6 +159,12 @@ public class ConfigParser {
                 break;
             case TEAM_RED:
                 createTeam(new UHCTeam("Red", (String) configurable.value(), NamedTextColor.RED ), config);
+                break;
+            case TEAM_RED_SPAWN:
+                Optional<UHCTeam> team = config.getManagedResources().getTeams().stream().filter(uhcTeam -> uhcTeam.getName().equals("Red")).findAny();
+                if (team.isPresent()) {
+                    team.get().setSpawn((String) configurable.value(), config);
+                }
                 break;
             case TEAM_BLUE:
                 createTeam(new UHCTeam("Blue", (String) configurable.value(), NamedTextColor.AQUA ), config);

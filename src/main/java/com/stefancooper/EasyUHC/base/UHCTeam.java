@@ -1,9 +1,11 @@
 package com.stefancooper.EasyUHC.base;
 
 import com.stefancooper.EasyUHC.Config;
+import com.stefancooper.EasyUHC.Defaults;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
@@ -19,6 +21,7 @@ public class UHCTeam {
     private final String playerNames;
     private final List<Player> players;
     private final String name;
+    private Location spawn=null;
 
     public UHCTeam(final String name, final String playerNames, final NamedTextColor color) {
         this.name = name;
@@ -43,6 +46,20 @@ public class UHCTeam {
 
     public NamedTextColor getColor() {
         return color;
+    }
+
+    public Location getSpawn() { return spawn; };
+
+    public void setSpawn(final String location, final Config config){
+        // "0,100,0"
+        // Takes the string above, and converts into array[0,100,0]
+        final List<Integer> spawnCoords = Arrays.stream(location.split(",")).map(Integer::parseInt).toList();
+        // Sets the new coords x,y,z
+        spawn = new Location(config.getWorlds().getOverworld(), spawnCoords.get(0), spawnCoords.get(1), spawnCoords.get(2));
+    }
+
+    public boolean hasCustomSpawnSet(){
+        return spawn != null;
     }
 
     public static void createTeam(final UHCTeam uhcTeam, final Config config) {

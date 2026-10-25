@@ -133,9 +133,10 @@ public class SpreadPlayers {
         }).toList();
     }
 
+    //Gets all the teams to spread players (That don't have custom spawn set)
     private List<List<Player>> getAllTeams() {
         List<List<Player>> teams = new ArrayList<>();
-        for (UHCTeam team : config.getManagedResources().getTeams()) {
+        for (UHCTeam team : config.getManagedResources().getTeams().stream().filter(uhcTeam -> ! uhcTeam.hasCustomSpawnSet()).toList()) {
             teams.add(team.getPlayers());
         }
         return teams;
