@@ -79,15 +79,13 @@ public enum ConfigKey {
 
     // Evolving Shields
     ENABLE_EVOLVING_SHIELDS("enable.evolving.shields"), // enable evolving shields
-    ENABLE_EVOLVING_SHIELD_SHARED_CHOICE("enable.evolving.shield.shared.choice"), // set this to true to allow players to choose shared inventory or shared health on uhc start. Note that this value is overridden by enable.shared.team.health or enable.shared.team.ineventory, if either of those are true, this will be false.
     EVOLVING_SHIELDS_EXP_THRESHOLD("evolving.shields.exp.threshold"), // threshold in which you will require to do player damage to continue upgrading your shield
     EVOLVING_SHIELDS_MINECRAFT_EXP_MULTIPLIER("evolving.shields.minecraft.exp.multiplier"), // multiplier for regular minecraft exp
 
-    // Shared team health
-    ENABLE_SHARED_TEAM_HEALTH("enable.shared.team.health"), // enables shared team health on /uhc start. Setting this to true will mean that players in teams will share the health based from 'shared.team.health'.
+    // Shared healh/inventory
+    ENABLE_SHARED_CHOICE("enable.shared.choice"), // set this to true to allow players to choose shared inventory or shared health on uhc start. Note that this value is overridden by enable.shared.team.health or enable.shared.team.ineventory, if either of those are true, this will be false.
     SHARED_TEAM_HEALTH("shared.team.health"), // if set to a value above 0, the team will use this value as the total shared health. Defaults to 20
-
-    // Shared inventory
+    ENABLE_SHARED_TEAM_HEALTH("enable.shared.team.health"), // enables shared team health on /uhc start. Setting this to true will mean that players in teams will share the health based from 'shared.team.health'.
     ENABLE_SHARED_TEAM_INVENTORY("enable.shared.team.inventory"), // enables shared team inventory on /uhc start
 
     // Warmup config

@@ -23,6 +23,8 @@ public class Constants {
     public static final String EVOLVING_SHIELD_UPGRADE_TYPE_KEY = "evolving_shield_upgrade_type";
     public static final String EVOLVING_SHIELD_UPGRADE_AVAILABLE_KEY= "evolving_shield_upgrade_available";
     public static final String EVOLVING_SHIELD_UPGRADE_TOTAL_KEY= "evolving_shield_upgrade_total";
+    // shared
+    public static final String SHARED_CHOICE_TYPE_KEY= "shared_choice_type_key";
     // hoes
     public static final String HOE_REAPER_MARK = "hoe_reaper_mark";
 }

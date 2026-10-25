@@ -2,6 +2,7 @@ package com.stefancooper.EasyUHC.commands;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 
 import com.stefancooper.EasyUHC.Defaults;
@@ -75,6 +76,8 @@ public class StartCommand extends AbstractCommand {
         final int sharedHealth = getConfig().getProperty(SHARED_TEAM_HEALTH, Defaults.SHARED_TEAM_HEALTH);
         final boolean enableSharedInventory = getConfig().getProperty(ENABLE_SHARED_TEAM_INVENTORY, Defaults.ENABLE_SHARED_TEAM_INVENTORY);
         final boolean enableEvolvingShields = getConfig().getProperty(ENABLE_EVOLVING_SHIELDS, Defaults.ENABLE_EVOLVING_SHIELDS);
+        final boolean enableSharedChoice = getConfig().getProperty(ENABLE_SHARED_CHOICE, Defaults.ENABLE_SHARED_CHOICE);
+
 
         // Final Center Location
         final Location finalLocation;
@@ -109,6 +112,29 @@ public class StartCommand extends AbstractCommand {
             return;
         }
 
+        if (enableSharedChoice && !enableSharedHealth && !enableSharedInventory) {
+            AtomicBoolean failedToTrigger = new AtomicBoolean(false);
+            getConfig().getManagedResources().getTeams().forEach(team -> {
+                try {
+                    team.triggerChoice(countdownTimer);
+                } catch (final Exception e) {
+                    failedToTrigger.set(true);
+                }
+            });
+            if (failedToTrigger.get()) {
+                final Location worldSpawn = Utils.getWorldSpawn(getConfig());
+                Bukkit.getOnlinePlayers().forEach(p -> {
+                    if (worldSpawn != null) {
+                        p.teleport(worldSpawn);
+                    }
+                    p.closeInventory();
+                });
+                getConfig().getPlugin().getLogger().log(Level.WARNING, "UHC Start command cancelled. Could not trigger choice for all teams, for an unknown reason.");
+                getSender().sendMessage(Component.text("UHC Start command cancelled. Could not trigger choice for all teams, for an unknown reason.", Style.style(NamedTextColor.RED)));
+                return;
+            }
+        }
+
         getConfig().getPlugin().setUHCLive(true);
 
         // Wipe existing achievements
@@ -133,19 +159,11 @@ public class StartCommand extends AbstractCommand {
         // Actions on the player
         Bukkit.getOnlinePlayers().forEach(player -> {
             player.resetMaxHealth();
-            if (enableSharedHealth) {
-                player.getAttribute(Attribute.MAX_HEALTH).setBaseValue(sharedHealth);
-                player.setHealth(sharedHealth);
-            } else {
-                double maxHealth = player.getAttribute(Attribute.MAX_HEALTH).getDefaultValue();
-                player.setHealth(maxHealth);
-            }
+            player.getAttribute(Attribute.MAX_HEALTH).setBaseValue(sharedHealth);
+            player.setHealth(sharedHealth);
             player.setSaturation(20);
             player.setFoodLevel(20);
             player.getInventory().clear();
-            if (enableEvolvingShields && !enableSharedInventory) {
-                EvolvingShield.createEvolvingShield(getConfig(), player);
-            }
             player.setExp(0);
             player.setLevel(0);
             player.setGameMode(GameMode.SURVIVAL);
@@ -157,12 +175,6 @@ public class StartCommand extends AbstractCommand {
             if (useRandomFinalLocation) {
                 player.getInventory().addItem(RandomFinalLocation.generateWorldCenterCompass());
                 player.setCompassTarget(world.getWorldBorder().getCenter());
-            }
-        });
-
-        getConfig().getManagedResources().getTeams().forEach(team -> {
-            if (enableEvolvingShields && enableSharedInventory) {
-                EvolvingShield.createEvolvingShield(getConfig(), team);
             }
         });
 
@@ -214,8 +226,7 @@ public class StartCommand extends AbstractCommand {
             getConfig().getManagedResources().runRepeatingTask(updateActionBarLocation(), 1L);
         }
 
-        getConfig().getManagedResources().getTeams().forEach(team -> team.setSharedHealth(enableSharedHealth));
-        getConfig().getManagedResources().getTeams().forEach(team -> team.setSharedInventory(enableSharedInventory));
+        getConfig().getManagedResources().getTeams().forEach(team -> team.setSharedChoice(enableSharedHealth, enableSharedInventory));
 
         final int endMobGracePeriod = getConfig().getProperty(MOB_GRACE_PERIOD, Defaults.MOB_GRACE_PERIOD);
         if (endMobGracePeriod > 0) {

@@ -94,12 +94,6 @@ public class EvolvingShield {
         team.getPlayers().getFirst().getInventory().addItem(shield);
     }
 
-    // TODO
-    //      - create new constructor for creating an Evolving Shield for a UHC Team - check!
-    //      - update all 'update xp' events to have a check if shared inventory is on, if it is, it needs to update the team shield instead
-    //      - figure out a way to close the inventory of the evolving shield menu, if another teammate chose the upgrade
-
-
     public enum EvolvingShieldXPType {
         EXPERIENCE,
         DAMAGE_HEARTS,

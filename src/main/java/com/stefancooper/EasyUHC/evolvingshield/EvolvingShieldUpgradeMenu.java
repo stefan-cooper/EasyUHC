@@ -32,6 +32,7 @@ import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Level;
 
+import static com.stefancooper.EasyUHC.base.Utils.splitStringForLore;
 import static com.stefancooper.EasyUHC.evolvingshield.EvolvingShield.STAGE_1;
 import static com.stefancooper.EasyUHC.evolvingshield.EvolvingShield.STAGE_10;
 import static com.stefancooper.EasyUHC.evolvingshield.EvolvingShield.STAGE_11;
@@ -59,7 +60,7 @@ public class EvolvingShieldUpgradeMenu {
             final NamespacedKey stageKey = config.getManagedResources().getKeys().getEvolvingShieldUpgradeStageKey();
             final ItemMeta shieldMeta = shield.get().getItemMeta();
             final int stage = shieldMeta.getPersistentDataContainer().get(stageKey, PersistentDataType.INTEGER);
-            final Inventory inv = Bukkit.createInventory(null, 45, "§8Select your upgrade!");
+            final Inventory inv = Bukkit.createInventory(null, 45, Component.text("Select your upgrade!"));
 
             switch (stage) {
                 case 0:
@@ -316,26 +317,6 @@ public class EvolvingShieldUpgradeMenu {
         }
     }
 
-    private static List<Component> splitStringForLore(String lore) {
-        final List<Component> result = new ArrayList<>();
-
-        while (lore.length() > 24) {
-            final int splitIndex = lore.indexOf(" ", 24);
-            if (splitIndex == -1) {
-                result.add(Component.text(lore, NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, false));
-                return result;
-            }
-            result.add(Component.text(lore.substring(0, splitIndex), NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, false));
-            lore = lore.substring(splitIndex + 1);
-        }
-
-        if (!lore.isEmpty()) {
-            result.add(Component.text(lore, NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, false));
-        }
-
-        return result;
-    }
-
     private ItemStack createUpgradeItem(final Material mat, final String name, final String desc, final EvolvingShieldUpgradeType key, final boolean glint) {
         final ItemStack item = new ItemStack(mat);
         final ItemMeta meta = item.getItemMeta();
@@ -364,7 +345,6 @@ public class EvolvingShieldUpgradeMenu {
     public static void applyUpgrade(final Config config, final Player player, final EvolvingShieldUpgradeType type) {
         final NamespacedKey xpKey = config.getManagedResources().getKeys().getEvolvingShieldXPKey();
         final Optional<ItemStack> getShield = EvolvingShield.getEvolvingShieldFromPlayer(config, player);
-
 
         if (getShield.isPresent()) {
             final Optional<UHCTeam> team = Utils.getTeamForPlayer(config, player);

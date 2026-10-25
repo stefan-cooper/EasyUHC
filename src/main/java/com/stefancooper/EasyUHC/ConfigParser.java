@@ -102,7 +102,7 @@ public class ConfigParser {
             case ADDITIONAL_ENCHANTS_TNT -> new Configurable<>(ADDITIONAL_ENCHANTS_TNT, Boolean.parseBoolean(value));
             // Evolving shields
             case ENABLE_EVOLVING_SHIELDS -> new Configurable<>(ENABLE_EVOLVING_SHIELDS, Boolean.parseBoolean(value));
-            case ENABLE_EVOLVING_SHIELD_SHARED_CHOICE -> new Configurable<>(ENABLE_EVOLVING_SHIELD_SHARED_CHOICE, Boolean.parseBoolean(value));
+            case ENABLE_SHARED_CHOICE -> new Configurable<>(ENABLE_SHARED_CHOICE, Boolean.parseBoolean(value));
             case EVOLVING_SHIELDS_EXP_THRESHOLD -> new Configurable<>(EVOLVING_SHIELDS_EXP_THRESHOLD, Integer.valueOf(value));
             case EVOLVING_SHIELDS_MINECRAFT_EXP_MULTIPLIER -> new Configurable<>(EVOLVING_SHIELDS_MINECRAFT_EXP_MULTIPLIER, Integer.parseInt(value));
             // Shared health

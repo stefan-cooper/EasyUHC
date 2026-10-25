@@ -7,11 +7,14 @@ import com.stefancooper.EasyUHC.base.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.damage.DamageType;
+import org.bukkit.entity.Damageable;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityPotionEffectEvent;
@@ -74,16 +77,47 @@ public class SharedHealthEvents implements Listener {
 
         final List<Player> players = team.get().getPlayers().stream().filter(player -> !damagee.equals(player)).toList();
         players.forEach(teammate -> teammate.damage(event.getFinalDamage()));
+
+        config.getManagedResources().runTaskLater(() -> {
+            final List<Player> onlinePlayers = team.get().getPlayers();
+
+            final List<Player> onlineAlivePlayers = onlinePlayers.stream()
+                    .filter(player -> !player.isDead() && player.getGameMode() != GameMode.SPECTATOR)
+                    .toList();
+
+            if (onlineAlivePlayers.isEmpty()) return;
+
+            if (onlinePlayers.size() > onlineAlivePlayers.size()) {
+                onlineAlivePlayers.forEach(Damageable::kill);
+                return;
+            }
+
+            final double lowestHealth = onlineAlivePlayers.stream()
+                    .mapToDouble(Player::getHealth)
+                    .min()
+                    .orElse(0.0);
+
+            if (lowestHealth <= 0.0) {
+                onlineAlivePlayers.forEach(Damageable::kill);
+            } else {
+                onlineAlivePlayers.forEach(p -> p.setHealth(lowestHealth));
+            }
+        }, 1L);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.NORMAL)
     public void onJoin(final PlayerJoinEvent event) {
         if (!config.getPlugin().isUHCLive()) return;
         final Player player = event.getPlayer();
         final Optional<UHCTeam> team = Utils.getTeamForPlayer(config, player);
         if (team.isEmpty() || !team.get().isSharedHealth()) return;
-
+        final int expectedMaxHP = config.getProperty(SHARED_TEAM_HEALTH, Defaults.SHARED_TEAM_HEALTH);
         final List<Player> teammates = team.get().getPlayers().stream().filter(p -> !player.equals(p)).toList();
+        final double playerMaxHP = player.getAttribute(Attribute.MAX_HEALTH).getBaseValue();
+        if (playerMaxHP < expectedMaxHP) {
+            player.getAttribute(Attribute.MAX_HEALTH).setBaseValue(expectedMaxHP);
+        }
+
         if (teammates.isEmpty()) {
             // noop, cannot find teammates
         } else if (teammates.getFirst().isDead() || teammates.getFirst().getGameMode().equals(GameMode.SPECTATOR)) {

@@ -33,6 +33,15 @@ public final class SharedInventoryManager {
         return playerGroups.containsKey(player.getUniqueId());
     }
 
+    public void resetToDefaults() {
+        groups.clear();
+        playerGroups.clear();
+        applyingToPlayer.clear();
+        inventoryInitialized.clear();
+        pendingCaptures.clear();
+        pendingSyncs.clear();
+    }
+
     public String groupName(Player player) {
         return playerGroups.get(player.getUniqueId());
     }

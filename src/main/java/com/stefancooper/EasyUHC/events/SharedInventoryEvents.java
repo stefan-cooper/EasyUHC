@@ -47,21 +47,6 @@ public class SharedInventoryEvents implements Listener {
         }
     }
 
-//    /** Refresh the acting player's slots before vanilla processes a click against them. */
-//    @EventHandler(priority = EventPriority.LOWEST)
-//    public void onInventoryClick(InventoryClickEvent event) {
-//        if (event.getWhoClicked() instanceof Player player && shouldAction(player)) {
-//            manager.prepareForAction(player);
-//        }
-//    }
-//
-//    @EventHandler(priority = EventPriority.LOWEST)
-//    public void onInventoryDrag(InventoryDragEvent event) {
-//        if (event.getWhoClicked() instanceof Player player && shouldAction(player)) {
-//            manager.prepareForAction(player);
-//        }
-//    }
-
     @EventHandler(priority = EventPriority.LOWEST)
     public void onInventoryOpen(InventoryOpenEvent event) {
         if (event.getPlayer() instanceof Player player && shouldAction(player)) {
@@ -75,13 +60,6 @@ public class SharedInventoryEvents implements Listener {
             manager.markPendingCapture(player);
         }
     }
-
-//    @EventHandler(priority = EventPriority.LOWEST)
-//    public void onDrop(PlayerDropItemEvent event) {
-//        if (shouldAction(event.getPlayer())) {
-//            manager.prepareForAction(event.getPlayer());
-//        }
-//    }
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPickup(EntityPickupItemEvent event) {
@@ -139,14 +117,6 @@ public class SharedInventoryEvents implements Listener {
             }
         }
     }
-
-//    @EventHandler(priority = EventPriority.LOWEST)
-//    public void onShootBow(EntityShootBowEvent event) {
-//        if (event.getEntity() instanceof Player player && shouldAction(player)) {
-//            manager.prepareForAction(player);
-//        }
-//    }
-
 
     /*
      * These MONITOR handlers queue a next-tick snapshot. Bukkit often calls an event before the actual
@@ -276,13 +246,15 @@ public class SharedInventoryEvents implements Listener {
         manager.prepareForAction(player);
     }
 
-//    @EventHandler(priority = EventPriority.MONITOR)
-//    public void onRespawn(PlayerRespawnEvent event) {
-//        manager.applyAfterRespawn(event.getPlayer());
-//    }
-
     @EventHandler(priority = EventPriority.MONITOR)
     public void onJoin(PlayerJoinEvent event) {
+        final Player player = event.getPlayer();
+        final Optional<UHCTeam> team = Utils.getTeamForPlayer(config, player);
+        final SharedInventoryManager manager = config.getManagedResources().getSharedInventoryManager();
+        if (team.isEmpty()) return;
+        if (team.get().isSharedInventory() && !config.getManagedResources().getSharedInventoryManager().isShared(player)) {
+            manager.joinGroup(player, team.get().getName());
+        }
         if (shouldAction(event.getPlayer())) {
             manager.applyAfterJoin(event.getPlayer());
         }

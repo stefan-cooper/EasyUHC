@@ -87,15 +87,14 @@ public class Defaults {
 
     // Evolving shields
     public static boolean ENABLE_EVOLVING_SHIELDS = false;
-    public static boolean ENABLE_EVOLVING_SHIELDS_SHARED_CHOICE = false;
+
     public static int EVOLVING_SHIELDS_EXP_THRESHOLD = -1;
     public static int EVOLVING_SHIELDS_MINECRAFT_EXP_MULTIPLIER = 4;
 
-    // Shared health
-    public static boolean ENABLE_SHARED_TEAM_HEALTH = false;
+    // Shared health/inventory
+    public static boolean ENABLE_SHARED_CHOICE = false;
     public static int SHARED_TEAM_HEALTH = 20;
-
-    // Shared Inventory
+    public static boolean ENABLE_SHARED_TEAM_HEALTH = false;
     public static boolean ENABLE_SHARED_TEAM_INVENTORY = false;
 
     // Warmup
@@ -139,6 +138,7 @@ public class Defaults {
             world.setGameRule(GameRules.FALL_DAMAGE, false);
         });
         config.getPlugin().setCountingDown(false);
+        config.getManagedResources().getSharedInventoryManager().resetToDefaults();
         Bukkit.getOnlinePlayers().forEach(player -> {
             player.setGameMode(GameMode.ADVENTURE);
             player.getAttribute(Attribute.MAX_HEALTH).setBaseValue(20);
@@ -152,6 +152,6 @@ public class Defaults {
             healthObjective = board.getObjective(HEALTH_OBJECTIVE);
         }
         healthObjective.setDisplaySlot(DisplaySlot.PLAYER_LIST);
-        healthObjective.setRenderType(RenderType.HEARTS);
+        healthObjective.setRenderType(RenderType.INTEGER);
     }
 }

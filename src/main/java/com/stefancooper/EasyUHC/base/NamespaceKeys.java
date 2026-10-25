@@ -3,27 +3,11 @@ package com.stefancooper.EasyUHC.base;
 import com.stefancooper.EasyUHC.Config;
 import org.bukkit.NamespacedKey;
 
-import static com.stefancooper.EasyUHC.enchants.Constants.BLASTWAVE_ENCHANTMENT;
 import static com.stefancooper.EasyUHC.base.Constants.CRAFTABLE_PLAYER_HEAD;
-import static com.stefancooper.EasyUHC.enchants.Constants.EVOLVING_SHIELD_UPGRADE_AVAILABLE_KEY;
-import static com.stefancooper.EasyUHC.enchants.Constants.EVOLVING_SHIELD_UPGRADE_TOTAL_KEY;
-import static com.stefancooper.EasyUHC.enchants.Constants.EVOLVING_SHIELD_UPGRADE_TYPE_KEY;
-import static com.stefancooper.EasyUHC.enchants.Constants.EVOLVING_SHIELD_USER_KEY;
-import static com.stefancooper.EasyUHC.enchants.Constants.EVOLVING_SHIELD_XP_KEY;
 import static com.stefancooper.EasyUHC.base.Constants.NOTCH_APPLE;
 import static com.stefancooper.EasyUHC.base.Constants.PLAYER_HEAD;
-import static com.stefancooper.EasyUHC.enchants.Constants.HOE_REAPER_MARK;
-import static com.stefancooper.EasyUHC.enchants.Constants.QUICKBOOM_ENCHANTMENT;
 import static com.stefancooper.EasyUHC.base.Constants.NAMESPACE;
-import static com.stefancooper.EasyUHC.enchants.Constants.SHIELD_FIRE_ENCHANTMENT;
-import static com.stefancooper.EasyUHC.enchants.Constants.SHIELD_JUMP_ENCHANTMENT;
-import static com.stefancooper.EasyUHC.enchants.Constants.SHIELD_SLOWNESS_ENCHANTMENT;
-import static com.stefancooper.EasyUHC.enchants.Constants.SHIELD_STRENGTH_ENCHANTMENT;
-import static com.stefancooper.EasyUHC.enchants.Constants.SHIELD_SWIFTNESS_ENCHANTMENT;
-import static com.stefancooper.EasyUHC.enchants.Constants.SHIELD_THUNDER_ENCHANTMENT;
-import static com.stefancooper.EasyUHC.enchants.Constants.SHIELD_WATER_ENCHANTMENT;
-import static com.stefancooper.EasyUHC.enchants.Constants.SHIELD_WEAKNESS_ENCHANTMENT;
-import static com.stefancooper.EasyUHC.enchants.Constants.SHIELD_WIND_ENCHANTMENT;
+import static com.stefancooper.EasyUHC.enchants.Constants.*;
 import static com.stefancooper.EasyUHC.warmup.constants.WARMUP_BUTTON;
 
 public class NamespaceKeys {
@@ -50,6 +34,8 @@ public class NamespaceKeys {
     final private NamespacedKey evolvingShieldUpgradeTypeKey;
     final private NamespacedKey evolvingShieldUpgradeReadyKey;
     final private NamespacedKey evolvingShieldUpgradeStageKey;
+
+    final private NamespacedKey sharedChoiceTypeKey;
 
     final private NamespacedKey warmupButtonKey;
 
@@ -86,6 +72,9 @@ public class NamespaceKeys {
         this.evolvingShieldUpgradeTypeKey = new NamespacedKey(NAMESPACE, EVOLVING_SHIELD_UPGRADE_TYPE_KEY);
         this.evolvingShieldUpgradeReadyKey = new NamespacedKey(NAMESPACE, EVOLVING_SHIELD_UPGRADE_AVAILABLE_KEY);
         this.evolvingShieldUpgradeStageKey = new NamespacedKey(NAMESPACE, EVOLVING_SHIELD_UPGRADE_TOTAL_KEY);
+
+        // Shared choice
+        this.sharedChoiceTypeKey = new NamespacedKey(NAMESPACE, SHARED_CHOICE_TYPE_KEY);
     }
 
     public NamespacedKey getPlayerHeadKey() {
@@ -142,6 +131,10 @@ public class NamespaceKeys {
 
     public NamespacedKey getEvolvingShieldUpgradeStageKey() {
         return evolvingShieldUpgradeStageKey;
+    }
+
+    public NamespacedKey getSharedChoiceTypeKey() {
+        return sharedChoiceTypeKey;
     }
 
     public NamespacedKey getWarmupButtonKey() { return warmupButtonKey; }

@@ -23,7 +23,7 @@ import java.util.Objects;
 import static com.stefancooper.EasyUHC.Defaults.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-@
+
 public class SharedInventoryTest {
 
     private static RespawnPlayerServerMock server;

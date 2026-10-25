@@ -2,6 +2,9 @@ package com.stefancooper.EasyUHC.base;
 
 import com.stefancooper.EasyUHC.Config;
 import com.stefancooper.EasyUHC.Defaults;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -10,6 +13,7 @@ import org.bukkit.WorldCreator;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
@@ -108,6 +112,26 @@ public class Utils {
             return new Location(config.getWorlds().getOverworld(), x, y, z);
         }
         return null;
+    }
+
+    public static List<Component> splitStringForLore(String lore) {
+        final List<Component> result = new ArrayList<>();
+
+        while (lore.length() > 24) {
+            final int splitIndex = lore.indexOf(" ", 24);
+            if (splitIndex == -1) {
+                result.add(Component.text(lore, NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, false));
+                return result;
+            }
+            result.add(Component.text(lore.substring(0, splitIndex), NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, false));
+            lore = lore.substring(splitIndex + 1);
+        }
+
+        if (!lore.isEmpty()) {
+            result.add(Component.text(lore, NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, false));
+        }
+
+        return result;
     }
 
     public static Optional<UHCTeam> getTeamForPlayer(final Config config, final Player player) {

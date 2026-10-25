@@ -56,7 +56,7 @@ public class BaseEvents implements Listener {
 
     // View docs for various events https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/event/package-summary.html
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onDeath(PlayerDeathEvent event) {
         if (config.getPlugin().isUHCLive()) {
             switch (DeathAction.fromString(config.getProperty(ON_DEATH_ACTION, Defaults.ON_DEATH_ACTION))) {
@@ -131,7 +131,7 @@ public class BaseEvents implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOW)
     public void gameModeOnJoin(PlayerJoinEvent event) {
         final Player player = event.getPlayer();
         /* -- Setting Game mode -- */
@@ -151,7 +151,7 @@ public class BaseEvents implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void playerEffectsOnJoin(final PlayerJoinEvent event) {
         final Player player = event.getPlayer();
         /* -- Organizing teams -- */
@@ -177,16 +177,15 @@ public class BaseEvents implements Listener {
     public void onQuitEvent(final PlayerQuitEvent event) {
         final Player player = event.getPlayer();
         /* -- Organizing teams -- */
-        if (!config.getPlugin().isUHCLive()) {
-            final List<UHCTeam> teams = config.getManagedResources().getTeams().stream().filter(team -> {
-                final List<String> playerNames = team.getPlayerNames();
-                final List<Player> players = team.getPlayers();
-                return playerNames.contains(player.getName()) && players.contains(player);
-            }).toList();
-            if (!teams.isEmpty()) {
-                teams.getFirst().getPlayers().remove(player);
-            }
+        final List<UHCTeam> teams = config.getManagedResources().getTeams().stream().filter(team -> {
+            final List<String> playerNames = team.getPlayerNames();
+            final List<Player> players = team.getPlayers();
+            return playerNames.contains(player.getName()) && players.contains(player);
+        }).toList();
+        if (!teams.isEmpty()) {
+            teams.getFirst().getPlayers().remove(player);
         }
+
     }
 
     @EventHandler
